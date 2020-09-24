@@ -1,0 +1,26 @@
+{
+  "name": "ncku",
+  "version": "1.0.0",
+  "description": "成大課程作業",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "index": "parcel index.html -p 8080",
+    "dsp2020-hw1": "parcel ./dsp2020/hw1/index.html -p 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toonnyy8/ncku.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/toonnyy8/ncku/issues"
+  },
+  "homepage": "https://github.com/toonnyy8/ncku#readme",
+  "dependencies": {
+    "@tensorflow/tfjs": "^2.4.0",
+    "parcel": "^2.0.0-beta.1"
+  }
+}
