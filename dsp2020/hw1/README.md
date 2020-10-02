@@ -1,4 +1,6 @@
 # [DSP Project of Chapter 2](https://toonnyy8.github.io/ncku/dsp2020/hw1/build/index.html)
+> dev 資料夾中存放開發用原始碼。  
+> build 資料夾則是存放已經打包完的程式碼，可直接開啟 index.html 觀看執行結果。
 
 ### 1. x\[n\] = 0.9^n, 繪製出 0 <= n <= 20 的 x .
 ```typescript
