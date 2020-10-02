@@ -2,11 +2,17 @@
   "name": "ncku",
   "version": "1.0.0",
   "description": "成大課程作業",
+  "app": "dist/index.html",
+  "targets": {
+    "app": {
+      "publicUrl": "./"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "index": "parcel index.html -p 8080",
-    "dev:dsp2020-hw1": "parcel ./dsp2020/hw1/dev/index.html -p 8080",
-    "build:dsp2020-hw1": "parcel build ./dsp2020/hw1/dev/index.html --dist-dir ./dsp2020/hw1/build/"
+    "index": "parcel index.htm -p 8080 --open",
+    "dev:dsp2020-hw1": "parcel ./dsp2020/hw1/dev/index.html -p 8080 --open",
+    "build:dsp2020-hw1": "parcel build --no-content-hash ./dsp2020/hw1/dev/index.html --out-dir ./dsp2020/hw1/build/  --public-url=./"
   },
   "repository": {
     "type": "git",
@@ -22,6 +28,9 @@
   "dependencies": {
     "@antv/g2": "^4.0.15",
     "@tensorflow/tfjs": "^2.4.0",
-    "parcel": "^2.0.0-nightly.414"
+    "parcel": "^1.12.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.3"
   }
 }

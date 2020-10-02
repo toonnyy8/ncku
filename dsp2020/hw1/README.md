@@ -1,4 +1,4 @@
-# DSP Project of Chapter 2
+# [DSP Project of Chapter 2](./build/index.html)
 
 ### 1. x\[n\] = 0.9^n, 繪製出 0 <= n <= 20 的 x .
 ```typescript

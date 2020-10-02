@@ -4,7 +4,7 @@ import * as g2 from "@antv/g2"
     const f = (n: number) => Math.pow(0.9, n)
 
     const chart = new g2.Chart({
-        container: document.body,
+        container: document.getElementById("q1"),
         autoFit: false,
         width: 600,
         height: 300,
@@ -49,7 +49,7 @@ import * as g2 from "@antv/g2"
     const f = h(x)
 
     const chart = new g2.Chart({
-        container: document.body,
+        container: document.getElementById("q2a"),
         autoFit: false,
         width: 600,
         height: 300,
@@ -131,7 +131,7 @@ import * as g2 from "@antv/g2"
         x)
 
     const chart = new g2.Chart({
-        container: document.body,
+        container: document.getElementById("q2b"),
         autoFit: false,
         width: 600,
         height: 300,
