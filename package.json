@@ -12,7 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "index": "parcel index.htm -p 8080 --open",
     "dev:dsp2020-hw1": "parcel ./dsp2020/hw1/dev/index.html -p 8080 --open",
-    "build:dsp2020-hw1": "parcel build --no-content-hash ./dsp2020/hw1/dev/index.html --out-dir ./dsp2020/hw1/build/  --public-url=./"
+    "build:dsp2020-hw1": "parcel build --no-content-hash ./dsp2020/hw1/dev/index.html --out-dir ./dsp2020/hw1/build/  --public-url=./",
+    "dev:cvdl2020-hw1": "parcel ./cvdl2020/hw1/dev/index.html -p 8080 --open"
   },
   "repository": {
     "type": "git",
