@@ -28,7 +28,7 @@
   "homepage": "https://github.com/toonnyy8/ncku#readme",
   "dependencies": {
     "@antv/g2": "^4.0.15",
-    "@tensorflow/tfjs": "^2.4.0",
+    "@tensorflow/tfjs": "^2.6.0",
     "parcel": "^1.12.4"
   },
   "devDependencies": {
