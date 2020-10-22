@@ -9,6 +9,7 @@ const ilpf = (T: number) => {
     }
 }
 
+
 document.getElementById("upload").onclick = () => {
     let load = document.createElement("input")
     load.type = "file"
@@ -54,9 +55,9 @@ document.getElementById("upload").onclick = () => {
                                         .map((_, idx) => new Array(L).fill(0)
                                             .map((_, _idx) => calc(idx + _idx / L))
                                         )
-                                        .slice(99, 199)
+                                        .slice(data.length - 1, data.length * 2 - 1)
                                         .reduce((prev, curr) => prev.concat(curr), [])
-                                        .slice(0, -3)
+                                        .slice(0, -L + 1)
                                         .map((val, idx) => ({ n: idx / L, value: val }))
                                     // ...data.map((val, idx) => ({ n: idx, value: val }))
                                 ]
@@ -67,17 +68,67 @@ document.getElementById("upload").onclick = () => {
                     }
 
                     {
+                        const _data = data
+                            .slice(1)
+                            .reverse()
+                            .concat(data)
+                            .concat(data.slice(0, -1).reverse())
                         const chart = new g2.Chart({
                             container: document.body,
                             autoFit: false,
                             width: 1200,
                             height: 300,
                         });
+                        const f = ilpf(4 / 3)
+
+
+
+                        const __data = tf.conv1d(
+                            tf.tensor2d(_data, [_data.length, 1]),
+                            tf.tensor3d(
+                                new Array(101)
+                                    .fill(0)
+                                    .map((_, idx) => f(idx - 50)),
+                                [101, 1, 1]),
+                            1,
+                            "same")
+                            .flatten()
+                            .arraySync()
+                            .slice(data.length - 1, data.length * 2 - 1)
+
+                        const ___data = __data
+                            .slice(1)
+                            .reverse()
+                            .concat(data)
+                            .concat(data.slice(0, -1).reverse())
+
+                        const ilpfs = ___data.map((val, idx) => {
+                            const f = ilpf(1)
+                            return (n: number) => f(n - idx) * val
+                        })
+                        const calc = (n: number) => ilpfs.reduce((prev, f) => prev + f(n), 0)
+                        const L = 3
+
+                        console.log(
+                            __data
+                                .map((_, idx) => new Array(L).fill(0)
+                                    .map((_, _idx) => calc(idx + _idx / L))
+                                )
+                        )
 
                         chart
                             .data(
                                 [
-                                    ...data.map((val, idx) => ({ n: idx, value: val }))
+                                    ...___data
+                                        .map((_, idx) => new Array(L).fill(0)
+                                            .map((_, _idx) => calc(idx + _idx / L))
+                                        )
+                                        .slice(data.length - 1, data.length * 2 - 1)
+                                        .reduce((prev, curr) => prev.concat(curr), [])
+                                        .slice(0, -L + 1)
+
+                                        .map((val, idx) => ({ n: idx / L, value: val }))
+                                    // ...data.map((val, idx) => ({ n: idx, value: val }))
                                 ]
                             )
                             .line()
@@ -94,7 +145,7 @@ document.getElementById("upload").onclick = () => {
 }
 
 {
-    const f = ilpf(100)
+    const f = ilpf(4 / 3)
 
     const chart = new g2.Chart({
         container: document.body,
@@ -106,27 +157,60 @@ document.getElementById("upload").onclick = () => {
     chart
         .data(
             [
-                ...new Array(2201).fill(0).map((_, idx) => ({ n: idx, value: f(idx - 20) }))
+                ...new Array(2201).fill(0).map((_, idx) => ({ n: idx / 100, value: f((idx / 100)) }))
             ]
         )
         .line()
         .position('n*value')
     chart.render()
 }
+
 {
-    const f = ilpf(3)
+    const f = ilpf(1)
 
     const chart = new g2.Chart({
         container: document.body,
         autoFit: false,
-        width: 600,
+        width: 1200,
         height: 300,
     });
 
     chart
         .data(
             [
-                ...new Array(221).fill(0).map((_, idx) => ({ n: idx, value: f(idx - 10) }))
+                ...new Array(500)
+                    .fill(0)
+                    .map((_, idx) => f((idx / 10) - 25))
+                    .map((val, idx) => ({ n: idx / 10, value: val }))
+            ]
+        )
+        .line()
+        .position('n*value')
+    chart.render()
+}
+
+
+
+{
+    const f = ilpf(4 / 3)
+    console.log(new Array(101)
+        .fill(0)
+        .map((_, idx) => f(idx - 50)))
+
+    const chart = new g2.Chart({
+        container: document.body,
+        autoFit: false,
+        width: 1200,
+        height: 300,
+    });
+
+    chart
+        .data(
+            [
+                ...new Array(101)
+                    .fill(0)
+                    .map((_, idx) => f(idx - 50))
+                    .map((val, idx) => ({ n: idx, value: val }))
             ]
         )
         .line()
