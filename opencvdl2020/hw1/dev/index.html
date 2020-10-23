@@ -4,22 +4,97 @@
 <head>
     <meta charset="utf-8" />
     <title>OPENCVDL2020 Homework1</title>
+    <style>
+        @import url(./css/index.css);
+    </style>
     <script src="src/index.ts" defer></script>
 </head>
 
 <body>
-    <h3>Q1</h3>
-    <div id="q1">
-        <button id=q1-upload>upload</button>
-    </div>
+    <button id=q1-1b>Q1-1</button>
+    <br /><br />
+    <canvas id="q1-1c" width="0" height="0" style="width:25%"></canvas>
+    <ul>
+        <li id=w></li>
+        <li id=h></li>
+    </ul>
+
+    <hr class="dashed" />
+
+    <button id=q1-2b>Q1-2</button>
+    <br /><br />
+    <canvas id="q1-2c" width="0" height="0" style="width:100%"></canvas>
+
+    <hr class="dashed" />
+
+    <button id=q1-3b>Q1-3</button>
+    <br /><br />
+    <canvas id="q1-3c" width="0" height="0" style="width:50%"></canvas>
+
+    <hr class="dashed" />
+
+    <button id=q1-4b>Q1-4</button>
+    <br /><br />
+    <input type="range" id="combine" value="0" min="0" max="100">
+    <br /><br />
+    <canvas id="q1-4c" width="0" height="0" style="width:25%"></canvas>
+
     <hr />
-    <h3>Q2a</h3>
-    <div id="q2a">
-    </div>
+
+    <button id=q2-1b>Q2-1</button>
+    <br /><br />
+    <canvas id="q2-1c" width="0" height="0" style="width:50%"></canvas>
+
+    <hr class="dashed" />
+
+    <button id=q2-2b>Q2-2</button>
+    <br /><br />
+    <canvas id="q2-2c" width="0" height="0" style="width:100%"></canvas>
+
+    <hr class="dashed" />
+
+    <hr class="dashed" />
+
     <hr />
-    <h3>Q2b</h3>
-    <div id="q2b">
-    </div>
+
+    <button id=q3-1b>Q3-1</button>
+    <br /><br />
+    <canvas id="q3-1c" width="0" height="0" style="width:100%"></canvas>
+
+    <hr class="dashed" />
+
+    <button id=q3-2b>Q3-2</button>
+    <br /><br />
+    <canvas id="q3-2c" width="0" height="0" style="width:100%"></canvas>
+
+    <hr class="dashed" />
+
+    <button id=q3-3b>Q3-3</button>
+    <br /><br />
+    <canvas id="q3-3c" width="0" height="0" style="width:100%"></canvas>
+
+    <hr class="dashed" />
+
+    <button id=q3-4b>Q3-4</button>
+    <br /><br />
+    <canvas id="q3-4c" width="0" height="0" style="width:100%"></canvas>
+
+    <hr />
+
+    <button id=q4-1b>Q4-1</button><br /><br />
+    Cx: <input id=Cx type="number" min="0" value="160" step="1" /></input> pixel
+    <br /><br />
+    Cy: <input id=Cy type="number" min="0" value="84" step="1" /></input> pixel
+    <br /><br />
+    Rotation: <input id=rotation type="number" min="0" max="360" value="0" step="0.25" /></input> deg
+    <br /><br />
+    Scaling: <input id=scaling type="number" min="0.1" max="10" value="1" step="0.1" /></input>
+    <br /><br />
+    Tx: <input id=Tx type="number" min="-5000" max="5000" value="0" step="1" /></input> pixel
+    <br /><br />
+    Ty: <input id=Ty type="number" min="-5000" max="5000" value="0" step="1" /></input> pixel
+    <br /><br />
+    <canvas id="q4-1c" width="0" height="0" style="width:50%"></canvas>
 </body>
 
 </html>
