@@ -15,7 +15,8 @@
     "build:dsp2020-hw1": "parcel build --no-content-hash ./dsp2020/hw1/dev/index.html --out-dir ./dsp2020/hw1/build/  --public-url=./",
     "dev:dsp2020-hw2": "parcel ./dsp2020/hw2/dev/index.html -p 8080 --open",
     "build:dsp2020-hw2": "parcel build --no-content-hash ./dsp2020/hw2/dev/index.html --out-dir ./dsp2020/hw2/build/  --public-url=./",
-    "dev:cvdl2020-hw1": "parcel ./cvdl2020/hw1/dev/index.html -p 8080 --open"
+    "dev:cvdl2020-hw1": "parcel ./cvdl2020/hw1/dev/index.html -p 8080 --open",
+    "dev:opencvdl2020-hw1": "parcel ./opencvdl2020/hw1/dev/index.html -p 8080 --open"
   },
   "repository": {
     "type": "git",
