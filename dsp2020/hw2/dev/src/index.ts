@@ -9,6 +9,7 @@ const ilpf = (T: number) => {
     }
 }
 tf.tensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).reshape([-1, 5]).slice([0, 0], [-1, 1]).print()
+tf.tensor([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [10]).stack([tf.zeros([10]), tf.zeros([10])], 0).transpose([1, 0]).reshape([-1]).print()
 
 document.getElementById("upload").onclick = () => {
     let load = document.createElement("input")
@@ -24,92 +25,121 @@ document.getElementById("upload").onclick = () => {
                 .decodeAudioData(<ArrayBuffer>reader.result)
                 .then(audioBuffer => {
 
-                    let source = audioContext.createBufferSource();
-                    // set the buffer in the AudioBufferSourceNode
-                    let bf0 = audioBuffer.getChannelData(0)
-                    bf0.reverse()
-                    let bf1 = audioBuffer.getChannelData(1)
-                    bf1.reverse()
-
-                    source.buffer = audioBuffer
-
-                    // connect the AudioBufferSourceNode to the
-                    // destination so we can hear the sound
-                    source.connect(audioContext.destination);
-
-                    // start the source playing
-                    source.start();
-
-                    return audioBuffer.getChannelData(0)
-                })
-                .then(bufferData => {
-
-                    // const _bufferData = bufferData.slice(0, Math.floor(bufferData.length / 2))
-                    // const _data = Array.from(_bufferData)
-
-                    // const filterSize = 25
-                    // const L = 3
-                    // const M = 4
-                    // const kernel = tf.tensor3d(
-                    //     new Array(filterSize * 2 * 3 + 1)
-                    //         .fill(0)
-                    //         .map((_, idx) => ilpf(M / L)(idx / L - filterSize)),
-                    //     [filterSize * 2 * 3 + 1, 1, 1]
-                    // )
-                    // const data =
-                    //     (() => {
-                    //         let data = Array.from(_bufferData)
-                    //         data = data
-                    //             .slice(1, (filterSize + 1))
-                    //             .reverse()
-                    //             .concat(data)
-                    //             .concat(data
-                    //                 .slice(-(filterSize + 1), -1)
-                    //                 .reverse())
-
-                    //         let tensorData = tf.tensor2d(data, [data.length, 1])
-
-                    //         return tf.tidy(() => tf.concat(
-                    //             [
-                    //                 tensorData,
-                    //                 ...new Array(L - 1).fill(tf.zeros([data.length, 1]))
-                    //             ],
-                    //             -1)
-                    //             .reshape([-1, 1])
-                    //         )
-                    //     })()
-                    // let out: tf.Tensor = tf.tidy(() => tf.conv1d(data, kernel, 1, "valid").flatten())
-                    // let shortage = out.shape[0] % M
-                    // if (shortage != 0) {
-                    //     console.log(out)
-                    //     out = out.concat(tf.zeros([M - shortage]), 0)
-                    // }
-
-                    // out = out
-                    //     .reshape([-1, M])
-                    //     .slice([0, 0], [-1, 1])
-                    //     .flatten()
-
-                    // const audioContextOut = new AudioContext({ sampleRate: 12000 })
-                    // let myArrayBuffer = audioContextOut.createBuffer(1, out.shape[0], audioContextOut.sampleRate * (L / M));
-                    // let bf = myArrayBuffer.getChannelData(0)
-                    // let obf = out.bufferSync()
-                    // bf.forEach((_, idx) => bf[idx] = obf[idx])
-                    // let source = audioContextOut.createBufferSource();
+                    // let source = audioContext.createBufferSource();
                     // // set the buffer in the AudioBufferSourceNode
-                    // source.buffer = myArrayBuffer
+                    // let bf0 = audioBuffer.getChannelData(0)
+                    // bf0.reverse()
+                    // let bf1 = audioBuffer.getChannelData(1)
+                    // bf1.reverse()
+
+                    // source.buffer = audioBuffer
 
                     // // connect the AudioBufferSourceNode to the
                     // // destination so we can hear the sound
-                    // source.connect(audioContextOut.destination);
+                    // source.connect(audioContext.destination);
 
                     // // start the source playing
                     // source.start();
 
+                    const f = (t: tf.Tensor1D, L: number, flen) => {
+                        const x: tf.Tensor2D = t.stack(new Array(L - 1).fill(tf.zeros(t.shape)), 0).transpose([1, 0]).reshape([-1, 1])
+                        const lp = ilpf(L)
+                        return tf.conv1d(
+                            x,
+                            tf.tensor3d(
+                                new Array(flen * L * 2 + 1)
+                                    .fill(0)
+                                    .map((_, idx) => lp(idx - flen * L)), [flen * L * 2 + 1, 1, 1]),
+                            1,
+                            "valid")
+                            .flatten()
+                    }
+
+                    const L = 3
+                    const M = 4
+                    const len = 500
+                    const flen = 50
+                    flen * L * 2 + 1
+                    const bfs = new Array(audioBuffer.numberOfChannels).fill(0).map((_, idx) => audioBuffer.getChannelData(idx))
+                    console.log(bfs)
+                    const downbfs = bfs.map(bf => {
+                        let arr = Array.from(bf)
+                        let pad = len - bf.length % len
+                        arr = arr.concat(new Array(pad).fill(0))
+                        let tensor = tf.tensor2d(arr, [arr.length / len, len])
+                        let unskts = tensor.unstack(0)
+                        let convOuts = tf.concat([
+                            tf.stack([unskts[0].reverse(), ...unskts.slice(0, -1)]),
+                            tensor,
+                            tf.stack([...unskts.slice(1), unskts[unskts.length - 1].reverse()]),
+                        ], -1)
+                            .slice([0, len - (flen)], [-1, len + (flen * 2)])
+                            .unstack(0)
+                            .map((t: tf.Tensor1D, idx) => tf.tidy(() => {
+                                // console.log(t)
+                                return f(t, L, flen)
+                            }))
+                        let convOut = tf.concat(convOuts)
+                        const padM = M - convOut.shape[0] % M
+                        if (padM != 0) {
+                            convOut = tf.concat([convOut, tf.zeros([padM])])
+                        }
+                        return convOut.reshape([-1, M]).slice([0, 0], [-1, 1]).flatten()
+                    })
+
+                    const outContext = new AudioContext({ sampleRate: 12000 })
+                    let source = outContext.createBufferSource();
+                    let outBuffer = outContext.createBuffer(audioBuffer.numberOfChannels, downbfs[0].shape[0], outContext.sampleRate * (L / M));
+                    new Array(outBuffer.numberOfChannels).fill(0)
+                        .map((_, idx) => outBuffer
+                            .getChannelData(idx)
+                            .set(<number[]>downbfs[idx].arraySync()))
+
+
+                    source.buffer = outBuffer
+
+                    // connect the AudioBufferSourceNode to the
+                    // destination so we can hear the sound
+                    source.connect(outContext.destination);
+
+                    // start the source playing
+                    source.start();
+                    console.log(downbfs)
                 })
         })
 
         reader.readAsArrayBuffer(files[0])
     }
     load.click()
+}
+
+{
+
+    const L = 3
+    const flen = 50
+    const lp = ilpf(L)
+
+    {
+        const f = (n: number) => Math.pow(0.9, n)
+
+        const chart = new g2.Chart({
+            container: document.body,
+            autoFit: false,
+            width: 1200,
+            height: 300,
+        });
+
+        chart
+            .data(
+                [
+                    ...new Array(flen * L * 2 + 1).fill(0)
+                        .map((_, idx) => lp(idx - flen * L))
+                        .map((val, idx) => ({ n: idx, value: val }))
+                ]
+            )
+            .line()
+            .position('n*value')
+        chart.render()
+    }
+
 }
