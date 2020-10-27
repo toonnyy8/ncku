@@ -1,6 +1,6 @@
 import { CircleAxis } from "@antv/g2/lib/dependents"
 import * as tf from "@tensorflow/tfjs"
-import { gray, gaussianKernel3x3, conv3x3 } from "./conv"
+import { gray, gaussianKernel3x3, conv3x3, median7x7 } from "./conv"
 
 document.getElementById("q1-1b").onclick = () => {
     let load = document.createElement("input")
@@ -170,6 +170,38 @@ document.getElementById("q1-4b").onclick = () => {
 }
 
 
+document.getElementById("q2-1b").onclick = () => {
+    let load = document.createElement("input")
+    load.type = "file"
+    load.accept = "image/png,image/jpeg,image/bmp"
+
+    load.onchange = () => {
+        const files = load.files
+        var reader = new FileReader()
+        reader.addEventListener("loadend", () => {
+
+            const canvas = <HTMLCanvasElement>document.getElementById("q2-1c")
+            const ctx = canvas.getContext("2d")
+            var img = new Image;
+            img.onload = () => {
+                canvas.height = img.height
+                canvas.width = img.width
+
+                const imgarrs = tf.browser.fromPixels(img, 3).div(255).unstack(-1).map(t => t.arraySync())
+
+                tf.browser.toPixels(
+                    <tf.Tensor3D>tf.tensor3d(imgarrs.map(imgarr => median7x7(<number[][]>imgarr)))
+                        .transpose([1, 2, 0]),
+                    canvas
+                )
+            }
+            img.src = <string>reader.result;
+        })
+
+        reader.readAsDataURL(files[0])
+    }
+    load.click()
+}
 
 document.getElementById("q2-2b").onclick = () => {
     let load = document.createElement("input")

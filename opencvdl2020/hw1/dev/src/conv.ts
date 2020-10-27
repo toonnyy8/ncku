@@ -44,3 +44,19 @@ export const conv3x3 = (x: number[][], kernel: number[][],) => {
 
     return out
 }
+
+export const median7x7 = (x: number[][]): number[][] => {
+    const offsets = [-3, -2, -1, 0, 1, 2, 3]
+    const h = x.length
+    const w = x[0].length
+    const out = new Array(h).fill(0).map(() => new Array(w).fill(0))
+    for (let i = 0; i < h; i++)
+        for (let j = 0; j < w; j++) {
+            const arr = x.slice(i - 3 > 0 ? i - 3 : 0, i + 3)
+                .reduce((prev, row) => [...prev, ...row.slice(j - 3 > 0 ? j - 3 : 0, j + 3)], [])
+                .sort((a, b) => a - b)
+            out[i][j] = arr[Math.floor(arr.length / 2)]
+        }
+
+    return out
+} 
