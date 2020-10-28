@@ -1,9 +1,89 @@
 import * as g2 from "@antv/g2"
 import * as tf from "@tensorflow/tfjs"
+import record from "../../model/record.json";
 
 let test_batch: HTMLCanvasElement = document.createElement("canvas")
 let model: tf.LayersModel
 let labelName = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
+
+document.getElementById('show-record').onclick = () => tf.tidy(() => {
+    document.getElementById("record").innerHTML = ""
+
+    {
+        let title = document.createElement("h3")
+        title.innerText = "Accuracy"
+        document.getElementById("record").append(title)
+        const chart = new g2.Chart({
+            container: document.getElementById("record"),
+            autoFit: false,
+            width: 600,
+            height: 300,
+        });
+        const view1 = chart.createView();
+        const view2 = chart.createView();
+        const accData = record.trainAcc.map((trainAcc, epoch) => ({ epoch, trainAcc, testAcc: record.testAcc[epoch] }))
+        view1.data(accData)
+            .line()
+            .position('epoch*trainAcc')
+            .style({
+                stroke: '#5555ff'
+            })
+        view2.data(accData)
+            .line()
+            .position('epoch*testAcc')
+            .style({
+                stroke: '#ff5555'
+            })
+        chart.scale({
+            trainAcc: {
+                sync: 'value',
+            },
+            testAcc: {
+                sync: 'value',
+            },
+        });
+        chart.render()
+    }
+
+    document.getElementById("record").append(document.createElement("br"))
+
+    {
+        let title = document.createElement("h3")
+        title.innerText = "Loss"
+        document.getElementById("record").append(title)
+        const chart = new g2.Chart({
+            container: document.getElementById("record"),
+            autoFit: false,
+            width: 600,
+            height: 300,
+        });
+        const view1 = chart.createView();
+        const view2 = chart.createView();
+        const lossData = record.trainLoss.map((trainLoss, epoch) => ({ epoch, trainLoss, testLoss: record.testLoss[epoch] }))
+        view1.data(lossData)
+            .line()
+            .position('epoch*trainLoss')
+            .style({
+                stroke: '#5555ff'
+            })
+        view2.data(lossData)
+            .line()
+            .position('epoch*testLoss')
+            .style({
+                stroke: '#ff5555'
+            })
+        chart.scale({
+            trainLoss: {
+                sync: 'value',
+            },
+            testLoss: {
+                sync: 'value',
+            },
+        });
+        chart.render()
+    }
+})
+
 
 document.getElementById('vgg16').onclick = () => {
     let loadModel = document.createElement("input")

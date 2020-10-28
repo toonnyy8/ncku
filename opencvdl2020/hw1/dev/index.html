@@ -43,17 +43,27 @@
 
     <button id=q2-1b>Q2-1</button>
     <br /><br />
-    <canvas id="q2-1c" width="0" height="0" style="width:50%"></canvas>
+    <canvas id="q2-1c" width="0" height="0" style="width:100%;image-rendering: pixelated;"></canvas>
 
     <hr class="dashed" />
 
     <button id=q2-2b>Q2-2</button>
     <br /><br />
-    <canvas id="q2-2c" width="0" height="0" style="width:100%"></canvas>
+    <canvas id="q2-2c" width="0" height="0" style="width:100%;image-rendering: pixelated;"></canvas>
 
     <hr class="dashed" />
 
-    <hr class="dashed" />
+    <button id=q2-3b>Q2-3</button>
+    <br /><br />
+    sigmaSpace : <input id=sigmaSpace type=number value=9 max=100 min=1 step=0.25></input>
+    <br /><br />
+    sigmaColor : <input id=sigmaColor type=number value=9 max=100 min=1 step=0.25></input>
+    <br /><br />
+    halfWidth : <input id=halfWidth type=number value=4 max=100 min=9 step=1></input>
+    <br /><br />
+    halfHeight : <input id=halfHeight type=number value=4 max=100 min=9 step=1></input>
+    <br /><br />
+    <canvas id="q2-3c" width="0" height="0" style="width:100%;image-rendering: pixelated;"></canvas>
 
     <hr />
 
@@ -97,6 +107,13 @@
     <canvas id="q4-1c" width="0" height="0" style="width:50%"></canvas>
 
     <hr />
+
+    <button id=show-record class="lg">record</button>
+    <br /><br />
+    <div id=record></div>
+
+    <hr class="dashed">
+
     <button id=load-train class="lg">load train</button>
     <br /><br />
     <canvas id="train-set" width="0" height="0" style="width:100%"></canvas>
@@ -119,16 +136,21 @@
     <hr class="dashed">
 
     <button id=show-hyperparameter class="lg">hyperparameter</button>
+    <br /><br />
     <div id=hyperparameter></div>
 
     <hr class="dashed">
 
     <button id=vgg16>vgg16</button>
+    <br /><br />
     <div id=model-summary></div>
 
     <hr class="dashed">
+
     <button id=load-test class="lg">load test</button>
+
     <hr class="dashed">
+
     <button id=test class="lg">test</button>
     <br /><br />
     test index : <input id=test-idx type=number value=0 min=0 max=9999>
