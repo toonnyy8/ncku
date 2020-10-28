@@ -24,20 +24,6 @@ document.getElementById("upload").onclick = () => {
             audioContext
                 .decodeAudioData(<ArrayBuffer>reader.result)
                 .then(audioBuffer => {
-                    // {
-                    //     let source = audioContext.createBufferSource();
-                    //     // set the buffer in the AudioBufferSourceNode
-
-                    //     source.buffer = audioBuffer
-
-                    //     // connect the AudioBufferSourceNode to the
-                    //     // destination so we can hear the sound
-                    //     source.connect(audioContext.destination);
-
-                    //     // start the source playing
-                    //     source.start();
-                    // }
-
                     {
                         const f = (t: tf.Tensor1D, L: number, flen) => {
                             const x: tf.Tensor2D = t.stack(new Array(L - 1).fill(tf.zeros(t.shape)), 0).transpose([1, 0]).reshape([-1, 1])
@@ -110,35 +96,4 @@ document.getElementById("upload").onclick = () => {
         reader.readAsArrayBuffer(files[0])
     }
     load.click()
-}
-
-{
-
-    const L = 3
-    const flen = 50
-    const lp = ilpf(L)
-
-    {
-        const f = (n: number) => Math.pow(0.9, n)
-
-        const chart = new g2.Chart({
-            container: document.body,
-            autoFit: false,
-            width: 1200,
-            height: 300,
-        });
-
-        chart
-            .data(
-                [
-                    ...new Array(flen * L * 2 + 1).fill(0)
-                        .map((_, idx) => lp(idx - flen * L))
-                        .map((val, idx) => ({ n: idx, value: val }))
-                ]
-            )
-            .line()
-            .position('n*value')
-        chart.render()
-    }
-
 }
