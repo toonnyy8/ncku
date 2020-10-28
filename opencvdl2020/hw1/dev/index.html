@@ -95,6 +95,47 @@
     Ty: <input id=Ty type="number" min="-5000" max="5000" value="0" step="1" /></input> pixel
     <br /><br />
     <canvas id="q4-1c" width="0" height="0" style="width:50%"></canvas>
+
+    <hr />
+    <button id=load-train class="lg">load train</button>
+    <br /><br />
+    <canvas id="train-set" width="0" height="0" style="width:100%"></canvas>
+    <table style="width:100%;text-align:center;">
+        <tbody>
+            <tr>
+                <td id="img-0" style="width:10%;"></td>
+                <td id="img-1" style="width:10%;"></td>
+                <td id="img-2" style="width:10%;"></td>
+                <td id="img-3" style="width:10%;"></td>
+                <td id="img-4" style="width:10%;"></td>
+                <td id="img-5" style="width:10%;"></td>
+                <td id="img-6" style="width:10%;"></td>
+                <td id="img-7" style="width:10%;"></td>
+                <td id="img-8" style="width:10%;"></td>
+                <td id="img-9" style="width:10%;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <hr class="dashed">
+
+    <button id=show-hyperparameter class="lg">hyperparameter</button>
+    <div id=hyperparameter></div>
+
+    <hr class="dashed">
+
+    <button id=vgg16>vgg16</button>
+    <div id=model-summary></div>
+
+    <hr class="dashed">
+    <button id=load-test class="lg">load test</button>
+    <hr class="dashed">
+    <button id=test class="lg">test</button>
+    <br /><br />
+    test index : <input id=test-idx type=number value=0 min=0 max=9999>
+    <br /><br />
+    <canvas id="test-img" width="0" height="0" style="width:25%;image-rendering: pixelated;"></canvas>
+    <br /><br />
+    <div id="prediction"></div>
 </body>
 
 </html>

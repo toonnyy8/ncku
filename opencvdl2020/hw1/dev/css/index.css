@@ -21,10 +21,14 @@ button {
     box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.863), 4px -4px 5px rgb(116, 0, 58);
     outline: none;
 }
+
+button.lg {
+    height: 5rem;
+    width: 20rem;
+}
+
 button:hover {
     background-color: rgb(40, 40, 40);
-    height: 5rem;
-    width: 10rem;
     font-size: 2.5rem;
     color: rgb(255, 214, 235);
     border: 0;
@@ -35,8 +39,6 @@ button:hover {
 
 button:active {
     background-color: rgb(40, 40, 40);
-    height: 5rem;
-    width: 10rem;
     font-size: 2.5rem;
     color: rgb(255, 214, 235);
     border: 0;
