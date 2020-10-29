@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        @import url(./index.css);
+    </style>
+    <script>
+        /**
+         *  @param {number} size
+         */
+        const changePageSize = (size) => {
+            document.documentElement.style.setProperty("--page-size", `${size}`)
+        }
+
+        window.onload = window.onresize = () => {
+            const WandH = () => {
+                if (window.visualViewport != null) {
+                    return [
+                        window.visualViewport.width
+                        * window.visualViewport.scale,
+                        window.visualViewport.height
+                        * window.visualViewport.scale
+                    ]
+                } else {
+                    return [
+                        window.innerWidth,
+                        window.innerHeight
+                    ]
+                }
+            }
+            const [W, H] = WandH()
+            const w = 29.75 * (96 / 2.54)
+            const h = 21.0 * (96 / 2.54)
+            if (W / H > w / h) {
+                changePageSize(H / h)
+            } else {
+                changePageSize(W / w)
+            }
+        }
+    </script>
+    <script src="./src/html.js" defer></script>
+    <script src="./src/css.js" defer></script>
+
+    <script src="./page-en/template.js" defer></script>
+    <script src="./page-en/title.js" defer></script>
+    <script src="./page-en/introduction.js" defer></script>
+    <script src="./page-en/methodology.js" defer></script>
+    <script src="./page-en/architecture.js" defer></script>
+    <script src="./page-en/experiments.js" defer></script>
+    <script src="./page-en/conclusion.js" defer></script>
+
+    <script src="index.js" defer></script>
+
+</head>
+
+<body>
+    <!-- <img src="./icon/arrow_back_ios-white-18dp.svg" class="page-left-button" />
+    <img src="./icon/arrow_back_ios-white-18dp.svg" class="page-right-button" /> -->
+</body>
+
+</html>
