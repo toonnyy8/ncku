@@ -29,13 +29,19 @@ const title = (() => {
         html.page()([
             div_vc([
                 div_hc([
-                    html.a({ class: ["text-2xl"], href: "https://arxiv.org/abs/1904.13142", })
+                    html.span({ class: ["text-2xl"], })
                         `Advanced Topics on Spoken Language Perception and Interaction`,
                     html.hr(),
-                    pxl_1([
-                        spanlg`Advisor   : Chung-Hsien Wu`, html.br(),
-                        spanlg`Presenter : Jen-Hung Huang`
-                    ]),
+                    html.table({ class: ["text-lg"], style: [css.p.l(70)] })([
+                        html.tr()([
+                            html.td({ style: [css.tx.right()] })([`Advisor :`]),
+                            html.td()([`Chung-Hsien Wu`]),
+                        ]),
+                        html.tr()([
+                            html.td({ style: [css.tx.right()] })([`Presenter :`]),
+                            html.td()([`Jen-Hung Huang`]),
+                        ]),
+                    ])
                 ])
             ])
         ]),
@@ -45,16 +51,11 @@ const title = (() => {
                     span3xl`Outline`,
                     html.hr(),
                     html.ul({ style: [css.tx.left(), css.m.l(100)] })([
-                        html.li()`Introduction`,
+                        html.li()`Speech Enhancement`,
+                        html.li()`Review`,
                         html.li()`Methodology`,
-                        html.ul({ class: ["text-lg"] })([
-                            html.li()`U-Net`,
-                            html.li()`Symbolic Encoder`,
-                            html.li()`Multi Head Attention`,
-                        ]),
-                        html.li()`Architecture`,
-                        html.li()`Experiments`,
-                        html.li()`Conclusion`,
+                        html.li()`Problems`,
+                        html.li()`Proposed methods`,
                     ])
                 ])
             ])

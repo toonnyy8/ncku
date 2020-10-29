@@ -64,7 +64,10 @@ const methodology =
                     html.img({ src: './img/methodology/multi-head-attention.png', style: [css.w.percent(55), css.p.l(5)] }),
                 ]),
             ),
-
+            html.page()([
+                template.div_hc(0)([
+                    html.img({ src: './img/architecture/complete-model.png', style: [css.w.percent(98), css.p.t(8)] })]),
+            ]),
             template.page2(0)(
                 'Methodology',
                 'Loss',

@@ -5,7 +5,7 @@
 const introduction = (() => {
     return [
         template.default_page(
-            "Introduction",
+            "Speech Enhancement",
             html.p({ class: ["text-base"] })([
                 `即使處於在吵雜的環境中，只要聽眾能理解講者的說話內容，就能恢復具有缺損的語音訊號。`,
                 html.br(), html.br(),
