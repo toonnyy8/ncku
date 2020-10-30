@@ -52,10 +52,10 @@ const title = (() => {
                     html.hr(),
                     html.ul({ style: [css.tx.left(), css.m.l(100)] })([
                         html.li()`Speech Enhancement`,
-                        html.li()`Review`,
                         html.li()`Methodology`,
                         html.li()`Problems`,
                         html.li()`Proposed methods`,
+                        html.li()`Schedule`,
                     ])
                 ])
             ])
