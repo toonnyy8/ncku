@@ -124,6 +124,6 @@ const template = (() => {
                 },
         div_vc,
         div_hc,
-        a: (href = "") => html.a({ href, style: [css.tx.color(255, 235, 205)] }),
+        a: (href = "") => html.a({ href, }),
     }
 })()

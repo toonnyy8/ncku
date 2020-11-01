@@ -9,12 +9,11 @@ const possibleSolutions = (() => {
             html.div({ class: ["text-lg"], style: [css.p.t(1)] })([
                 html.ul()([
                     html.li()([
-                        `更換目前的 Encoder-Decoder：`, html.br(),
-                        `即便用上了正確的聲學資訊依然無法帶來顯著提升，`, html.br(),
-                        `表示 Encoder-Decoder 可能無法提取重要的資訊。`, html.br(), html.br(),
-                    ]),
-                    html.li()([
-                        `使用 VQ-VAE 2 的多階層(多解析度)，嘗試保留不同細度的聲音特徵。`, html.br(), html.br(),
+                        `Change the current Encoder-Decoder :`, html.br(),
+                        html.p({ class: ["text-base"], })([
+                            `Even if the correct acoustic information is used, it cannot bring significant improvement.`, html.br(),
+                            `Indicates that the current Encoder-Decoder may not be able to extract important information.`, html.br(), html.br(),
+                        ])
                     ]),
                 ]),
             ]),
@@ -24,18 +23,22 @@ const possibleSolutions = (() => {
             html.div({ class: ["text-lg"], style: [css.p.t(1)] })([
                 html.ul()([
                     html.li()([
-                        `更換目前的 Encoder-Decoder：`, html.br(),
-                        `即便用上了正確的聲學資訊依然無法帶來顯著提升，`, html.br(),
-                        `表示 Encoder-Decoder 可能無法提取重要的資訊。`, html.br(), html.br(),
+                        `Use the multi-layer (multi-resolution) of VQ-VAE 2
+                        to try to preserve the sound characteristics of different fineness.`, html.br(), html.br(),
                     ]),
-                    html.li()([
-                        `使用 VQ-VAE 2 的多階層(多解析度)，嘗試保留不同細度的聲音特徵。`, html.br(), html.br(),
+                ]),
+            ]),
+        ),
+        template.page2(20)(
+            "Possible Solutions",
+            "Challenge",
+            html.div({ class: ["text-lg"], style: [css.p.t(1)] })([
+                html.ul()([
+                    html.li({ style: [css.tx.color(255, 0, 102)] })([
+                        `Calculate from Time Domain.`, html.br(), html.br(),
                     ]),
                     html.li({ style: [css.tx.color(255, 0, 102)] })([
-                        `挑戰：從 Time Domain 進行計算。`, html.br(), html.br(),
-                    ]),
-                    html.li({ style: [css.tx.color(255, 0, 102)] })([
-                        `挑戰：使用 Phase 的資訊。`,
+                        `Use Phase information.`,
                     ]),
                 ]),
             ]),

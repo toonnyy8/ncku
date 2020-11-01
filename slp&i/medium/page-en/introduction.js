@@ -5,17 +5,21 @@
 const introduction = (() => {
     return [
         template.default_page(
-            "Introduction",
-            html.p({ class: ["text-base"] })([
-                `Even in a noisy environment, as long as the listener can understand what the speaker is saying, the defective voice signal can be restored.`,
-                html.br(), html.br(),
-                `The author believes that this is the result of relying on the language knowledge possessed by humans.`, html.br(), html.br(),
-                `In other words, with the aid of the language model, the damage caused by interference noise can be effectively suppressed.`, html.br(), html.br(),
+            "Speech Enhancement",
+            html.p({ class: ["text-base"], style: [css.tx.left(), css.p.t(15)] })([
+                `The real world is full of various background noises.
+                These noises can pollute the speech signal and reduce the accuracy of ASR,
+                hearing aids and other speech tasks.`, html.br(), html.br(),
+                `However, when humans face these sounds disturbed by background noise,
+                they can reduce the noise interference by adjusting their focus.`, html.br(),
             ])
-        ), template.default_page(
-            "Introduction",
-            html.p({ class: ["text-base"] })([
-                `Therefore, this paper attempts to use VQ-VAE's Symbolic Book to construct acoustic units, and then Transformer's Multi Head Attention (MHA) uses acoustic features to extract speech content to help improve the effect of Speech Enhancement.`
+        ),
+        template.default_page(
+            "Speech Enhancement",
+            html.p({ class: ["text-base"], style: [css.tx.left(), css.p.t(15)] })([
+                `It can even restore the damaged voice signal when understanding the speaker’s content.`, html.br(), html.br(),
+                `Therefore, the research focus of this monograph will focus on how to use the attention mechanism and
+                acoustic units to suppress the damage caused by noise and reconstruct clean speech.`,
             ])
         ),
     ]
