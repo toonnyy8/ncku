@@ -7,16 +7,29 @@ const methodology =
         return [
             template.default_page(
                 'Methodology',
-                html.p({ style: [css.tx.center(), css.tx.size(15), css.p.t(15)] })([
-                    html.a({
-                        href: 'https://arxiv.org/abs/1505.04597',
-                    })`U-Net`, html.br(),
-                    `+`, html.br(), html.a({
-                        href: 'https://arxiv.org/abs/1711.00937',
-                    })`VQ-VAE`,
-                    html.br(), `+`, html.br(), html.a({
-                        href: 'https://arxiv.org/abs/1706.03762',
-                    })`Multi Head Attention`,
+                html.div({ style: [css.tx.center(), css.tx.size(10), css.p.t(15)] })([
+                    html.p()([
+                        html.a({
+                            href: 'https://arxiv.org/abs/1505.04597',
+                        })`Incorporating Symbolic Sequential Modeling For Speech Enhancement`,
+                    ]),
+                    html.p({ style: [css.p.t(15)] })([
+                        html.a({
+                            href: 'https://arxiv.org/abs/1505.04597',
+                        })`U-Net`,
+                        html.br(),
+                        `+`,
+                        html.br(),
+                        html.a({
+                            href: 'https://arxiv.org/abs/1711.00937',
+                        })`VQ-VAE`,
+                        html.br(),
+                        `+`,
+                        html.br(),
+                        html.a({
+                            href: 'https://arxiv.org/abs/1706.03762',
+                        })`Multi Head Attention`,
+                    ]),
                 ]),
             ),
             template.page2(0)(
@@ -77,6 +90,13 @@ const methodology =
                     html.br(),
                     html.br(),
                     html.img({ src: './img/methodology/loss-total.png', style: [css.h.mm(20)] }),
+                ]),
+            ),
+            template.page2(0)(
+                'Methodology',
+                'Experiments',
+                template.div_hc(0)([
+                    html.img({ src: './img/experiments/performance.png', style: [css.w.percent(100)] }),
                 ]),
             ),
         ]

@@ -32,33 +32,32 @@ const title = (() => {
                     html.span({ class: ["text-2xl"], })
                         `Advanced Topics on Spoken Language Perception and Interaction`,
                     html.hr(),
-                    html.table({ class: ["text-lg"], style: [css.p.l(70)] })([
-                        html.tr()([
-                            html.td({ style: [css.tx.right()] })([`Advisor :`]),
-                            html.td()([`Chung-Hsien Wu`]),
-                        ]),
-                        html.tr()([
-                            html.td({ style: [css.tx.right()] })([`Presenter :`]),
-                            html.td()([`Jen-Hung Huang`]),
-                        ]),
+                    html.div({ style: [css.p.l(70)], })([
+                        html.table({ class: ["text-lg"], })([
+                            html.tr()([
+                                html.td({ style: [css.tx.right()] })([`Advisor :`]),
+                                html.td()([`Chung-Hsien Wu`]),
+                            ]),
+                            html.tr()([
+                                html.td({ style: [css.tx.right()] })([`Presenter :`]),
+                                html.td()([`Jen-Hung Huang`]),
+                            ]),
+                        ])
                     ])
                 ])
             ])
         ]),
-        html.page()([
-            div_vc([
-                div_hc([
-                    span3xl`Outline`,
-                    html.hr(),
-                    html.ul({ style: [css.tx.left(), css.m.l(100)] })([
-                        html.li()`Speech Enhancement`,
-                        html.li()`Methodology`,
-                        html.li()`Problems`,
-                        html.li()`Proposed methods`,
-                        html.li()`Schedule`,
-                    ])
+        template.default_page(
+            "Outline",
+            html.div({ class: ["text-xl"], style: [css.p.t(1)] })([
+                html.ul({ style: [css.tx.left(), css.m.l(60),] })([
+                    html.li()`Speech Enhancement`,
+                    html.li()`Methodology`,
+                    html.li()`Problems`,
+                    html.li()`Possible Solutions`,
+                    html.li()`Schedule`,
                 ])
-            ])
-        ]),
+            ]),
+        ),
     ]
 })()

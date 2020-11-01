@@ -150,7 +150,11 @@ const css = (() => {
          * @param {number} a
          */
         color: (r, g, b, a) => {
-            return `background-color:rgba(${r},${g},${b},${a})`
+            if (a === undefined) {
+                return `background-color:rgb(${r},${g},${b})`
+            } else {
+                return `background-color:rgba(${r},${g},${b},${a})`
+            }
         }
     }
 

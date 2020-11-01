@@ -9,9 +9,9 @@
         ...title,
         ...introduction,
         ...methodology,
-        ...architecture,
-        ...experiments,
-        ...conclusion,
+        ...problems,
+        ...possibleSolutions,
+        ...schedule,
     )
     let pageNum = Number(window.location.href.split('#/')[1] || 1)
     control.jump(pageNum - 1)
