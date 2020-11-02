@@ -2,6 +2,9 @@
 > dev 資料夾中存放開發用原始碼。  
 > build 資料夾則是存放已經打包完的程式碼，可直接開啟 index.html 觀看執行結果。
 
+「My Downsample」 在處理完後能下載 Downsample 完的 wav 檔。
+> 感謝 https://github.com/higuma/wav-audio-encoder-js
+
 > Change the sampling rate of the audio signal from 16 KHz to 12 KHz.
 
 ## 作法

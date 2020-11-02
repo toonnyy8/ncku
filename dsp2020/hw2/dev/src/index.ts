@@ -1,5 +1,6 @@
 import * as g2 from "@antv/g2"
 import * as tf from "@tensorflow/tfjs"
+import { WavAudioEncoder } from "../lib/WavAudioEncoder";
 
 const L = 3
 const M = 4
@@ -97,7 +98,21 @@ tf.setBackend("cpu")
 
                                 // start the source playing
                                 source.start();
-                                console.log(downbfs)
+                                {
+                                    let encoder = new WavAudioEncoder(audioContext.sampleRate * (L / M), audioBuffer.numberOfChannels)
+                                    encoder.encode(downbfs.map(downbf => downbf.dataSync()))
+
+
+                                    let blob = encoder.finish("audio/wav")
+                                    let a = document.createElement("a")
+                                    let url = window.URL.createObjectURL(blob)
+                                    let filename = "downsampling.wav"
+                                    a.href = url
+                                    a.download = filename
+                                    a.click()
+                                    window.URL.revokeObjectURL(url)
+                                    encoder.cancel()
+                                }
                             }
                         })
                 })
