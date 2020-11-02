@@ -32,12 +32,12 @@
   "homepage": "https://github.com/toonnyy8/ncku#readme",
   "dependencies": {
     "@antv/g2": "^4.0.15",
-    "@tensorflow/tfjs": "^2.6.0",
-    "@tensorflow/tfjs-backend-wasm": "^2.6.0",
-    "@tensorflow/tfjs-core": "^2.6.0",
+    "@tensorflow/tfjs": "^2.7.0",
+    "@tensorflow/tfjs-backend-wasm": "^2.7.0",
+    "@tensorflow/tfjs-core": "^2.7.0",
     "parcel": "^1.12.4"
   },
   "devDependencies": {
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.5"
   }
 }
