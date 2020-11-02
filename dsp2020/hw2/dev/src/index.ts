@@ -28,15 +28,23 @@ tf.setBackend("cpu")
                         .decodeAudioData(<ArrayBuffer>reader.result)
                         .then(audioBuffer => {
                             {
-                                const f = (t: tf.Tensor1D, L: number, flen) => {
-                                    const x: tf.Tensor2D = t.stack(new Array(L - 1).fill(tf.zeros(t.shape)), 0).transpose([1, 0]).reshape([-1, 1])
-                                    const lp = ilpf(L)
+                                const f = (t: tf.Tensor1D, L: number, M: number, flen) => {
+                                    // 插入 0
+                                    const x: tf.Tensor2D = t.stack(
+                                        new Array(L - 1)
+                                            .fill(tf.zeros(t.shape)),
+                                        0)
+                                        .transpose([1, 0])
+                                        .reshape([-1, 1])
+                                    let cutoff = Math.max(L, M)
+                                    const lp = ilpf(cutoff)
                                     return tf.conv1d(
                                         x,
                                         tf.tensor3d(
                                             new Array(flen * L * 2 + 1)
                                                 .fill(0)
-                                                .map((_, idx) => lp(idx - flen * L)), [flen * L * 2 + 1, 1, 1]),
+                                                .map((_, idx) => lp(idx - flen * L)),
+                                            [flen * L * 2 + 1, 1, 1]),
                                         1,
                                         "valid")
                                         .flatten()
@@ -44,7 +52,7 @@ tf.setBackend("cpu")
 
                                 const len = 500
                                 const flen = 50
-                                flen * L * 2 + 1
+
                                 const bfs = new Array(audioBuffer.numberOfChannels).fill(0).map((_, idx) => audioBuffer.getChannelData(idx))
                                 console.log(bfs)
                                 const downbfs = bfs.map(bf => {
@@ -62,7 +70,7 @@ tf.setBackend("cpu")
                                         .slice([0, len - (flen)], [-1, len + (flen * 2)])
                                         .unstack(0)
                                         .map((t: tf.Tensor1D, idx) => tf.tidy(() => {
-                                            return f(t, L, flen)
+                                            return f(t, L, M, flen)
                                         }))
                                     let convOut = tf.concat(convOuts)
                                     const padM = M - convOut.shape[0] % M
