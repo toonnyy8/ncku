@@ -17,7 +17,7 @@ const introduction = (() => {
         template.default_page(
             "Speech Enhancement",
             html.p({ class: ["text-base"], style: [css.tx.left(), css.p.t(15)] })([
-                `It can even restore the damaged voice signal when understanding the speaker’s content.`, html.br(), html.br(),
+                `It can even use its own language knowledge to recover damaged voice signals when understanding the content of the speaker.`, html.br(), html.br(),
                 `Therefore, the research focus of this monograph will focus on how to use the attention mechanism and
                 acoustic units to suppress the damage caused by noise and reconstruct clean speech.`,
             ])

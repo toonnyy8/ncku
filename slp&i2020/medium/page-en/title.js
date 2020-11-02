@@ -30,7 +30,7 @@ const title = (() => {
             div_vc([
                 div_hc([
                     html.span({ class: ["text-2xl"], })
-                        `Advanced Topics on Spoken Language Perception and Interaction`,
+                        `Vector Quantized Attention for Speech Enhancement`,
                     html.hr(),
                     html.div({ style: [css.p.l(70)], })([
                         html.table({ class: ["text-lg"], })([

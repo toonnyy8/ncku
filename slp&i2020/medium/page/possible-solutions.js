@@ -42,6 +42,13 @@ const possibleSolutions = (() => {
         ),
         template.page2(0)(
             "Possible Solutions",
+            "MVQHA",
+            html.div({ class: ["text-lg"], style: [css.p.t(1)] })([
+                html.img({ src: "./img/methodology/multi-vector-quantized-head-attention.png", style: [css.w.percent(100)] })
+            ]),
+        ),
+        template.page2(0)(
+            "Possible Solutions",
             "VQ-VAE2",
             html.div({ class: ["text-lg"], style: [css.p.t(1)] })([
                 html.img({ src: "./img/methodology/vq-vae2.png", style: [css.w.percent(100)] })
