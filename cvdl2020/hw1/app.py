@@ -95,6 +95,11 @@ def css(filename):
     return flask.send_from_directory("static", "css/{}".format(filename))
 
 
+@app.route('/lib/<filename>')
+def lib(filename):
+    return flask.send_from_directory("static", "lib/{}".format(filename))
+
+
 @app.route('/vgg16/<filename>')
 def vgg16(filename):
     return flask.send_from_directory("static", "vgg16/{}".format(filename))
@@ -185,7 +190,9 @@ q4_matches = sorted(q4_matches, key=lambda x: x.distance)
 q4_kp1_select6 = [q4_kp1[match.queryIdx] for match in q4_matches[:6]]
 q4_kp2_select6 = [q4_kp2[match.trainIdx] for match in q4_matches[:6]]
 q4_kp_img1 = cv2.drawKeypoints(q4_gray1, q4_kp1_select6, q4_kp_img1)
+cv2.imwrite("save/FeatureAerial1.jpg", q4_kp_img1)
 q4_kp_img2 = cv2.drawKeypoints(q4_gray2, q4_kp2_select6, q4_kp_img2)
+cv2.imwrite("save/FeatureAerial2.jpg", q4_kp_img2)
 
 q4_matching_img = cv2.drawMatches(q4_img1, q4_kp1, q4_img2, q4_kp2,
                                   q4_matches[:6], None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
