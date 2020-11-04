@@ -52,9 +52,7 @@ document.getElementById("q3-2b").onclick = () => {
         q3Result._2 = conv3x3(q3Result._1, [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
         q3Result._2 = q3Result._2.map(row => row.map(val => Math.abs(val)))
         let max = Math.max(...q3Result._2.reduce((prev, row) => [...prev, ...row], []))
-        let min = Math.min(...q3Result._2.reduce((prev, row) => [...prev, ...row], []))
-        console.log(min)
-        q3Result._2 = q3Result._2.map(row => row.map(val => (val - min) / (max - min)))
+        q3Result._2 = q3Result._2.map(row => row.map(val => val / max))
 
         tf.browser.toPixels(
             <tf.Tensor2D>tf.tensor(q3Result._2),
@@ -79,9 +77,7 @@ document.getElementById("q3-3b").onclick = () => {
         q3Result._3 = conv3x3(q3Result._1, [[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
         q3Result._3 = q3Result._3.map(row => row.map(val => Math.abs(val)))
         let max = Math.max(...q3Result._3.reduce((prev, row) => [...prev, ...row], []))
-        let min = Math.min(...q3Result._3.reduce((prev, row) => [...prev, ...row], []))
-        console.log(min)
-        q3Result._3 = q3Result._3.map(row => row.map(val => (val - min) / (max - min)))
+        q3Result._3 = q3Result._3.map(row => row.map(val => val / max))
 
         tf.browser.toPixels(
             <tf.Tensor2D>tf.tensor(q3Result._3),
