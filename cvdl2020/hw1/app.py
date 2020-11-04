@@ -201,4 +201,35 @@ def Q4_2():
     return {"matching_img": q4_matching_img.tolist()}
 
 
+cifar10_train_x = np.concatenate(
+    [cv2.imread("Cifar10/train_batch_{}.png".format(idx+1)) for idx in range(5)], 0)
+cifar10_train_y = []
+for idx in range(5):
+    with open("Cifar10/train_lables_{}.json".format(idx+1)) as f:
+        cifar10_train_y += json.load(f)
+
+
+@app.route('/Q5/1', methods=['POST'])
+def Q5_1():
+    indices = flask.request.get_json()["indices"]
+    return {"imgs": [cifar10_train_x[idx].tolist() for idx in indices], "lables": [cifar10_train_y[idx] for idx in indices]}
+
+
+@app.route('/Q5/4', methods=['POST'])
+def Q5_4():
+    return flask.send_from_directory("static", "record.json")
+
+
+cifar10_test_x = cv2.imread("Cifar10/test_batch.png")
+cifar10_test_y = []
+with open("Cifar10/test_lables.json") as f:
+    cifar10_test_y += json.load(f)
+
+
+@app.route('/Q5/5', methods=['POST'])
+def Q5_5():
+    idx = flask.request.get_json()["idx"]
+    return {"img": cifar10_test_x[idx].tolist(), "lable": cifar10_test_y[idx]}
+
+
 app.run()
