@@ -367,11 +367,11 @@ fetch(`${window.origin}/Q4/2`, {
              */
             const q5_5 = document.getElementById("Q5-5")
             q5_5.onchange = () => {
-
+                let idx = Number(q5_5.value)
                 fetch(`${window.origin}/Q5/5`, {
                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
                     credentials: 'include', // include, same-origin, *omit
-                    body: `{"idx":${Number(q5_5.value)}}`, // must match 'Content-Type' header
+                    body: `{"idx":${idx}}`, // must match 'Content-Type' header
                     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
                     headers: new Headers({
                         'content-type': 'application/json'

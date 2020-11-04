@@ -163,9 +163,9 @@ def Q3():
     return {"img": disparity.tolist()}
 
 
-q4_img1 = cv2.imread('Q4_Image/Aerial1.jpg')
+q4_img1 = cv2.imread('Q4_Image/Aerial1.jpg')[:, :, ::-1]
 q4_gray1 = cv2.cvtColor(q4_img1, cv2.COLOR_BGR2GRAY)
-q4_img2 = cv2.imread('Q4_Image/Aerial2.jpg')
+q4_img2 = cv2.imread('Q4_Image/Aerial2.jpg')[:, :, ::-1]
 q4_gray2 = cv2.cvtColor(q4_img2, cv2.COLOR_BGR2GRAY)
 
 sift = cv2.SIFT_create()
@@ -202,7 +202,7 @@ def Q4_2():
 
 
 cifar10_train_x = np.concatenate(
-    [cv2.imread("Cifar10/train_batch_{}.png".format(idx+1)) for idx in range(5)], 0)
+    [cv2.imread("Cifar10/train_batch_{}.png".format(idx+1))[:, :, ::-1] for idx in range(5)], 0)
 cifar10_train_y = []
 for idx in range(5):
     with open("Cifar10/train_lables_{}.json".format(idx+1)) as f:
@@ -220,7 +220,7 @@ def Q5_4():
     return flask.send_from_directory("static", "record.json")
 
 
-cifar10_test_x = cv2.imread("Cifar10/test_batch.png")
+cifar10_test_x = cv2.imread("Cifar10/test_batch.png")[:, :, ::-1]
 cifar10_test_y = []
 with open("Cifar10/test_lables.json") as f:
     cifar10_test_y += json.load(f)
