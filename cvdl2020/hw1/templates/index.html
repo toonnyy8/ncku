@@ -2,14 +2,73 @@
 <html>
 
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.6.0/dist/tf.min.js"></script>
+    <style>
+        @import url(./css/index.css);
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js"></script>
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g2/4.0.15/dist/g2.min.js"></script>
+    <script src="https://rawgit.com/caldwell/renderjson/master/renderjson.js"></script>
     <script src="/src/index.js" defer></script>
 </head>
 
 <body>
-    <input id="Q1-1-idx" type="number" min="1" max="15" value="1">
-    <button id="upload">上傳</button>
-    <canvas id=c style="width: 512px;"></canvas>
+    <h1>Q1</h1>
+    <hr class="dashed" />
+
+    <h2>(1) Corner Detection</h2>
+    index : <input id="Q1-1-idx" type="number" min="1" max="15" value="1">
+    <br />
+    <canvas id=Q1-1-canvas style="width: 512px;"></canvas>
+
+    <hr class="dashed" />
+
+    <h2>(2) Find the Intrinsic Matrix</h2>
+    <button id=Q1-2>Find</button>
+    <p id=Q1-2-mtx></p>
+
+    <hr class="dashed" />
+
+    <h2>(3) Find the Extrinsic Matrix</h2>
+    index : <input id="Q1-3-idx" type="number" min="1" max="15" value="1">
+    <p id=Q1-3-mtx></p>
+
+    <hr class="dashed" />
+
+    <h2>(4) Find the Extrinsic Matrix</h2>
+    <button id=Q1-4>Find</button>
+    <p id=Q1-4-dist></p>
+
+    <hr />
+
+    <h1>Q2. Augmented Reality</h1>
+    index : <input id="Q2-idx" type="number" min="1" max="5" value="1">
+    <br />
+    <canvas id=Q2-canvas style="width: 512px;"></canvas>
+
+    <hr />
+
+    <h1>Q3. Stereo Disparity Map</h1>
+    <button id=Q3>Find</button>
+    <br />
+    <canvas id=Q3-canvas></canvas>
+
+    <hr />
+
+    <h1>Q4</h1>
+
+    <hr class="dashed">
+
+    <h2>(1) Keypoints</h2>
+    <button id=Q4-1>Find</button>
+    <br />
+    <canvas id=Q4-1-canvas></canvas>
+
+    <hr class="dashed">
+
+    <h2>(2) Matching</h2>
+    <button id=Q4-2>Find</button>
+    <br />
+    <canvas id=Q4-2-canvas></canvas>
 </body>
 
 </html>
