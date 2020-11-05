@@ -35,6 +35,7 @@
     "@tensorflow/tfjs": "^2.7.0",
     "@tensorflow/tfjs-backend-wasm": "^2.7.0",
     "@tensorflow/tfjs-core": "^2.7.0",
+    "@wasmer/wasi": "^0.12.0",
     "parcel": "^1.12.4"
   },
   "devDependencies": {

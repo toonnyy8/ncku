@@ -1,0 +1,5 @@
+-Wall
+-std=c++1z
+-llua
+-ldl
+-L./lua/install/lib
