@@ -18,8 +18,14 @@
     <button id=extract-blue class="lg">extract blue</button>
     <button id=mean-filter class="lg">mean filter</button>
     <button id=median-filter class="lg">median filter</button>
+    <div class="input-button lg">
+        <button id=threshold>threshold</button>
+        <input type="number" id=cutoff value=127 min="0" max="255"></input>
+    </div>
     <button id=vertical-filter class="lg">vertical filter</button>
     <button id=horizontal-filter class="xl">horizontal filter</button>
+    <button id=combined class="lg">combined</button>
+    <button id=overlap>overlap</button>
     <hr />
     <canvas id=canvas width=0 height=0></canvas>
     <canvas id=buffer-canvas width=0 height=0></canvas>

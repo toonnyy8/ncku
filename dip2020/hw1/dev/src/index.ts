@@ -67,20 +67,26 @@ upload_bn.onclick = () => {
 let gray_bn = <HTMLButtonElement>document.getElementById("gray")
 gray_bn.onclick = () => {
     wasm
-        .then(({ memory, gray }) => {
+        .then(({ memory, gray, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = gray(0, imgData.width, imgData.height)
+            const resultPtr = gray(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // console.log(
             //     result
             // )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
 
@@ -88,141 +94,270 @@ gray_bn.onclick = () => {
 let extract_red_bn = <HTMLButtonElement>document.getElementById("extract-red")
 extract_red_bn.onclick = () => {
     wasm
-        .then(({ memory, extract_red }) => {
+        .then(({ memory, extract_red, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = extract_red(0, imgData.width, imgData.height)
+            const resultPtr = extract_red(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // console.log(
             //     result
             // )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
 
 let extract_green_bn = <HTMLButtonElement>document.getElementById("extract-green")
 extract_green_bn.onclick = () => {
     wasm
-        .then(({ memory, extract_green }) => {
+        .then(({ memory, extract_green, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = extract_green(0, imgData.width, imgData.height)
+            const resultPtr = extract_green(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // console.log(
             //     result
             // )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
 
 let extract_blue_bn = <HTMLButtonElement>document.getElementById("extract-blue")
 extract_blue_bn.onclick = () => {
     wasm
-        .then(({ memory, extract_blue }) => {
+        .then(({ memory, extract_blue, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = extract_blue(0, imgData.width, imgData.height)
+            const resultPtr = extract_blue(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // console.log(
             //     result
             // )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
 
 let mean_filter_bn = <HTMLButtonElement>document.getElementById("mean-filter")
 mean_filter_bn.onclick = () => {
     wasm
-        .then(({ memory, mean_filter }) => {
+        .then(({ memory, mean_filter, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = mean_filter(0, imgData.width, imgData.height)
+            const resultPtr = mean_filter(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // console.log(
             //     result
             // )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
 
 let median_filter_bn = <HTMLButtonElement>document.getElementById("median-filter")
 median_filter_bn.onclick = () => {
     wasm
-        .then(({ memory, median_filter }) => {
+        .then(({ memory, median_filter, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = median_filter(0, imgData.width, imgData.height)
+            const resultPtr = median_filter(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // console.log(
             //     result
             // )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
+        })
+}
+
+
+let threshold_bn = <HTMLButtonElement>document.getElementById("threshold")
+threshold_bn.onclick = () => {
+    wasm
+        .then(({ memory, threshold, new_int_arr, delete_int_arr }) => {
+            const mem = new Int32Array(memory.buffer);
+
+            const imgData = imgHistory[len(imgHistory) - 1]
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
+
+            const cutoff = Number((<HTMLInputElement>document.getElementById("cutoff")).value)
+
+            const resultPtr = threshold(imgPtr, imgData.width, imgData.height, cutoff)
+
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            console.log(
+                result
+            )
+            const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
+            imgHistory.push(resultImgData)
+            ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
 
 let vertical_filter_bn = <HTMLButtonElement>document.getElementById("vertical-filter")
 vertical_filter_bn.onclick = () => {
     wasm
-        .then(({ memory, vertical_filter }) => {
+        .then(({ memory, vertical_filter, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = vertical_filter(0, imgData.width, imgData.height)
+            const resultPtr = vertical_filter(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             console.log(
                 result
             )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
-
-
 
 let horizontal_filter_bn = <HTMLButtonElement>document.getElementById("horizontal-filter")
 horizontal_filter_bn.onclick = () => {
     wasm
-        .then(({ memory, horizontal_filter }) => {
+        .then(({ memory, horizontal_filter, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
+
             const imgData = imgHistory[len(imgHistory) - 1]
-            mem.set(new Uint8Array(imgData.data.buffer))
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const result_ptr = horizontal_filter(0, imgData.width, imgData.height)
+            const resultPtr = horizontal_filter(imgPtr, imgData.width, imgData.height)
 
-            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             console.log(
                 result
             )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
+        })
+}
+
+let combined_bn = <HTMLButtonElement>document.getElementById("combined")
+combined_bn.onclick = () => {
+    wasm
+        .then(({ memory, combined, new_int_arr, delete_int_arr }) => {
+            const mem = new Int32Array(memory.buffer)
+
+            const img1Data = imgHistory[len(imgHistory) - 1]
+            const img1Arr = new Uint8Array(img1Data.data.buffer)
+            const img1Ptr = new_int_arr(img1Arr.length)
+            mem.set(img1Arr, img1Ptr / Int32Array.BYTES_PER_ELEMENT)
+
+            const img2Data = buffer_ctx.getImageData(0, 0, buffer_canvas.width, buffer_canvas.height)
+            const img2Arr = new Uint8Array(img2Data.data.buffer)
+            const img2Ptr = new_int_arr(img2Arr.length)
+            mem.set(img2Arr, img2Ptr / Int32Array.BYTES_PER_ELEMENT)
+            console.log(mem.byteLength)
+
+            const resultPtr = combined(img1Ptr, img2Ptr, img1Data.width, img1Data.height)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+
+            const resultImgData = new ImageData(new Uint8ClampedArray(result), img1Data.width, img1Data.height)
+            imgHistory.push(resultImgData)
+            ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(img1Ptr)
+            delete_int_arr(img2Ptr)
+            delete_int_arr(resultPtr)
+        })
+}
+
+let overlap_bn = <HTMLButtonElement>document.getElementById("overlap")
+overlap_bn.onclick = () => {
+    wasm
+        .then(({ memory, overlap, new_int_arr, delete_int_arr }) => {
+            const mem = new Int32Array(memory.buffer)
+
+            const img1Data = imgHistory[len(imgHistory) - 1]
+            const img1Arr = new Uint8Array(img1Data.data.buffer)
+            const img1Ptr = new_int_arr(img1Arr.length)
+            mem.set(img1Arr, img1Ptr / Int32Array.BYTES_PER_ELEMENT)
+
+            const img2Data = buffer_ctx.getImageData(0, 0, buffer_canvas.width, buffer_canvas.height)
+            const img2Arr = new Uint8Array(img2Data.data.buffer)
+            const img2Ptr = new_int_arr(img2Arr.length)
+            mem.set(img2Arr, img2Ptr / Int32Array.BYTES_PER_ELEMENT)
+            console.log(mem.byteLength)
+
+            const resultPtr = overlap(img1Ptr, img2Ptr, img1Data.width, img1Data.height)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+
+            const resultImgData = new ImageData(new Uint8ClampedArray(result), img1Data.width, img1Data.height)
+            imgHistory.push(resultImgData)
+            ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(img1Ptr)
+            delete_int_arr(img2Ptr)
+            delete_int_arr(resultPtr)
         })
 }

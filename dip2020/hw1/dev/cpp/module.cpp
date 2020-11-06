@@ -3,20 +3,40 @@
 
 extern "C"
 {
+    void consoleLog(int num);
+    int* new_int_arr(int size);
+    void delete_int_arr(int* ptr);
     int* gray(int img[], int width, int height);
     int* extract_red(int img[], int width, int height);
     int* extract_green(int img[], int width, int height);
     int* extract_blue(int img[], int width, int height);
     int* mean_filter(int img[], int width, int height);
     int* median_filter(int img[], int width, int height);
+    int*
+         threshold(int img[], int width, int height, int cutoff);
     int* vertical_filter(int img[], int width, int height);
     int*
     horizontal_filter(int img[], int width, int height);
+    int*
+    combined(int img1[], int img2[], int width, int height);
+    int*
+    overlap(int img1[], int img2[], int width, int height);
+}
+
+int* new_int_arr(int size)
+{
+    int* ptr = new int[size];
+    return ptr;
+}
+
+void delete_int_arr(int* ptr)
+{
+    delete[] ptr;
 }
 
 int* gray(int img[], int width, int height)
 {
-    int gray_img[width * height * 4];
+    int* gray_img = new int[width * height * 4];
     for (int i = 0; i < width * height; i++)
     {
         int gray_color =
@@ -35,7 +55,7 @@ int* extract_channel(int img[],
                      int height,
                      int channel)
 {
-    int channel_img[width * height * 4];
+    int* channel_img = new int[width * height * 4];
     for (int i = 0; i < width * height; i++)
     {
         int channel_power      = img[i * 4 + channel];
@@ -62,106 +82,6 @@ int* extract_blue(int img[], int width, int height)
     return extract_channel(img, width, height, 2);
 }
 
-// int* mean_filter(int img[], int width, int height)
-// {
-//     int result_img[width * height * 4];
-//     for (int i = 0; i < height; i++)
-//     {
-//         for (int j = 0; j < width; j++)
-//         {
-//             for (int c = 0; c < 4; c++)
-//             {
-//                 int count                           = 0;
-//                 result_img[(i * width + j) * 4 + c] = 0;
-//                 if (i - 1 >= 0)
-//                 {
-//                     if (j - 1 >= 0)
-//                     {
-//                         count += 1;
-//                         result_img[(i * width + j) * 4 +
-//                                    c] +=
-//                             img[((i - 1) * width +
-//                                  (j - 1)) *
-//                                     4 +
-//                                 c];
-//                     }
-//                     count += 1;
-//                     result_img[(i * width + j) * 4 + c]
-//                     +=
-//                         img[((i - 1) * width + j) * 4 +
-//                         c];
-
-//                     if (j + 1 < width)
-//                     {
-//                         count += 1;
-//                         result_img[(i * width + j) * 4 +
-//                                    c] +=
-//                             img[((i - 1) * width +
-//                                  (j + 1)) *
-//                                     4 +
-//                                 c];
-//                     }
-//                 }
-//                 if (j - 1 >= 0)
-//                 {
-//                     count += 1;
-//                     result_img[(i * width + j) * 4 + c]
-//                     +=
-//                         img[(i * width + (j - 1)) * 4 +
-//                         c];
-//                 }
-//                 count += 1;
-//                 result_img[(i * width + j) * 4 + c] +=
-//                     img[(i * width + j) * 4 + c];
-
-//                 if (j + 1 < width)
-//                 {
-//                     count += 1;
-//                     result_img[(i * width + j) * 4 + c]
-//                     +=
-//                         img[(i * width + (j + 1)) * 4 +
-//                         c];
-//                 }
-//                 if (i + 1 < height)
-//                 {
-//                     if (j - 1 >= 0)
-//                     {
-//                         count += 1;
-//                         result_img[(i * width + j) * 4 +
-//                                    c] +=
-//                             img[((i + 1) * width +
-//                                  (j - 1)) *
-//                                     4 +
-//                                 c];
-//                     }
-//                     count += 1;
-//                     result_img[(i * width + j) * 4 + c]
-//                     +=
-//                         img[((i + 1) * width + j) * 4 +
-//                         c];
-
-//                     if (j + 1 < width)
-//                     {
-//                         count += 1;
-//                         result_img[(i * width + j) * 4 +
-//                                    c] +=
-//                             img[((i + 1) * width +
-//                                  (j + 1)) *
-//                                     4 +
-//                                 c];
-//                     }
-//                 }
-
-//                 result_img[(i * width + j) * 4 + c] =
-//                     result_img[(i * width + j) * 4 + c] /
-//                     count;
-//             }
-//         }
-//     }
-
-//     return result_img;
-// }
-
 // kernel 的寬高必須是奇數
 int* conv(int  inp[],
           int  width,
@@ -171,7 +91,7 @@ int* conv(int  inp[],
           int  kernel_height,
           int  mean)
 {
-    int result_img[width * height * 4];
+    int* result_img = new int[width * height * 4];
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -204,12 +124,12 @@ int* conv(int  inp[],
 
                 int count = 0;
                 int val   = 0;
-                for (int offset_y = offset_y_end;
-                     offset_y >= offset_y_begin; offset_y--)
+                for (int offset_y = offset_y_begin;
+                     offset_y <= offset_y_end; offset_y++)
                 {
-                    for (int offset_x = offset_x_end;
-                         offset_x >= offset_x_begin;
-                         offset_x--)
+                    for (int offset_x = offset_x_begin;
+                         offset_x <= offset_x_end;
+                         offset_x++)
                     {
                         int ky = offset_y - y +
                                  (kernel_height - 1) / 2;
@@ -217,12 +137,16 @@ int* conv(int  inp[],
                         int kx = offset_x - x +
                                  (kernel_width - 1) / 2;
                         count += 1;
-                        val += inp[((offset_y * width) +
-                                    offset_x) *
-                                       4 +
-                                   c] *
-                               kernel[((ky * kernel_width) +
-                                       kx)];
+                        int inp_val =
+                            inp[((offset_y * width) +
+                                 offset_x) *
+                                    4 +
+                                c];
+                        int kernel_val = kernel
+                            [kernel_width * kernel_height -
+                             ((ky * kernel_width) + kx) -
+                             1];
+                        val += inp_val * kernel_val;
                     }
                 }
                 if (mean)
@@ -266,7 +190,7 @@ void insertion_sort(int arr[], int size)
 
 int* median_filter(int img[], int width, int height)
 {
-    int result_img[width * height * 4];
+    int* result_img = new int[width * height * 4];
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
@@ -347,24 +271,36 @@ int* median_filter(int img[], int width, int height)
     return result_img;
 }
 
+int* threshold(int img[], int width, int height, int cutoff)
+{
+    consoleLog(cutoff);
+    int* result_img = new int[width * height * 4];
+
+    for (int i = 0; i < width * height; i++)
+    {
+        for (int c = 0; c < 3; c++)
+        {
+            result_img[i * 4 + c] =
+                img[i * 4 + c] >= cutoff ? 255 : 0;
+        }
+        result_img[i * 4 + 3] = img[i * 4 + 3];
+    }
+
+    return result_img;
+}
+
 int* vertical_filter(int img[], int width, int height)
 {
     int kernel[9];
-    for (int i = 0; i < 9; i++)
-    {
-        if (i % 3 == 0)
-        {
-            kernel[i] = 1;
-        }
-        else if (i % 3 == 1)
-        {
-            kernel[i] = 0;
-        }
-        else
-        {
-            kernel[i] = -1;
-        }
-    }
+    kernel[0] = 1;
+    kernel[3] = 2;
+    kernel[6] = 1;
+    kernel[1] = 0;
+    kernel[4] = 0;
+    kernel[7] = 0;
+    kernel[2] = -1;
+    kernel[5] = -2;
+    kernel[8] = -1;
     int* result_img =
         conv(img, width, height, kernel, 3, 3, false);
 
@@ -377,21 +313,15 @@ int* vertical_filter(int img[], int width, int height)
 int* horizontal_filter(int img[], int width, int height)
 {
     int kernel[9];
-    for (int i = 0; i < 9; i++)
-    {
-        if (i < 3)
-        {
-            kernel[i] = 1;
-        }
-        else if (i < 6)
-        {
-            kernel[i] = 0;
-        }
-        else
-        {
-            kernel[i] = -1;
-        }
-    }
+    kernel[0] = 1;
+    kernel[1] = 2;
+    kernel[2] = 1;
+    kernel[3] = 0;
+    kernel[4] = 0;
+    kernel[5] = 0;
+    kernel[6] = -1;
+    kernel[7] = -2;
+    kernel[8] = -1;
     int* result_img =
         conv(img, width, height, kernel, 3, 3, false);
 
@@ -403,41 +333,38 @@ int* horizontal_filter(int img[], int width, int height)
 
 int* combined(int img1[], int img2[], int width, int height)
 {
-    int result_img[9];
-    for (int i = 0; i < 9; i++)
-    {
-        if (i < 3)
-        {
-            kernel[i] = 1;
-        }
-        else if (i < 6)
-        {
-            kernel[i] = 0;
-        }
-        else
-        {
-            kernel[i] = -1;
-        }
-    }
-    int* result_img =
-        conv(img, width, height, kernel, 3, 3, false);
-
+    // consoleLog(width * height * 4);
+    int* result_img = new int[width * height * 4];
     for (int i = 0; i < width * height * 4; i++)
-        result_img[i] = abs(result_img[i]);
+    {
+        result_img[i] = pow(
+            (pow(img1[i], 2) + pow(img2[i], 2)) / 2, 0.5);
+    }
 
     return result_img;
 }
 
-// int main(void)
-// {
-//     int img[3 * 3 * 4] = {
-//         1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3,
-//         1, 2, 3, 4, 9, 1, 2, 3, 5, 6, 7, 8,
-//         5, 6, 7, 8, 1, 2, 3, 4, 9, 1, 2, 3,
-//     };
-//     int kernel[3 * 3] = {
-//         1, 1, 1, 1, 1, 1, 1, 1, 1,
-//     };
-//     int* result_img = conv(img, 3, 3, kernel, 3, 3,
-//     true); return 0;
-// }
+int* overlap(int img1[], int img2[], int width, int height)
+{
+    // consoleLog(width * height * 4);
+    int* result_img = new int[width * height * 4];
+    for (int i = 0; i < width * height; i++)
+    {
+        if (img2[i * 4] != 0 || img2[i * 4 + 1] != 0 ||
+            img2[i * 4 + 2] != 0)
+        {
+            result_img[i * 4]     = 0;
+            result_img[i * 4 + 1] = 255;
+            result_img[i * 4 + 2] = 0;
+        }
+        else
+        {
+            result_img[i * 4]     = img1[i * 4];
+            result_img[i * 4 + 1] = img1[i * 4 + 1];
+            result_img[i * 4 + 2] = img1[i * 4 + 2];
+        }
+        result_img[i * 4 + 3] = img1[i * 4 + 3];
+    }
+
+    return result_img;
+}
