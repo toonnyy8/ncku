@@ -3,6 +3,9 @@ import wasm from "./wasm"
 const canvas = <HTMLCanvasElement>document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
+const buffer_canvas = <HTMLCanvasElement>document.getElementById("buffer-canvas")
+const buffer_ctx = buffer_canvas.getContext("2d")
+
 const imgHistory: ImageData[] = []
 const len = <T>(arr: T[]) => arr.length
 
@@ -12,13 +15,25 @@ undo_bn.onclick = () => {
     if (len(imgHistory) > 0) {
         imgHistory.pop()
     }
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     if (len(imgHistory) > 0) {
-        ctx.putImageData(imgHistory[len(imgHistory) - 1], 0, 0)
+        let oldImg = imgHistory[len(imgHistory) - 1]
+        canvas.width = oldImg.width
+        canvas.height = oldImg.height
+        ctx.putImageData(oldImg, 0, 0)
     } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
         canvas.width = 0
         canvas.height = 0
     }
+}
+
+
+let buffer_bn = <HTMLButtonElement>document.getElementById("buffer")
+buffer_bn.onclick = () => {
+    let bufImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    buffer_canvas.width = bufImg.width
+    buffer_canvas.height = bufImg.height
+    buffer_ctx.putImageData(bufImg, 0, 0)
 }
 
 let upload_bn = <HTMLButtonElement>document.getElementById("upload")
@@ -164,6 +179,48 @@ median_filter_bn.onclick = () => {
             // console.log(
             //     result
             // )
+            const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
+            imgHistory.push(resultImgData)
+            ctx.putImageData(resultImgData, 0, 0);
+        })
+}
+
+let vertical_filter_bn = <HTMLButtonElement>document.getElementById("vertical-filter")
+vertical_filter_bn.onclick = () => {
+    wasm
+        .then(({ memory, vertical_filter }) => {
+            const mem = new Int32Array(memory.buffer);
+            const imgData = imgHistory[len(imgHistory) - 1]
+            mem.set(new Uint8Array(imgData.data.buffer))
+
+            const result_ptr = vertical_filter(0, imgData.width, imgData.height)
+
+            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            console.log(
+                result
+            )
+            const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
+            imgHistory.push(resultImgData)
+            ctx.putImageData(resultImgData, 0, 0);
+        })
+}
+
+
+
+let horizontal_filter_bn = <HTMLButtonElement>document.getElementById("horizontal-filter")
+horizontal_filter_bn.onclick = () => {
+    wasm
+        .then(({ memory, horizontal_filter }) => {
+            const mem = new Int32Array(memory.buffer);
+            const imgData = imgHistory[len(imgHistory) - 1]
+            mem.set(new Uint8Array(imgData.data.buffer))
+
+            const result_ptr = horizontal_filter(0, imgData.width, imgData.height)
+
+            const result = mem.slice(result_ptr / Int32Array.BYTES_PER_ELEMENT, result_ptr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            console.log(
+                result
+            )
             const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
             imgHistory.push(resultImgData)
             ctx.putImageData(resultImgData, 0, 0);

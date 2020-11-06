@@ -20,5 +20,7 @@ export default WebAssembly.instantiate(
             extract_blue: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.extract_blue,
             mean_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.mean_filter,
             median_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.median_filter,
+            vertical_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.vertical_filter,
+            horizontal_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.horizontal_filter,
         }
     })

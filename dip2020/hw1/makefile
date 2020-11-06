@@ -1,2 +1,2 @@
 module:./dev/cpp/module.cpp
-	emcc ./dev/cpp/module.cpp -s EXPORTED_FUNCTIONS="['_gray','_extract_red','_extract_green','_extract_blue','_mean_filter','_median_filter']" -o ./dev/wasm/module.wasm
+	emcc ./dev/cpp/module.cpp -s EXPORTED_FUNCTIONS="['_gray','_extract_red','_extract_green','_extract_blue','_mean_filter','_median_filter','_vertical_filter','_horizontal_filter']" -o ./dev/wasm/module.wasm
