@@ -53,6 +53,8 @@ button:active {
     border-radius: 8px;
     box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.863), 4px -4px 5px rgb(116, 0, 58);
     outline: none;
+    display: inline-block;
+    vertical-align:top;
 }
 
 .input-button.lg {
@@ -83,7 +85,14 @@ button:active {
     margin: 0;
     height: 2rem;
     font-size: 1.3rem;
-    box-shadow: 0;
+    box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.863);
+}
+
+
+.input-button >button:active {
+    color: rgb(255, 214, 235);
+    box-shadow: inset -4px 4px 4px rgba(0, 0, 0, 0.863), inset 4px -4px 5px rgb(116, 0, 58);
+    outline: none;
 }
 
 .input-button.lg > button {

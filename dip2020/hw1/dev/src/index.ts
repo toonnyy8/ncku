@@ -1,4 +1,5 @@
 import wasm from "./wasm"
+import { histogram } from "./histogram"
 
 const canvas = <HTMLCanvasElement>document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
@@ -221,6 +222,33 @@ median_filter_bn.onclick = () => {
         })
 }
 
+
+let histogram_bn = <HTMLButtonElement>document.getElementById("histogram")
+histogram_bn.onclick = () => {
+    wasm
+        .then(({ memory, median_filter, new_int_arr, delete_int_arr }) => {
+            const mem = new Int32Array(memory.buffer);
+
+            const imgData = imgHistory[len(imgHistory) - 1]
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
+
+            // const resultPtr = median_filter(imgPtr, imgData.width, imgData.height)
+            histogram(new Int32Array(imgArr), imgData.width, imgData.height)
+
+            // const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            // // console.log(
+            // //     result
+            // // )
+            // const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
+            // imgHistory.push(resultImgData)
+            // ctx.putImageData(resultImgData, 0, 0);
+
+            // delete_int_arr(imgPtr)
+            // delete_int_arr(resultPtr)
+        })
+}
 
 let threshold_bn = <HTMLButtonElement>document.getElementById("threshold")
 threshold_bn.onclick = () => {
