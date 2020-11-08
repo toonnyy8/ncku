@@ -54,7 +54,7 @@ button:active {
     box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.863), 4px -4px 5px rgb(116, 0, 58);
     outline: none;
     display: inline-block;
-    vertical-align:top;
+    vertical-align: top;
 }
 
 .input-button.lg {
@@ -80,6 +80,25 @@ button:active {
     width: 12rem;
 }
 
+.input-button > input[type="range"] {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(40, 40, 40);
+    height: 1.3rem;
+    width: 8rem;
+    font-size: 1.3rem;
+    color: rgb(255, 0, 128);
+    border: 0;
+
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    outline: none;
+}
+
+.input-button.lg > input[type="range"] {
+    width: 12rem;
+}
+
 .input-button > button {
     padding: 0;
     margin: 0;
@@ -88,8 +107,7 @@ button:active {
     box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.863);
 }
 
-
-.input-button >button:active {
+.input-button > button:active {
     color: rgb(255, 214, 235);
     box-shadow: inset -4px 4px 4px rgba(0, 0, 0, 0.863), inset 4px -4px 5px rgb(116, 0, 58);
     outline: none;

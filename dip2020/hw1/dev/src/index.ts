@@ -29,12 +29,21 @@ undo_bn.onclick = () => {
 }
 
 
-let buffer_bn = <HTMLButtonElement>document.getElementById("buffer")
-buffer_bn.onclick = () => {
+let store_bn = <HTMLButtonElement>document.getElementById("store")
+store_bn.onclick = () => {
     let bufImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
     buffer_canvas.width = bufImg.width
     buffer_canvas.height = bufImg.height
     buffer_ctx.putImageData(bufImg, 0, 0)
+}
+
+let load_bn = <HTMLButtonElement>document.getElementById("load")
+load_bn.onclick = () => {
+    let img = buffer_ctx.getImageData(0, 0, canvas.width, canvas.height)
+    canvas.width = img.width
+    canvas.height = img.height
+    ctx.putImageData(img, 0, 0)
+    imgHistory.push(img)
 }
 
 let upload_bn = <HTMLButtonElement>document.getElementById("upload")
@@ -226,7 +235,7 @@ median_filter_bn.onclick = () => {
 let histogram_bn = <HTMLButtonElement>document.getElementById("histogram")
 histogram_bn.onclick = () => {
     wasm
-        .then(({ memory, median_filter, new_int_arr, delete_int_arr }) => {
+        .then(({ memory, histogram, new_int_arr, delete_int_arr }) => {
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -234,19 +243,18 @@ histogram_bn.onclick = () => {
             const imgPtr = new_int_arr(imgArr.length)
             mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            // const resultPtr = median_filter(imgPtr, imgData.width, imgData.height)
-            histogram(new Int32Array(imgArr), imgData.width, imgData.height)
+            const resultPtr = histogram(imgPtr, imgData.width, imgData.height)
 
-            // const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // // console.log(
             // //     result
             // // )
-            // const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
-            // imgHistory.push(resultImgData)
-            // ctx.putImageData(resultImgData, 0, 0);
+            const resultImgData = new ImageData(new Uint8ClampedArray(result), imgData.width, imgData.height)
+            imgHistory.push(resultImgData)
+            ctx.putImageData(resultImgData, 0, 0);
 
-            // delete_int_arr(imgPtr)
-            // delete_int_arr(resultPtr)
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
         })
 }
 
@@ -347,7 +355,9 @@ combined_bn.onclick = () => {
             mem.set(img2Arr, img2Ptr / Int32Array.BYTES_PER_ELEMENT)
             console.log(mem.byteLength)
 
-            const resultPtr = combined(img1Ptr, img2Ptr, img1Data.width, img1Data.height)
+            const rate = Number((<HTMLInputElement>document.getElementById("combined-rate")).value)
+
+            const resultPtr = combined(img1Ptr, img2Ptr, img1Data.width, img1Data.height, rate)
             const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
 
             const resultImgData = new ImageData(new Uint8ClampedArray(result), img1Data.width, img1Data.height)

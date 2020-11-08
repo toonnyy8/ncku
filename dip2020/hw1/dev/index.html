@@ -10,7 +10,8 @@
 
 <body>
     <button id=upload>upload</button>
-    <button id=buffer>buffer</button>
+    <button id=store>store</button>
+    <button id=load>load</button>
     <button id=undo>undo</button>
     <button id=gray>gray</button>
     <button id=extract-red class="lg">extract red</button>
@@ -25,7 +26,10 @@
     </div>
     <button id=vertical-filter class="lg">vertical filter</button>
     <button id=horizontal-filter class="xl">horizontal filter</button>
-    <button id=combined class="lg">combined</button>
+    <div class="input-button lg">
+        <button id=combined>combined</button>
+        <input type="range" id=combined-rate value=0.5 min="0" max="1" step="0.1"></input>
+    </div>
     <button id=overlap>overlap</button>
     <hr />
     <canvas id=canvas width=0 height=0></canvas>

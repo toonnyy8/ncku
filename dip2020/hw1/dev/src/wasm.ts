@@ -26,10 +26,11 @@ export default WebAssembly.instantiate(
             extract_blue: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.extract_blue,
             mean_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.mean_filter,
             median_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.median_filter,
+            histogram: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.histogram,
             threshold: <(img_ptr: number, width: number, height: number, cutoff: number) => number>obj.instance.exports.threshold,
             vertical_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.vertical_filter,
             horizontal_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.horizontal_filter,
-            combined: <(img1_ptr: number, img2_ptr: number, width: number, height: number) => number>obj.instance.exports.combined,
+            combined: <(img1_ptr: number, img2_ptr: number, width: number, height: number, rate: number) => number>obj.instance.exports.combined,
             overlap: <(img1_ptr: number, img2_ptr: number, width: number, height: number) => number>obj.instance.exports.overlap,
         }
     })

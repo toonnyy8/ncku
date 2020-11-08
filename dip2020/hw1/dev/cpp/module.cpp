@@ -12,13 +12,17 @@ extern "C"
     int* extract_blue(int img[], int width, int height);
     int* mean_filter(int img[], int width, int height);
     int* median_filter(int img[], int width, int height);
+    int* histogram(int img[], int width, int height);
     int*
          threshold(int img[], int width, int height, int cutoff);
     int* vertical_filter(int img[], int width, int height);
     int*
-    horizontal_filter(int img[], int width, int height);
-    int*
-    combined(int img1[], int img2[], int width, int height);
+         horizontal_filter(int img[], int width, int height);
+    int* combined(int    img1[],
+                  int    img2[],
+                  int    width,
+                  int    height,
+                  double rate);
     int*
     overlap(int img1[], int img2[], int width, int height);
 }
@@ -331,14 +335,19 @@ int* horizontal_filter(int img[], int width, int height)
     return result_img;
 }
 
-int* combined(int img1[], int img2[], int width, int height)
+int* combined(int    img1[],
+              int    img2[],
+              int    width,
+              int    height,
+              double rate)
 {
     // consoleLog(width * height * 4);
     int* result_img = new int[width * height * 4];
     for (int i = 0; i < width * height * 4; i++)
     {
-        result_img[i] = pow(
-            (pow(img1[i], 2) + pow(img2[i], 2)) / 2, 0.5);
+        result_img[i] = pow((pow(img1[i], 2) * rate +
+                             pow(img2[i], 2) * (1 - rate)),
+                            0.5);
     }
 
     return result_img;
@@ -366,5 +375,62 @@ int* overlap(int img1[], int img2[], int width, int height)
         result_img[i * 4 + 3] = img1[i * 4 + 3];
     }
 
+    return result_img;
+}
+
+int* histogram_mapping(int img[],
+                       int width,
+                       int height,
+                       int channel)
+{
+    int  frequency[256];
+    int* mapping = new int[256];
+    int  all     = width * height;
+    int  cutoff  = all / 256;
+
+    for (int i = 0; i < 256; i++)
+    {
+        frequency[i] = 0;
+        mapping[i]   = 0;
+    }
+    for (int i = 0; i < all; i++)
+    {
+        frequency[img[i * 4 + channel]] += 1;
+    }
+    int accumulation = 0;
+    int j            = 0;
+
+    for (int i = 0; i < 256; i++)
+    {
+        mapping[i] = j;
+        accumulation += frequency[i];
+        while (accumulation > cutoff * (j + 1))
+            j += 1;
+    }
+    return mapping;
+}
+
+int* histogram(int img[], int width, int height)
+{
+    int* mapping_red =
+        histogram_mapping(img, width, height, 0);
+    int* mapping_green =
+        histogram_mapping(img, width, height, 1);
+    int* mapping_blue =
+        histogram_mapping(img, width, height, 2);
+
+    int* result_img = new int[width * height * 4];
+    for (int i = 0; i < width * height; i++)
+    {
+        result_img[i * 4] = mapping_red[img[i * 4]];
+        result_img[i * 4 + 1] =
+            mapping_green[img[i * 4 + 1]];
+        result_img[i * 4 + 2] =
+            mapping_blue[img[i * 4 + 2]];
+        result_img[i * 4 + 3] = 255;
+    }
+    delete[] mapping_red;
+    delete[] mapping_green;
+    delete[] mapping_blue;
     return result_img;
 }
