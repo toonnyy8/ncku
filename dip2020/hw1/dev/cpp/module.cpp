@@ -4,6 +4,7 @@
 extern "C"
 {
     void consoleLog(int num);
+    void postMessage(double num);
     int* new_int_arr(int size);
     void delete_int_arr(int* ptr);
     int* gray(int img[], int width, int height);
@@ -528,12 +529,18 @@ int* transpose(int         img[],
                struct Vec* matching_pt2)
 {
     int* result_img = new int[new_width * new_height * 4];
+
     struct Vec vec1 = calcVec(*img_pt1, *img_pt2);
     struct Vec vec2 = calcVec(*matching_pt1, *matching_pt2);
+
     struct Vec translate =
         calcTranslate(*img_pt1, *matching_pt1);
-    double     rad    = calcRadian(vec1, vec2);
-    double     scale  = calcScale(vec2) / calcScale(vec1);
+    postMessage(translate.x);
+    postMessage(translate.y);
+    double rad = calcRadian(vec1, vec2);
+    postMessage(rad);
+    double scale = calcScale(vec2) / calcScale(vec1);
+    postMessage(scale);
     struct Vec offset = *img_pt1;
     for (int y = 0; y < new_height; y++)
         for (int x = 0; x < new_width; x++)

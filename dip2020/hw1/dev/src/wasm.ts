@@ -5,18 +5,25 @@ let moduleBuffer = fs.readFileSync(`${__dirname}/../wasm/module.wasm`)
 
 const wasi = new WASI({});
 
+let messages = []
+
 export default WebAssembly.instantiate(
     moduleBuffer,
     {
         wasi_snapshot_preview1: wasi.wasiImport,
         env: {
             main: () => { },
-            consoleLog: num => console.log(num),
-            emscripten_notify_memory_growth: () => { }
+            consoleLog: (num: number) => console.log(num),
+            postMessage: (num: number) => messages.push(num),
         }
     })
     .then(obj => {
         return {
+            getMessage: () => {
+                let msg = [...messages]
+                messages = []
+                return msg
+            },
             memory: <WebAssembly.Memory>obj.instance.exports.memory,
             new_int_arr: <(size: number) => number>obj.instance.exports.new_int_arr,
             delete_int_arr: <(ptr: number) => void>obj.instance.exports.delete_int_arr,

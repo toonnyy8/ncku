@@ -470,7 +470,7 @@ overlap_bn.onclick = () => {
 let matching_bn = <HTMLButtonElement>document.getElementById("matching")
 matching_bn.onclick = () => {
     wasm
-        .then(({ memory, transpose, new_int_arr, delete_int_arr, new_vec, delete_vec }) => {
+        .then(({ memory, transpose, new_int_arr, delete_int_arr, new_vec, delete_vec, getMessage }) => {
             const mem = new Int32Array(memory.buffer)
 
             const img1Data = imgHistory[len(imgHistory) - 1]
@@ -495,6 +495,12 @@ matching_bn.onclick = () => {
                 matchingPt1,
                 matchingPt2)
             const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + storeImg.height * storeImg.width * 4)
+            const [translate_x, translate_y, rad, scale] = getMessage()
+            alert(
+                `translate : (${translate_x}, ${translate_y})\n` +
+                `radian : ${-rad}\n` +
+                `scale : ${scale}`
+            )
 
             const resultImgData = new ImageData(new Uint8ClampedArray(result), storeImg.width, storeImg.height)
             imgHistory.push(resultImgData)
