@@ -37,6 +37,11 @@ extern "C"
                           struct Vec* img_pt2,
                           struct Vec* matching_pt1,
                           struct Vec* matching_pt2);
+
+    double intensity_difference(int img1[],
+                                int img2[],
+                                int width,
+                                int height);
 }
 
 int* new_int_arr(int size)
@@ -557,4 +562,20 @@ int* transpose(int         img[],
             }
         }
     return result_img;
+}
+
+double intensity_difference(int img1[],
+                            int img2[],
+                            int width,
+                            int height)
+{
+    double diff = 0.0;
+    for (int i = 0; i < width * height; i++)
+    {
+        diff += (abs(img1[i * 4] - img2[i * 4]) +
+                 abs(img1[i * 4 + 1] - img2[i * 4 + 1]) +
+                 abs(img1[i * 4 + 2] - img2[i * 4 + 2]));
+    }
+    diff /= (width * height * 3);
+    return diff;
 }

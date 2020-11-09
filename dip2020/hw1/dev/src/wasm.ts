@@ -44,5 +44,6 @@ export default WebAssembly.instantiate(
                 img_pt2: number,
                 matching_pt1: number,
                 matching_pt2: number) => number>obj.instance.exports.transpose,
+            intensity_difference: <(img1_ptr: number, img2_ptr: number, width: number, height: number) => number>obj.instance.exports.intensity_difference,
         }
     })

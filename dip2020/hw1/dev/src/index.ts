@@ -511,3 +511,33 @@ matching_bn.onclick = () => {
             imgMatchingPoints = []
         })
 }
+
+
+
+let intensity_difference_bn = <HTMLButtonElement>document.getElementById("intensity-difference")
+intensity_difference_bn.onclick = () => {
+    wasm
+        .then(({ memory, intensity_difference, new_int_arr, delete_int_arr }) => {
+            const mem = new Int32Array(memory.buffer)
+
+            const img1Data = imgHistory[len(imgHistory) - 1]
+            const img1Arr = new Uint8Array(img1Data.data.buffer)
+            const img1Ptr = new_int_arr(img1Arr.length)
+            mem.set(img1Arr, img1Ptr / Int32Array.BYTES_PER_ELEMENT)
+
+            const img2Data = storeImg
+            const img2Arr = new Uint8Array(img2Data.data.buffer)
+            const img2Ptr = new_int_arr(img2Arr.length)
+            mem.set(img2Arr, img2Ptr / Int32Array.BYTES_PER_ELEMENT)
+
+            const diff = intensity_difference(
+                img1Ptr,
+                img2Ptr,
+                img1Data.width,
+                img1Data.height)
+            alert(`Intensity Difference : ${diff}`)
+
+            delete_int_arr(img1Ptr)
+            delete_int_arr(img2Ptr)
+        })
+}
