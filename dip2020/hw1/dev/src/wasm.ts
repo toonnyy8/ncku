@@ -19,7 +19,7 @@ export default WebAssembly.instantiate(
         return {
             memory: <WebAssembly.Memory>obj.instance.exports.memory,
             new_int_arr: <(size: number) => number>obj.instance.exports.new_int_arr,
-            delete_int_arr: <(ptr: number) => number>obj.instance.exports.delete_int_arr,
+            delete_int_arr: <(ptr: number) => void>obj.instance.exports.delete_int_arr,
             gray: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.gray,
             extract_red: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.extract_red,
             extract_green: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.extract_green,
@@ -32,5 +32,17 @@ export default WebAssembly.instantiate(
             horizontal_filter: <(img_ptr: number, width: number, height: number) => number>obj.instance.exports.horizontal_filter,
             combined: <(img1_ptr: number, img2_ptr: number, width: number, height: number, rate: number) => number>obj.instance.exports.combined,
             overlap: <(img1_ptr: number, img2_ptr: number, width: number, height: number) => number>obj.instance.exports.overlap,
+            new_vec: <(x: number, y: number) => number>obj.instance.exports.new_vec,
+            delete_vec: <(ptr: number) => void>obj.instance.exports.delete_vec,
+            transpose: <(
+                img_ptr: number,
+                width: number,
+                height: number,
+                new_width: number,
+                new_height: number,
+                img_pt1: number,
+                img_pt2: number,
+                matching_pt1: number,
+                matching_pt2: number) => number>obj.instance.exports.transpose,
         }
     })

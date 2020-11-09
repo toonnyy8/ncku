@@ -1,15 +1,63 @@
 import wasm from "./wasm"
-import { histogram } from "./histogram"
 
 const canvas = <HTMLCanvasElement>document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
-const buffer_canvas = <HTMLCanvasElement>document.getElementById("buffer-canvas")
-const buffer_ctx = buffer_canvas.getContext("2d")
+const store_canvas = <HTMLCanvasElement>document.getElementById("buffer-canvas")
+const store_ctx = store_canvas.getContext("2d")
 
-const imgHistory: ImageData[] = []
 const len = <T>(arr: T[]) => arr.length
 
+const imgHistory: ImageData[] = []
+let imgMatchingPoints: { x: number, y: number }[] = []
+let storeImg: ImageData
+let storeImgMatchingPoints: { x: number, y: number }[] = []
+let drawMatchingPoints = (drawCtx: CanvasRenderingContext2D, matchingPoints: { x: number, y: number }[]) => {
+    if (matchingPoints[0] !== undefined) {
+        drawCtx.beginPath()
+        drawCtx.fillStyle = "#ff0066"
+        drawCtx.arc(
+            matchingPoints[0].x,
+            matchingPoints[0].y,
+            10,
+            0,
+            Math.PI * 2,
+            false
+        )
+        drawCtx.fill()
+    }
+    if (matchingPoints[1] !== undefined) {
+        drawCtx.beginPath()
+        drawCtx.fillStyle = "#00ff66"
+        drawCtx.arc(
+            matchingPoints[1].x,
+            matchingPoints[1].y,
+            10,
+            0,
+            Math.PI * 2,
+            false
+        )
+        drawCtx.fill()
+    }
+}
+
+canvas.onmousedown = (e) => {
+    console.log(e.pageX - canvas.offsetLeft)
+    console.log(e.pageY - canvas.offsetTop)
+    switch (len(imgMatchingPoints)) {
+        case 0:
+        case 1:
+            imgMatchingPoints.push({ x: e.pageX - canvas.offsetLeft, y: e.pageY - canvas.offsetTop })
+            break;
+        case 2:
+            imgMatchingPoints = []
+            break;
+        default:
+            break;
+    }
+    ctx.putImageData(imgHistory[len(imgHistory) - 1], 0, 0)
+    drawMatchingPoints(ctx, imgMatchingPoints)
+}
 
 let undo_bn = <HTMLButtonElement>document.getElementById("undo")
 undo_bn.onclick = () => {
@@ -26,23 +74,30 @@ undo_bn.onclick = () => {
         canvas.width = 0
         canvas.height = 0
     }
+    imgMatchingPoints = []
 }
 
 
 let store_bn = <HTMLButtonElement>document.getElementById("store")
 store_bn.onclick = () => {
-    let bufImg = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    buffer_canvas.width = bufImg.width
-    buffer_canvas.height = bufImg.height
-    buffer_ctx.putImageData(bufImg, 0, 0)
+    storeImgMatchingPoints = imgMatchingPoints
+    imgMatchingPoints = []
+    storeImg = imgHistory[len(imgHistory) - 1]
+    store_canvas.width = storeImg.width
+    store_canvas.height = storeImg.height
+    store_ctx.putImageData(storeImg, 0, 0)
+    drawMatchingPoints(store_ctx, storeImgMatchingPoints)
 }
 
 let load_bn = <HTMLButtonElement>document.getElementById("load")
 load_bn.onclick = () => {
-    let img = buffer_ctx.getImageData(0, 0, canvas.width, canvas.height)
+    imgMatchingPoints = storeImgMatchingPoints
+    storeImgMatchingPoints = []
+    let img = storeImg
     canvas.width = img.width
     canvas.height = img.height
     ctx.putImageData(img, 0, 0)
+    drawMatchingPoints(ctx, imgMatchingPoints)
     imgHistory.push(img)
 }
 
@@ -63,8 +118,8 @@ upload_bn.onclick = () => {
                 canvas.width = img.width
                 canvas.height = img.height
                 ctx.drawImage(img, 0, 0)
-                // const imgArray = new Uint8Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer)
                 imgHistory.push(ctx.getImageData(0, 0, canvas.width, canvas.height))
+                imgMatchingPoints = []
             }
             img.src = <string>reader.result
         })
@@ -97,6 +152,7 @@ gray_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -124,6 +180,7 @@ extract_red_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -150,6 +207,7 @@ extract_green_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -176,6 +234,7 @@ extract_blue_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -202,6 +261,7 @@ mean_filter_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -228,6 +288,7 @@ median_filter_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -255,6 +316,7 @@ histogram_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -283,6 +345,7 @@ threshold_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -309,6 +372,7 @@ vertical_filter_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -335,6 +399,7 @@ horizontal_filter_bn.onclick = () => {
 
             delete_int_arr(imgPtr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -349,7 +414,7 @@ combined_bn.onclick = () => {
             const img1Ptr = new_int_arr(img1Arr.length)
             mem.set(img1Arr, img1Ptr / Int32Array.BYTES_PER_ELEMENT)
 
-            const img2Data = buffer_ctx.getImageData(0, 0, buffer_canvas.width, buffer_canvas.height)
+            const img2Data = storeImg
             const img2Arr = new Uint8Array(img2Data.data.buffer)
             const img2Ptr = new_int_arr(img2Arr.length)
             mem.set(img2Arr, img2Ptr / Int32Array.BYTES_PER_ELEMENT)
@@ -367,6 +432,7 @@ combined_bn.onclick = () => {
             delete_int_arr(img1Ptr)
             delete_int_arr(img2Ptr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
         })
 }
 
@@ -381,7 +447,7 @@ overlap_bn.onclick = () => {
             const img1Ptr = new_int_arr(img1Arr.length)
             mem.set(img1Arr, img1Ptr / Int32Array.BYTES_PER_ELEMENT)
 
-            const img2Data = buffer_ctx.getImageData(0, 0, buffer_canvas.width, buffer_canvas.height)
+            const img2Data = storeImg
             const img2Arr = new Uint8Array(img2Data.data.buffer)
             const img2Ptr = new_int_arr(img2Arr.length)
             mem.set(img2Arr, img2Ptr / Int32Array.BYTES_PER_ELEMENT)
@@ -397,5 +463,51 @@ overlap_bn.onclick = () => {
             delete_int_arr(img1Ptr)
             delete_int_arr(img2Ptr)
             delete_int_arr(resultPtr)
+            imgMatchingPoints = []
+        })
+}
+
+let matching_bn = <HTMLButtonElement>document.getElementById("matching")
+matching_bn.onclick = () => {
+    wasm
+        .then(({ memory, transpose, new_int_arr, delete_int_arr, new_vec, delete_vec }) => {
+            const mem = new Int32Array(memory.buffer)
+
+            const img1Data = imgHistory[len(imgHistory) - 1]
+            const img1Arr = new Uint8Array(img1Data.data.buffer)
+            const img1Ptr = new_int_arr(img1Arr.length)
+            mem.set(img1Arr, img1Ptr / Int32Array.BYTES_PER_ELEMENT)
+
+            const imgPt1 = new_vec(imgMatchingPoints[0].x, imgMatchingPoints[0].y)
+            const imgPt2 = new_vec(imgMatchingPoints[1].x, imgMatchingPoints[1].y)
+
+            const matchingPt1 = new_vec(storeImgMatchingPoints[0].x, storeImgMatchingPoints[0].y)
+            const matchingPt2 = new_vec(storeImgMatchingPoints[1].x, storeImgMatchingPoints[1].y)
+
+            const resultPtr = transpose(
+                img1Ptr,
+                img1Data.width,
+                img1Data.height,
+                storeImg.width,
+                storeImg.height,
+                imgPt1,
+                imgPt2,
+                matchingPt1,
+                matchingPt2)
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + storeImg.height * storeImg.width * 4)
+
+            const resultImgData = new ImageData(new Uint8ClampedArray(result), storeImg.width, storeImg.height)
+            imgHistory.push(resultImgData)
+            canvas.width = resultImgData.width
+            canvas.height = resultImgData.height
+            ctx.putImageData(resultImgData, 0, 0);
+
+            delete_int_arr(img1Ptr)
+            delete_int_arr(resultPtr)
+            delete_vec(imgPt1)
+            delete_vec(imgPt2)
+            delete_vec(matchingPt1)
+            delete_vec(matchingPt2)
+            imgMatchingPoints = []
         })
 }

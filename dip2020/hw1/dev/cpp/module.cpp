@@ -25,6 +25,18 @@ extern "C"
                   double rate);
     int*
     overlap(int img1[], int img2[], int width, int height);
+
+    struct Vec* new_vec(double x, double y);
+    void        delete_vec(struct Vec* ptr);
+    int*        transpose(int         img[],
+                          int         width,
+                          int         height,
+                          int         new_width,
+                          int         new_height,
+                          struct Vec* img_pt1,
+                          struct Vec* img_pt2,
+                          struct Vec* matching_pt1,
+                          struct Vec* matching_pt2);
 }
 
 int* new_int_arr(int size)
@@ -432,5 +444,117 @@ int* histogram(int img[], int width, int height)
     delete[] mapping_red;
     delete[] mapping_green;
     delete[] mapping_blue;
+    return result_img;
+}
+
+struct Vec
+{
+    double x;
+    double y;
+};
+
+double calcScale(struct Vec vec)
+{
+    return pow(pow(vec.x, 2) + pow(vec.y, 2), 0.5);
+}
+
+struct Vec rotationVector(struct Vec vec, double rad)
+{
+    return (struct Vec){
+        cos(rad) * vec.x - sin(rad) * vec.y,
+        sin(rad) * vec.x + cos(rad) * vec.y,
+    };
+}
+
+double calcRadian(struct Vec vec1, struct Vec vec2)
+{
+    double scale1 = calcScale(vec1);
+    double scale2 = calcScale(vec2);
+    double rad = acos((vec1.x * vec2.x + vec1.y * vec2.y) /
+                      (scale1 * scale2));
+    struct Vec anticlockwise = rotationVector(vec1, rad);
+    struct Vec clockwise     = rotationVector(vec1, -rad);
+    double     anticlockwiseErr =
+        pow(anticlockwise.x - vec2.x, 2) +
+        pow(anticlockwise.y - vec2.y, 2);
+    double clockwiseErr = pow(clockwise.x - vec2.x, 2) +
+                          pow(clockwise.y - vec2.y, 2);
+    if (anticlockwiseErr > clockwiseErr)
+    {
+        rad = -rad;
+    }
+    return rad;
+}
+
+struct Vec calcTranslate(struct Vec pt1, struct Vec pt2)
+{
+    return (struct Vec){
+        pt2.x - pt1.x,
+        pt2.y - pt1.y,
+    };
+}
+
+struct Vec calcVec(struct Vec pt1, struct Vec pt2)
+{
+    return (struct Vec){
+        pt2.x - pt1.x,
+        pt2.y - pt1.y,
+    };
+}
+
+struct Vec* new_vec(double x, double y)
+{
+    return new struct Vec({x, y});
+}
+
+void delete_vec(struct Vec* ptr)
+{
+    delete ptr;
+}
+
+int* transpose(int         img[],
+               int         width,
+               int         height,
+               int         new_width,
+               int         new_height,
+               struct Vec* img_pt1,
+               struct Vec* img_pt2,
+               struct Vec* matching_pt1,
+               struct Vec* matching_pt2)
+{
+    int* result_img = new int[new_width * new_height * 4];
+    struct Vec vec1 = calcVec(*img_pt1, *img_pt2);
+    struct Vec vec2 = calcVec(*matching_pt1, *matching_pt2);
+    struct Vec translate =
+        calcTranslate(*img_pt1, *matching_pt1);
+    double     rad    = calcRadian(vec1, vec2);
+    double     scale  = calcScale(vec2) / calcScale(vec1);
+    struct Vec offset = *img_pt1;
+    for (int y = 0; y < new_height; y++)
+        for (int x = 0; x < new_width; x++)
+        {
+            struct Vec rotXY = rotationVector(
+                (struct Vec){
+                    (x - translate.x - offset.x) / scale,
+                    (y - translate.y - offset.y) / scale,
+                },
+                -rad);
+            int _x = round(rotXY.x + offset.x);
+            int _y = round(rotXY.y + offset.y);
+            if (_x > width || _x < 0 || _y > height ||
+                _y < 0)
+            {
+                for (int c = 0; c < 4; c++)
+                    result_img[(y * new_width + x) * 4 +
+                               c] = 0;
+            }
+            else
+            {
+                for (int c = 0; c < 4; c++)
+                    result_img[(y * new_width + x) * 4 +
+                               c] =
+                        img[(_y * width + _x) * 4 + c];
+            }
+        }
     return result_img;
 }
