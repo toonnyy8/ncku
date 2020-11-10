@@ -1,9 +1,10 @@
 import wasm from "./wasm"
+import { Chart } from '@antv/g2';
 
 const canvas = <HTMLCanvasElement>document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
-const store_canvas = <HTMLCanvasElement>document.getElementById("buffer-canvas")
+const store_canvas = <HTMLCanvasElement>document.getElementById("store-canvas")
 const store_ctx = store_canvas.getContext("2d")
 
 const len = <T>(arr: T[]) => arr.length
@@ -61,6 +62,7 @@ canvas.onmousedown = (e) => {
 
 let undo_bn = <HTMLButtonElement>document.getElementById("undo")
 undo_bn.onclick = () => {
+    document.getElementById('histogram-chart').innerHTML = ""
     if (len(imgHistory) > 0) {
         imgHistory.pop()
     }
@@ -80,6 +82,12 @@ undo_bn.onclick = () => {
 
 let store_bn = <HTMLButtonElement>document.getElementById("store")
 store_bn.onclick = () => {
+    document.getElementById('store-histogram-chart').innerHTML = ""
+    document.getElementById('store-histogram-chart').appendChild(
+        document.getElementById('histogram-chart').childNodes[0]
+    )
+    document.getElementById('histogram-chart').innerHTML = ""
+
     storeImgMatchingPoints = imgMatchingPoints
     imgMatchingPoints = []
     storeImg = imgHistory[len(imgHistory) - 1]
@@ -91,6 +99,12 @@ store_bn.onclick = () => {
 
 let load_bn = <HTMLButtonElement>document.getElementById("load")
 load_bn.onclick = () => {
+    document.getElementById('histogram-chart').innerHTML = ""
+    document.getElementById('histogram-chart').appendChild(
+        document.getElementById('store-histogram-chart').childNodes[0]
+    )
+    document.getElementById('store-histogram-chart').innerHTML = ""
+
     imgMatchingPoints = storeImgMatchingPoints
     storeImgMatchingPoints = []
     let img = storeImg
@@ -103,6 +117,7 @@ load_bn.onclick = () => {
 
 let upload_bn = <HTMLButtonElement>document.getElementById("upload")
 upload_bn.onclick = () => {
+    document.getElementById('histogram-chart').innerHTML = ""
     let load = document.createElement("input")
     load.type = "file"
     load.accept = "image/png,image/jpeg,image/bmp"
@@ -133,6 +148,7 @@ let gray_bn = <HTMLButtonElement>document.getElementById("gray")
 gray_bn.onclick = () => {
     wasm
         .then(({ memory, gray, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -161,6 +177,7 @@ let extract_red_bn = <HTMLButtonElement>document.getElementById("extract-red")
 extract_red_bn.onclick = () => {
     wasm
         .then(({ memory, extract_red, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -188,6 +205,7 @@ let extract_green_bn = <HTMLButtonElement>document.getElementById("extract-green
 extract_green_bn.onclick = () => {
     wasm
         .then(({ memory, extract_green, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -215,6 +233,7 @@ let extract_blue_bn = <HTMLButtonElement>document.getElementById("extract-blue")
 extract_blue_bn.onclick = () => {
     wasm
         .then(({ memory, extract_blue, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -242,6 +261,7 @@ let mean_filter_bn = <HTMLButtonElement>document.getElementById("mean-filter")
 mean_filter_bn.onclick = () => {
     wasm
         .then(({ memory, mean_filter, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -269,6 +289,7 @@ let median_filter_bn = <HTMLButtonElement>document.getElementById("median-filter
 median_filter_bn.onclick = () => {
     wasm
         .then(({ memory, median_filter, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -297,6 +318,7 @@ let histogram_bn = <HTMLButtonElement>document.getElementById("histogram")
 histogram_bn.onclick = () => {
     wasm
         .then(({ memory, histogram, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -304,7 +326,40 @@ histogram_bn.onclick = () => {
             const imgPtr = new_int_arr(imgArr.length)
             mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
 
-            const resultPtr = histogram(imgPtr, imgData.width, imgData.height)
+            const resultPtr = histogram(imgPtr, imgData.width, imgData.height, 0)
+
+            const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + 256)
+
+            const chart = new Chart({
+                container: 'histogram-chart',
+                width: imgData.width,
+                height: 300,
+            })
+            chart.data(Array.from(result).map((val, idx) => ({ color: idx, frequency: val })))
+                .interval()
+                .position('color*frequency')
+
+            chart.render();
+
+            delete_int_arr(imgPtr)
+            delete_int_arr(resultPtr)
+            imgMatchingPoints = []
+        })
+}
+
+let equalization_bn = <HTMLButtonElement>document.getElementById("equalization")
+equalization_bn.onclick = () => {
+    wasm
+        .then(({ memory, equalization, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
+            const mem = new Int32Array(memory.buffer);
+
+            const imgData = imgHistory[len(imgHistory) - 1]
+            const imgArr = new Uint8Array(imgData.data.buffer)
+            const imgPtr = new_int_arr(imgArr.length)
+            mem.set(imgArr, imgPtr / Int32Array.BYTES_PER_ELEMENT)
+
+            const resultPtr = equalization(imgPtr, imgData.width, imgData.height)
 
             const result = mem.slice(resultPtr / Int32Array.BYTES_PER_ELEMENT, resultPtr / Int32Array.BYTES_PER_ELEMENT + canvas.height * canvas.width * 4)
             // // console.log(
@@ -324,6 +379,7 @@ let threshold_bn = <HTMLButtonElement>document.getElementById("threshold")
 threshold_bn.onclick = () => {
     wasm
         .then(({ memory, threshold, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -353,6 +409,7 @@ let vertical_filter_bn = <HTMLButtonElement>document.getElementById("vertical-fi
 vertical_filter_bn.onclick = () => {
     wasm
         .then(({ memory, vertical_filter, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -380,6 +437,7 @@ let horizontal_filter_bn = <HTMLButtonElement>document.getElementById("horizonta
 horizontal_filter_bn.onclick = () => {
     wasm
         .then(({ memory, horizontal_filter, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer);
 
             const imgData = imgHistory[len(imgHistory) - 1]
@@ -407,6 +465,7 @@ let combined_bn = <HTMLButtonElement>document.getElementById("combined")
 combined_bn.onclick = () => {
     wasm
         .then(({ memory, combined, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer)
 
             const img1Data = imgHistory[len(imgHistory) - 1]
@@ -440,6 +499,7 @@ let overlap_bn = <HTMLButtonElement>document.getElementById("overlap")
 overlap_bn.onclick = () => {
     wasm
         .then(({ memory, overlap, new_int_arr, delete_int_arr }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer)
 
             const img1Data = imgHistory[len(imgHistory) - 1]
@@ -471,6 +531,7 @@ let matching_bn = <HTMLButtonElement>document.getElementById("matching")
 matching_bn.onclick = () => {
     wasm
         .then(({ memory, transpose, new_int_arr, delete_int_arr, new_vec, delete_vec, getMessage }) => {
+            document.getElementById('histogram-chart').innerHTML = ""
             const mem = new Int32Array(memory.buffer)
 
             const img1Data = imgHistory[len(imgHistory) - 1]

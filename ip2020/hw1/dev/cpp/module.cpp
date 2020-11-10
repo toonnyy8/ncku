@@ -13,7 +13,11 @@ extern "C"
     int* extract_blue(int img[], int width, int height);
     int* mean_filter(int img[], int width, int height);
     int* median_filter(int img[], int width, int height);
-    int* histogram(int img[], int width, int height);
+    int* histogram(int img[],
+                   int width,
+                   int height,
+                   int channel);
+    int* equalization(int img[], int width, int height);
     int*
          threshold(int img[], int width, int height, int cutoff);
     int* vertical_filter(int img[], int width, int height);
@@ -396,6 +400,24 @@ int* overlap(int img1[], int img2[], int width, int height)
     return result_img;
 }
 
+int* histogram(int img[],
+               int width,
+               int height,
+               int channel)
+{
+    int* frequency = new int[256];
+    int  all       = width * height;
+    for (int i = 0; i < 256; i++)
+    {
+        frequency[i] = 0;
+    }
+    for (int i = 0; i < all; i++)
+    {
+        frequency[img[i * 4 + channel]] += 1;
+    }
+    return frequency;
+}
+
 int* histogram_mapping(int img[],
                        int width,
                        int height,
@@ -428,7 +450,7 @@ int* histogram_mapping(int img[],
     return mapping;
 }
 
-int* histogram(int img[], int width, int height)
+int* equalization(int img[], int width, int height)
 {
     int* mapping_red =
         histogram_mapping(img, width, height, 0);
