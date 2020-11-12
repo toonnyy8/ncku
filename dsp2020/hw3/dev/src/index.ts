@@ -12,29 +12,27 @@ const log10 = (x) => tf.tidy(() => {
 
 tf.setBackend("webgl")
     .then(() => {
-        const ilpf = (T: number) => {
-            return (t: number) => {
-                const a = Math.sin(Math.PI * t / T)
-                const b = Math.PI * t / T
-                return a == 0 && b == 0 ? 1 : a / b
-            }
-        }
-
-        const ihpf = (T: number) => {
-            return (t: number) => {
-                const a = Math.sin(Math.PI * t / T)
-                const b = Math.PI * t / T
-                return (a == 0 && b == 0 ? 0 : 1 - a / b)
-            }
-        }
-        let f = ilpf(16000 / 1600)
-        let L = 2 ** 16 + 1
+        const sinc = (x) => Math.sin(x) / x
+        const ilp = (Ts, Tcutoff) => (t) => t == 0 ? 0 : -sinc(2 * Math.PI * t / (Ts / Tcutoff))
+        let f = ilp(16000, 880)
+        let f2 = ilp(16000, 110)
+        let L = 14 * 2 + 1
         let data = new Array(L).fill(0).map((_, idx) => f(idx - Math.floor(L / 2)))
+        let data2 = new Array(L).fill(0).map((_, idx) => f2(idx - Math.floor(L / 2)))
+        console.log(data.reduce((prev, curr) => prev + curr))
+        console.log(data2.reduce((prev, curr) => prev + curr))
         let sp = tf.signal.stft(tf.tensor(data), L, L, 512).flatten()
         sp = <tf.Tensor1D>log10(tf.real(sp).square().add(tf.imag(sp).square()).sqrt())
+        sp = sp.sub(sp.max())
         sp.max().print()
-        sp = sp.sub(sp.min()).div(sp.max().sub(sp.min()))
+        // sp = sp.sub(sp.min()).div(sp.max().sub(sp.min()))
         let data_sp = <number[]>sp.flatten().arraySync()
+
+
+        let sp2 = tf.signal.stft(tf.tensor(data2), L, L, 512).flatten()
+        sp2 = <tf.Tensor1D>log10(sp2.abs())
+        sp2.max().print()
+        sp2 = sp2.sub(sp2.min()).div(sp2.max().sub(sp2.min()))
 
         // Step 1: 创建 Chart 对象
         const chart = new g2.Chart({
