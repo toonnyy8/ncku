@@ -13,43 +13,53 @@ const log10 = (x) => tf.tidy(() => {
 tf.setBackend("webgl")
     .then(() => {
         const sinc = (x) => Math.sin(x) / x
-        const ilp = (Ts, Tcutoff) => (t) => t == 0 ? 0 : -sinc(2 * Math.PI * t / (Ts / Tcutoff))
+        const ilp = (Ts, Tcutoff) => (t) => (t == 0 ? 1 : sinc(2 * Math.PI * t / (Ts / Tcutoff)))
         let f = ilp(16000, 880)
         let f2 = ilp(16000, 110)
         let L = 14 * 2 + 1
-        let data = new Array(L).fill(0).map((_, idx) => f(idx - Math.floor(L / 2)))
+
+        let data1 = new Array(L).fill(0).map((_, idx) => f(idx - Math.floor(L / 2)))
+        let sp1 = tf.signal.stft(tf.tensor(data1), L, L, 512).flatten()
+        let max1 = <number>sp1.abs().max().arraySync()
+        console.log(max1)
+        data1 = data1.map(val => val / max1)
+
         let data2 = new Array(L).fill(0).map((_, idx) => f2(idx - Math.floor(L / 2)))
-        console.log(data.reduce((prev, curr) => prev + curr))
-        console.log(data2.reduce((prev, curr) => prev + curr))
-        let sp = tf.signal.stft(tf.tensor(data), L, L, 512).flatten()
-        sp = <tf.Tensor1D>log10(tf.real(sp).square().add(tf.imag(sp).square()).sqrt())
-        sp = sp.sub(sp.max())
-        sp.max().print()
-        // sp = sp.sub(sp.min()).div(sp.max().sub(sp.min()))
-        let data_sp = <number[]>sp.flatten().arraySync()
-
-
         let sp2 = tf.signal.stft(tf.tensor(data2), L, L, 512).flatten()
-        sp2 = <tf.Tensor1D>log10(sp2.abs())
-        sp2.max().print()
-        sp2 = sp2.sub(sp2.min()).div(sp2.max().sub(sp2.min()))
+        let max2 = <number>sp2.abs().max().arraySync()
+        console.log(max2)
+        data2 = data2.map(val => val / max2)
 
-        // Step 1: 创建 Chart 对象
-        const chart = new g2.Chart({
-            container: document.body, // 指定图表容器 ID
-            width: 600, // 指定图表宽度
-            height: 300, // 指定图表高度
-        });
+        let bandpass = new Array(L).fill(0).map((_, idx) => data1[idx] - data2[idx])
+        let sp = tf.signal.stft(tf.tensor(bandpass), L, L, 512).flatten()
+        sp = sp.abs()
+        let max = <number>sp.max().arraySync()
+        bandpass = bandpass.map(val => val / max)
 
-        // Step 2: 载入数据源
-        // chart.data(data.map((val, idx) => ({ idx, val })));
-        chart.data(data_sp.map((val, idx) => ({ idx, val })));
+        let sp_ = tf.signal.stft(tf.tensor(bandpass), L, L, 512).flatten()
+        sp_ = sp_.abs()
+        // sp = <tf.Tensor1D>log10(sp)
 
-        // Step 3: 创建图形语法，绘制柱状图
-        chart.interval().position('idx*val');
+        let data_sp = <number[]>sp_.flatten().arraySync()
 
-        // Step 4: 渲染图表
-        chart.render();
+        {  // Step 1: 创建 Chart 对象
+            const chart = new g2.Chart({
+                container: document.body, // 指定图表容器 ID
+                width: 600, // 指定图表宽度
+                height: 300, // 指定图表高度
+            });
+
+            // Step 2: 载入数据源
+            // chart.data(bandpass.map((val, idx) => ({ idx, val })));
+            chart.data(data_sp.map((val, idx) => ({ idx, val })));
+
+            // Step 3: 创建图形语法，绘制柱状图
+            chart.interval().position('idx*val');
+
+            // Step 4: 渲染图表
+            chart.render();
+        }
+
         document.getElementById("my-downsample").onclick = () => {
             let load = document.createElement("input")
             load.type = "file"
