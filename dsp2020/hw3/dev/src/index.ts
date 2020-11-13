@@ -4,51 +4,80 @@ import { WavAudioEncoder } from "../lib/WavAudioEncoder";
 
 const canvas = <HTMLCanvasElement>document.getElementById("spectrogram")
 
+const len = <T>(arr: ArrayLike<T>) => arr.length
+
 const log10 = (x) => tf.tidy(() => {
     let numerator = tf.log(x)
     let denominator = tf.log(10)
     return tf.div(numerator, denominator)
 })
 
+const sinc = (x) => Math.sin(x) / x
+const ilp = (Ts, Tcutoff) => (t) => (t == 0 ? 1 : sinc(2 * Math.PI * t / (Ts / Tcutoff)))
+
+const bandpass = (Ts: number, from: number, to: number, L: number) => {
+    const tofil = ilp(Ts, to)
+    const fromfil = ilp(Ts, from)
+
+    let toK = new Array(L).fill(0).map((_, idx) => tofil(idx - Math.floor(L / 2)))
+    const toK_acc = toK.reduce((prev, curr) => prev + curr, 0)
+    toK = toK.map(val => val / toK_acc)
+
+    let fromK = new Array(L).fill(0).map((_, idx) => fromfil(idx - Math.floor(L / 2)))
+    const fromK_acc = fromK.reduce((prev, curr) => prev + curr, 0)
+    fromK = fromK.map(val => val / fromK_acc)
+
+    return new Array(L).fill(0).map((_, idx) => toK[idx] - fromK[idx])
+}
+
+const pitchShift = (semitones: number, source: ArrayLike<number>) => {
+    const window = (x) => (1 + Math.cos(2 * Math.PI * x)) / 2
+    let outptr = 0
+    let periodratio = 2 ** (semitones / 12)
+
+    let out = new Array(len(source)).fill(0)
+
+    let x = 0
+    let oldzerocross = 0
+
+    for (let i = 0; i < len(source); i++) {
+        let oldx = x
+        x = source[i]
+
+        if (oldx > 0 && x <= 0) {
+            let periodlength = i - oldzerocross;
+            oldzerocross = i;
+            while (outptr < i) {
+                outptr = Math.round(outptr + periodlength * periodratio)
+                for (let n = -periodlength; n < periodlength; n++) {
+
+                    if (n + outptr > 0 &&
+                        n + outptr <= len(source) &&
+                        n + i > 0 &&
+                        n + i <= len(source)) {
+                        out[n + outptr] = out[n + outptr] + source[n + i] *
+                            window((n / periodlength) / 2)
+                        // ((1 + Math.cos(2 * Math.PI * (n / periodlength) / 2)) / 2);
+                    }
+                }
+            }
+        }
+    }
+    return out
+}
+
 tf.setBackend("webgl")
     .then(() => {
-        const sinc = (x) => Math.sin(x) / x
-        const ilp = (Ts, Tcutoff) => (t) => (t == 0 ? 1 : sinc(2 * Math.PI * t / (Ts / Tcutoff)))
-        let f = ilp(16000, 880)
-        let f2 = ilp(16000, 110)
-        let L = 1024 * 2
+        let L = 14 * 2 + 1
 
-        let data1 = new Array(L).fill(0).map((_, idx) => f(idx - Math.floor(L / 2)))
-        // let sp1 = tf.signal.stft(tf.tensor(data1), L, L, 512).flatten()
-        // let max1 = <number>sp1.abs().max().arraySync()
-        let acc1 = data1.reduce((prev, curr) => prev + curr, 0)
-        // console.log(max1)
-        data1 = data1.map(val => val / acc1)
+        // let bandpassK = bandpass(16000, 440, 880, L)
+        // let bandpassK = bandpass(16000, 220, 440, L)
+        let bandpassK = bandpass(16000, 110, 220, L)
 
-        let data2 = new Array(L).fill(0).map((_, idx) => f2(idx - Math.floor(L / 2)))
-        // let sp2 = tf.signal.stft(tf.tensor(data2), L, L, 512).flatten()
-        // let max2 = <number>sp2.abs().max().arraySync()
-        let acc2 = data2.reduce((prev, curr) => prev + curr, 0)
-        // console.log(max2)
-        data2 = data2.map(val => val / acc2)
-
-        let bandpass = new Array(L).fill(0).map((_, idx) => data1[idx] - data2[idx])
-        let sp = tf.signal.stft(tf.tensor(bandpass), L, L, 512).flatten()
-        sp = sp.abs()
-        let max = <number>sp.max().arraySync()
-        bandpass = bandpass.map(val => val / max)
-        // let bandpass_tensor = tf.tensor(bandpass)
-
-
-        let sp_ = tf.spectral.fft(
-            tf.complex(
-                data2,
-                tf.zerosLike(data2)
-            )
-        ).abs()
-        // sp_ = <tf.Tensor1D>log10(sp_)
-
-        let data_sp = <number[]>sp_.flatten().arraySync()
+        let bandpassSP = <number[]>tf.spectral.rfft(
+            tf.tensor(bandpassK),
+            512
+        ).abs().arraySync()
 
         {  // Step 1: 创建 Chart 对象
             const chart = new g2.Chart({
@@ -58,8 +87,8 @@ tf.setBackend("webgl")
             });
 
             // Step 2: 载入数据源
-            // chart.data(bandpass.map((val, idx) => ({ idx, val })));
-            chart.data(data_sp.map((val, idx) => ({ idx, val })));
+            // chart.data(bandpassK.map((val, idx) => ({ idx, val })));
+            chart.data(bandpassSP.map((val, idx) => ({ idx, val })));
 
             // Step 3: 创建图形语法，绘制柱状图
             chart.interval().position('idx*val');
@@ -81,16 +110,17 @@ tf.setBackend("webgl")
                     audioContext
                         .decodeAudioData(<ArrayBuffer>reader.result)
                         .then(audioBuffer => {
+                            let audioArr = audioBuffer.getChannelData(0)
+                            audioArr = <Float32Array>tf.conv1d(
+                                tf.tensor3d(audioArr, [1, len(audioArr), 1]),
+                                tf.tensor3d(bandpassK, [L, 1, 1]),
+                                1,
+                                "same").flatten().dataSync()
+                            audioArr = new Float32Array(pitchShift(6, audioArr))
 
-                            let s = tf.signal.stft(tf.tensor(audioBuffer.getChannelData(0)), 512, 128, 512, tf.signal.hannWindow)
+                            let s = tf.signal.stft(tf.tensor(audioArr), 512, 128, 512, tf.signal.hannWindow).abs()
 
-                            let spectrogram =
-                                log10(
-                                    tf.add(
-                                        tf.pow(tf.imag(s), 2),
-                                        tf.pow(tf.real(s), 2))
-                                        .sqrt()
-                                )
+                            let spectrogram = log10(s)
                             let min = spectrogram.min()
                             let max = spectrogram.max()
                             spectrogram = <tf.Tensor2D>(spectrogram.sub(min).div(max.sub(min)).transpose([1, 0]).reverse(0))
@@ -101,6 +131,22 @@ tf.setBackend("webgl")
                                     tf.zerosLike(spectrogram),
                                     tf.sub(1, spectrogram)
                                 ], -1).pow(2), canvas)
+
+                            {
+                                let encoder = new WavAudioEncoder(audioContext.sampleRate, 1)
+                                encoder.encode([audioArr])
+
+
+                                let blob = encoder.finish("audio/wav")
+                                let a = document.createElement("a")
+                                let url = window.URL.createObjectURL(blob)
+                                let filename = "downsampling.wav"
+                                a.href = url
+                                a.download = filename
+                                a.click()
+                                window.URL.revokeObjectURL(url)
+                                encoder.cancel()
+                            }
                         })
                 })
 
