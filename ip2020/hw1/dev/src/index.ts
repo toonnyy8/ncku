@@ -43,12 +43,13 @@ let drawMatchingPoints = (drawCtx: CanvasRenderingContext2D, matchingPoints: { x
 }
 
 canvas.onmousedown = (e) => {
-    console.log(e.pageX - canvas.offsetLeft)
-    console.log(e.pageY - canvas.offsetTop)
+    let x = e.offsetX - canvas.offsetLeft
+    let y = e.offsetY - canvas.offsetLeft
+    console.log(x, y)
     switch (len(imgMatchingPoints)) {
         case 0:
         case 1:
-            imgMatchingPoints.push({ x: e.pageX - canvas.offsetLeft, y: e.pageY - canvas.offsetTop })
+            imgMatchingPoints.push({ x, y })
             break;
         case 2:
             imgMatchingPoints = []
