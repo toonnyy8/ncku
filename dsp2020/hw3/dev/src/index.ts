@@ -30,10 +30,12 @@ const bandpass = (Ts: number, from: number, to: number, L: number) => {
     return new Array(L).fill(0).map((_, idx) => toK[idx] - fromK[idx])
 }
 
+0.5 * (1 - Math.cos(0))
+
 const pitchShift = (semitones: number, source: ArrayLike<number>) => {
-    const window = (x) => (1 + Math.cos(2 * Math.PI * x)) / 2
+    const windowFn = (x) => (1 + Math.cos(2 * Math.PI * x)) / 2
     let outptr = 0
-    let periodratio = 2 ** (semitones / 12)
+    let periodratio = 2 ** (-semitones / 12)
 
     let out = new Array(len(source)).fill(0)
 
@@ -48,15 +50,16 @@ const pitchShift = (semitones: number, source: ArrayLike<number>) => {
             let periodlength = i - oldzerocross;
             oldzerocross = i;
             while (outptr < i) {
-                outptr = Math.round(outptr + periodlength * periodratio)
-                for (let n = -periodlength; n < periodlength; n++) {
+                let p = Math.round(periodlength * periodratio)
+                outptr = outptr + p
+                for (let n = -p; n < p; n++) {
 
                     if (n + outptr > 0 &&
                         n + outptr <= len(source) &&
                         n + i > 0 &&
                         n + i <= len(source)) {
                         out[n + outptr] = out[n + outptr] + source[n + i] *
-                            window((n / periodlength) / 2)
+                            windowFn(n / (periodlength * 2))
                         // ((1 + Math.cos(2 * Math.PI * (n / periodlength) / 2)) / 2);
                     }
                 }
@@ -68,11 +71,12 @@ const pitchShift = (semitones: number, source: ArrayLike<number>) => {
 
 tf.setBackend("webgl")
     .then(() => {
-        let L = 14 * 2 + 1
+        let L = 256 * 2 + 1
 
+        let bandpassK = bandpass(16000, 440, 550, L)
         // let bandpassK = bandpass(16000, 440, 880, L)
         // let bandpassK = bandpass(16000, 220, 440, L)
-        let bandpassK = bandpass(16000, 110, 220, L)
+        // let bandpassK = bandpass(16000, 110, 440, L)
 
         let bandpassSP = <number[]>tf.spectral.rfft(
             tf.tensor(bandpassK),

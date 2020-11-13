@@ -82,28 +82,34 @@ undo_bn.onclick = () => {
 
 let store_bn = <HTMLButtonElement>document.getElementById("store")
 store_bn.onclick = () => {
-    document.getElementById('store-histogram-chart').innerHTML = ""
-    document.getElementById('store-histogram-chart').appendChild(
-        document.getElementById('histogram-chart').childNodes[0]
-    )
-    document.getElementById('histogram-chart').innerHTML = ""
+    if (len(imgHistory) > 0) {
+        if (document.getElementById('histogram-chart').childNodes[0] != undefined) {
+            document.getElementById('store-histogram-chart').innerHTML = ""
+            document.getElementById('store-histogram-chart').append(
+                document.getElementById('histogram-chart').childNodes[0]
+            )
+            document.getElementById('histogram-chart').innerHTML = ""
+        }
 
-    storeImgMatchingPoints = imgMatchingPoints
-    imgMatchingPoints = []
-    storeImg = imgHistory[len(imgHistory) - 1]
-    store_canvas.width = storeImg.width
-    store_canvas.height = storeImg.height
-    store_ctx.putImageData(storeImg, 0, 0)
-    drawMatchingPoints(store_ctx, storeImgMatchingPoints)
+        storeImgMatchingPoints = imgMatchingPoints
+        imgMatchingPoints = []
+        storeImg = imgHistory[len(imgHistory) - 1]
+        store_canvas.width = storeImg.width
+        store_canvas.height = storeImg.height
+        store_ctx.putImageData(storeImg, 0, 0)
+        drawMatchingPoints(store_ctx, storeImgMatchingPoints)
+    }
 }
 
 let load_bn = <HTMLButtonElement>document.getElementById("load")
 load_bn.onclick = () => {
-    document.getElementById('histogram-chart').innerHTML = ""
-    document.getElementById('histogram-chart').appendChild(
-        document.getElementById('store-histogram-chart').childNodes[0]
-    )
-    document.getElementById('store-histogram-chart').innerHTML = ""
+    if (document.getElementById('store-histogram-chart').childNodes[0] != undefined) {
+        document.getElementById('histogram-chart').innerHTML = ""
+        document.getElementById('histogram-chart').appendChild(
+            document.getElementById('store-histogram-chart').childNodes[0]
+        )
+        document.getElementById('store-histogram-chart').innerHTML = ""
+    }
 
     imgMatchingPoints = storeImgMatchingPoints
     storeImgMatchingPoints = []

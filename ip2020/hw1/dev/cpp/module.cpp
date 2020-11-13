@@ -66,8 +66,8 @@ int* gray(int img[], int width, int height)
     for (int i = 0; i < width * height; i++)
     {
         int gray_color =
-            (img[i * 4] + img[i * 4 + 1] + img[i * 4 + 2]) /
-            3;
+            (img[i * 4] * 0.299 + img[i * 4 + 1] * 0.587 +
+             img[i * 4 + 2] * 0.114);
         gray_img[i * 4]     = gray_color;
         gray_img[i * 4 + 1] = gray_color;
         gray_img[i * 4 + 2] = gray_color;
