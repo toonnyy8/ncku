@@ -16,29 +16,37 @@ tf.setBackend("webgl")
         const ilp = (Ts, Tcutoff) => (t) => (t == 0 ? 1 : sinc(2 * Math.PI * t / (Ts / Tcutoff)))
         let f = ilp(16000, 880)
         let f2 = ilp(16000, 110)
-        let L = 14 * 2 + 1
+        let L = 1024 * 2
 
         let data1 = new Array(L).fill(0).map((_, idx) => f(idx - Math.floor(L / 2)))
-        let sp1 = tf.signal.stft(tf.tensor(data1), L, L, 512).flatten()
-        let max1 = <number>sp1.abs().max().arraySync()
-        console.log(max1)
-        data1 = data1.map(val => val / max1)
+        // let sp1 = tf.signal.stft(tf.tensor(data1), L, L, 512).flatten()
+        // let max1 = <number>sp1.abs().max().arraySync()
+        let acc1 = data1.reduce((prev, curr) => prev + curr, 0)
+        // console.log(max1)
+        data1 = data1.map(val => val / acc1)
 
         let data2 = new Array(L).fill(0).map((_, idx) => f2(idx - Math.floor(L / 2)))
-        let sp2 = tf.signal.stft(tf.tensor(data2), L, L, 512).flatten()
-        let max2 = <number>sp2.abs().max().arraySync()
-        console.log(max2)
-        data2 = data2.map(val => val / max2)
+        // let sp2 = tf.signal.stft(tf.tensor(data2), L, L, 512).flatten()
+        // let max2 = <number>sp2.abs().max().arraySync()
+        let acc2 = data2.reduce((prev, curr) => prev + curr, 0)
+        // console.log(max2)
+        data2 = data2.map(val => val / acc2)
 
         let bandpass = new Array(L).fill(0).map((_, idx) => data1[idx] - data2[idx])
         let sp = tf.signal.stft(tf.tensor(bandpass), L, L, 512).flatten()
         sp = sp.abs()
         let max = <number>sp.max().arraySync()
         bandpass = bandpass.map(val => val / max)
+        // let bandpass_tensor = tf.tensor(bandpass)
 
-        let sp_ = tf.signal.stft(tf.tensor(bandpass), L, L, 512).flatten()
-        sp_ = sp_.abs()
-        // sp = <tf.Tensor1D>log10(sp)
+
+        let sp_ = tf.spectral.fft(
+            tf.complex(
+                data2,
+                tf.zerosLike(data2)
+            )
+        ).abs()
+        // sp_ = <tf.Tensor1D>log10(sp_)
 
         let data_sp = <number[]>sp_.flatten().arraySync()
 
