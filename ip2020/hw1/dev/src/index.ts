@@ -42,7 +42,7 @@ let drawMatchingPoints = (drawCtx: CanvasRenderingContext2D, matchingPoints: { x
     }
 }
 
-canvas.onmousedown = (e) => {
+canvas.ondblclick = (e) => {
     let x = e.offsetX - canvas.offsetLeft
     let y = e.offsetY - canvas.offsetLeft
     console.log(x, y)
