@@ -87,7 +87,7 @@ const pitchShift = (semitones: number, source: ArrayLike<number>) => {
 }
 
 const normSpectrogramImage = (spectrogram: tf.Tensor) => {
-    let norm_spectrogram = log10(spectrogram)
+    let norm_spectrogram = log10(spectrogram).clipByValue(-5, Infinity)
     let min = norm_spectrogram.min()
     let max = norm_spectrogram.max()
     norm_spectrogram = <tf.Tensor2D>(norm_spectrogram.sub(min).div(max.sub(min)).transpose([1, 0]).reverse(0))
@@ -108,37 +108,38 @@ tf.setBackend("webgl")
     .then(() => {
         let L = 256 * 2 + 1
 
-        let bandpassK1 = bandpass(16000, 110, 550, L)
-        let bandpassK2 = bandpass(16000, 550, 1760, L)
-        let bandpassK3 = bandpass(16000, 1760, 4000, L)
-        let bandpassK = tf.addN([
-            tf.tensor(bandpassK1),
-            tf.tensor(bandpassK2).mul(0.1),
-            tf.tensor(bandpassK3).mul(0.05),
-        ]).dataSync()
+        // let bandpassK1 = bandpass(16000, 110, 550, L)
+        // let bandpassK2 = bandpass(16000, 550, 1760, L)
+        // let bandpassK3 = bandpass(16000, 1760, 4000, L)
+        // let bandpassK = tf.addN([
+        //     tf.tensor(bandpassK1),
+        //     tf.tensor(bandpassK2).mul(0.1),
+        //     tf.tensor(bandpassK3).mul(0.05),
+        // ]).dataSync()
 
         // let bandpassSP = <number[]>tf.spectral.rfft(
         //     tf.tensor(bandpassK),
         //     512
         // ).abs().arraySync()
 
-        // {  // Step 1: 创建 Chart 对象
-        //     const chart = new g2.Chart({
-        //         container: document.body, // 指定图表容器 ID
-        //         width: 600, // 指定图表宽度
-        //         height: 300, // 指定图表高度
-        //     });
+        {  // Step 1: 创建 Chart 对象
+            const chart = new g2.Chart({
+                container: document.body, // 指定图表容器 ID
+                width: 600, // 指定图表宽度
+                height: 300, // 指定图表高度
+            });
 
-        //     // Step 2: 载入数据源
-        //     // chart.data(Array.from(bandpassK).map((val, idx) => ({ idx, val })));
-        //     chart.data(bandpassSP.map((val, idx) => ({ idx, val })));
+            // Step 2: 载入数据源
+            // chart.data(Array.from(bandpassK).map((val, idx) => ({ idx, val })));
+            chart.data(tf.signal.hannWindow(256).flatten().arraySync()
+                .map((val, idx) => ({ idx, val })));
 
-        //     // Step 3: 创建图形语法，绘制柱状图
-        //     chart.interval().position('idx*val');
+            // Step 3: 创建图形语法，绘制柱状图
+            chart.interval().position('idx*val');
 
-        //     // Step 4: 渲染图表
-        //     chart.render();
-        // }
+            // Step 4: 渲染图表
+            chart.render();
+        }
 
         document.getElementById("upload").onclick = () => {
             let load = document.createElement("input")
@@ -162,13 +163,95 @@ tf.setBackend("webgl")
                                 source_spectrogram_img,
                                 source_canvas)
 
-                            let pitch_shift_audioArr = <Float32Array>tf.conv1d(
-                                tf.tensor3d(audioArr, [1, len(audioArr), 1]),
-                                tf.tensor3d(bandpassK, [L, 1, 1]),
-                                1,
-                                "same").flatten().dataSync()
-                            pitch_shift_audioArr = new Float32Array(pitchShift(shiftValue, pitch_shift_audioArr))
+                            let rate = 2 ** (shiftValue / 12)
+                            let analysis = 64
+                            let synthesis = Math.round(analysis * rate)
+                            let win_len = analysis * 4
+                            let win = tf.signal.hannWindow(win_len).arraySync()
+                            let ana_count = (len(audioArr) - (win_len - analysis)) / analysis
 
+                            // {
+                            //     let angle_pre:number[]
+                            //     let ang: number[]=new Array(win_len).fill(0)
+                            //     let mag: number[]
+                            //     for (let offset = 0; offset < ana_count; offset++) {
+                            //         let frame
+                            //         if (offset == ana_count - 1) {
+                            //             frame = audioArr.slice(-win_len)
+                            //         } else {
+                            //             frame = audioArr.slice(analysis * offset, analysis * offset + win_len)
+                            //         }
+
+                            //         let frame_fft = tf.tidy(() => tf.fft(tf.tensor(frame).mul(win)))
+                            //         angle_pre = ang
+                            //         ang = tf.atan2(tf.imag(frame_fft), tf.real(frame_fft)).arraySync()
+                            //         mag = frame_fft.abs()
+                            //     }
+                            // }
+
+                            let frame_signal = tf.signal.frame(tf.tensor(audioArr), win_len, analysis, true).mul(win)
+
+
+                            let frame_fft = tf.spectral.fft(
+                                tf.complex(
+                                    frame_signal,
+                                    tf.zerosLike(frame_signal)
+                                )
+                            )
+                            let ang = tf.atan2(tf.imag(frame_fft), tf.real(frame_fft))
+                            let ang_pre = tf
+                                .zeros([1, win_len])
+                                .concat(ang)
+                                .slice([0, 0], [ang.shape[0], -1])
+
+                            let mag = frame_fft.abs()
+                            let omega = tf.tensor(
+                                new Array(win_len)
+                                    .fill(0)
+                                    .map((_, idx) =>
+                                        2 * Math.PI * idx / win_len
+                                    ))
+                            let delta = ang.sub(ang_pre).sub(omega.mul(analysis))
+                            let phase_unwrap = delta.sub(tf.round(delta.div(2 * Math.PI)).mul(2 * Math.PI))
+                            let phase_inc = phase_unwrap.div(analysis).add(omega)
+                            let y_angles = phase_inc
+                                .slice([1, 0], [-1, -1],)
+                                .mul(synthesis)
+                                .unstack()
+                            const xx = (t) => tf.tidy(() => t.sub(tf.round(t.div(2 * Math.PI)).mul(2 * Math.PI)))
+                            let y_angle = tf.tidy(() => tf.stack(y_angles
+                                .reduce((prev, curr) => [
+                                    ...prev,
+                                    xx(prev[len(prev) - 1].add(curr)),
+                                ], [xx(ang.slice([0, 0], [1, -1],))]
+                                ), 1))
+                            y_angles.forEach(t => t.dispose())
+                            console.log(y_angles)
+                            console.log(y_angle)
+                            // let y_angle = tf.concat([
+                            //     ang.slice([0, 0], [1, -1],),
+                            //     phase_inc.slice([1, 0], [-1, -1],).mul(synthesis)
+                            // ]).cumsum()
+                            let h = tf.complex(
+                                tf.cos(y_angle).mul(mag),
+                                tf.sin(y_angle).mul(mag),
+                            )
+                            let y_iffts = <number[][]>tf.real(tf.ifft(h)).mul(win).arraySync()
+                            let pitch_shift_audioArr = []
+                            y_iffts.forEach((y_ifft, i) => {
+                                y_ifft.forEach((y, j) => {
+                                    if (pitch_shift_audioArr[i * synthesis + j] === undefined) {
+                                        pitch_shift_audioArr[i * synthesis + j] = 0
+                                    }
+                                    pitch_shift_audioArr[i * synthesis + j] += y
+                                })
+                            })
+
+                            pitch_shift_audioArr = <number[]>tf.image.resizeBilinear(
+                                tf.tensor3d(pitch_shift_audioArr, [len(pitch_shift_audioArr), 1, 1]),
+                                [frame_signal.shape[0] * analysis + (win_len - analysis), 1]
+                            ).flatten().arraySync()
+                            pitch_shift_audioArr = pitch_shift_audioArr.slice(0, len(audioArr))
 
 
                             let pitch_shift_spectrogram = tf.signal.stft(tf.tensor(pitch_shift_audioArr), 512, 128, 512, tf.signal.hannWindow).abs()
