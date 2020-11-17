@@ -2,7 +2,7 @@
 > dev 資料夾中存放開發用原始碼。  
 > build 資料夾則是存放已經打包完的程式碼，可直接開啟 index.html 觀看執行結果。
 
-「My Downsample」 在處理完後能下載 Downsample 完的 wav 檔。
+「Upload」 在處理完後能下載調整 pitch 後的 wav 檔。
 > 感謝 https://github.com/higuma/wav-audio-encoder-js
 
 > Shift the pitch of a soundtrack of a person singing (downloaded from the course Web site) and process the data to make them sing 6 semitones loweror higher. Please show the spectrogram of the three audio files for comparison.
@@ -14,103 +14,92 @@
 * 六個半音約為 2**(6/12) = 2**(1/2)
 
 ## 實作
-> 參考 [An Efficient Method for Pitch Shifting Digitally Sampled Sounds](https://www.jstor.org/stable/3679554?seq=1) 這篇論文提出的方法並稍作改變
+> ~~參考 [An Efficient Method for Pitch Shifting Digitally Sampled Sounds](https://www.jstor.org/stable/3679554?seq=1) 這篇論文提出的方法並稍作改變~~
 
-1. 實作 ideal lowpass filter
+原本嘗試使用時域的方式改變 pitch，但效果不好。因此改使用頻域的調變方式。
+>  參考 https://github.com/jagger2048/PitchShifting
+
+1. 輸入介紹
 ```typescript
-const sinc = (x) => Math.sin(x) / x
-const ilp = (Ts, Tcutoff) => (t) => (t == 0 ? 1 : sinc(2 * Math.PI * t / (Ts / Tcutoff)))
+let shiftValue // 升降的半音數量
+let audioArr // 原始聲音訊號
 ```
 
-2. 利用兩個 lowpass filter 相減得到 bandpass filter
+2. 變數介紹
 ```typescript
-const bandpass = (Ts: number, from: number, to: number, L: number) => {
-    const tofil = ilp(Ts, to)
-    const fromfil = ilp(Ts, from)
-
-    let toK = new Array(L).fill(0).map((_, idx) => tofil(idx - Math.floor(L / 2)))
-    const toK_acc = toK.reduce((prev, curr) => prev + curr, 0)
-    toK = toK.map(val => val / toK_acc)
-
-    let fromK = new Array(L).fill(0).map((_, idx) => fromfil(idx - Math.floor(L / 2)))
-    const fromK_acc = fromK.reduce((prev, curr) => prev + curr, 0)
-    fromK = fromK.map(val => val / fromK_acc)
-
-    return new Array(L).fill(0).map((_, idx) => toK[idx] - fromK[idx])
-}
+let rate = 2 ** (shiftValue / 12) // 由半音計算頻率縮放倍數
+let analysis = 64 // 拆分訊號時每個 frame 的步長，如果太長會導致輸出聲音出現些許回音感
+let synthesis = Math.round(analysis * rate) // 合成訊號時每個 frame 的步長
+let win_len = analysis * 8 // 每個 frame 的 window size
+let win = tf.signal.hannWindow(win_len) // hann window
+let ana_count = Math.ceil(len(audioArr) / analysis) // frame 數量
+let omega = tf.tensor( // 每個平律的基本偏移量（？？
+    new Array(win_len)
+        .fill(0)
+        .map((_, idx) =>
+            2 * Math.PI * idx * analysis / win_len
+        ))
+let ang_pre: tf.Tensor1D = tf.zeros([win_len]) // 上一個 frame 的相位
+let ang: tf.Tensor1D = tf.zeros([win_len]) // frame 的相位
+let y_ang: tf.Tensor1D = tf.zeros([win_len]) // 輸出的相位
+let out = [] // 輸出
 ```
 
-3. 實作 pitch shift 算法  
-
-與原版相比，會先將原聲利用重採樣先得出變調變速的語音，在使用變調變速的語音疊加在相對應的輸出時序上。
+3. 主要運算流程
 ```typescript
-const pitchShift = (semitones: number, source: ArrayLike<number>) => {
-    const windowFn = (x) => (1 + Math.cos(2 * Math.PI * x)) / 2
-    let outptr = 0
-    let periodratio = 2 ** (-semitones / 12)
-    console.log(periodratio)
-
-    let out = new Array(len(source)).fill(0)
-
-    // 得出變調變速的語音
-    let newSource = <Float32Array>tf.image.resizeBilinear(
-        tf.tensor3d(<number[]>source, [len(source), 1, 1]),
-        [Math.round(len(source) * periodratio), 1]
-    ).flatten().dataSync()
-
-    let x = 0
-    let oldzerocross = -1
-
-    for (let i = 0; i < len(source); i++) {
-        let oldx = x
-        x = source[i]
-
-        if (oldx > 0 && x <= 0) {
-            let periodlength = (i - oldzerocross);
-            oldzerocross = i;
-            while (outptr < i) {
-                let p = Math.round(periodlength * periodratio)
-                outptr = outptr + p
-                for (let n = -p; n <= p; n++) {
-
-                    if (outptr + n >= 0 &&
-                        outptr + n < len(source) &&
-                        i + n >= 0 &&
-                        i + n < len(source)) {
-                        // 使用變調變速的語音代替原聲作為輸出
-                        out[outptr + n] +=
-                            newSource[Math.round(i * periodratio) + n] *
-                            windowFn(n / (p * 2))
-                    }
-                }
-            }
+for (let offset = 0; offset < ana_count; offset++) {
+    tf.tidy(() => {
+        let frame = <tf.Tensor1D>tf.tensor(audioArr.slice(analysis * offset, analysis * offset + win_len)) // 切割 frame
+        if (frame.shape[0] < win_len) { // 如果長度不足就補 0
+            frame = tf.pad1d(frame, [0, win_len - frame.shape[0]])
         }
-    }
-    return out
+        frame = frame.mul(win) // 乘上 window
+
+        let frame_fft = <tf.Tensor1D>tf.fft(tf.complex(frame, tf.zerosLike(frame))) // 計算頻譜
+        ang_pre.dispose()
+        ang_pre = tf.keep(ang.clone())
+        ang.dispose()
+        ang = tf.keep(tf.atan2(tf.imag(frame_fft), tf.real(frame_fft))) // 計算相位
+        let mag = frame_fft.abs() // 計算大小
+
+        let delta = ang.sub(ang_pre.add(omega))
+        let phase_unwrap = delta.sub(tf.round(delta.div(2 * Math.PI)).mul(2 * Math.PI))
+        let phase_inc = (phase_unwrap.add(omega)).div(analysis)
+
+        if (offset == 0) {
+            y_ang.dispose()
+            y_ang = ang.clone()
+        }
+        else {
+            let dis = y_ang
+            y_ang = y_ang.clone()
+            dis.dispose()
+            y_ang = y_ang.add(phase_inc.mul(synthesis))
+        }
+        y_ang = tf.keep(y_ang.sub(tf.round(y_ang.div(2 * Math.PI)).mul(2 * Math.PI)))
+
+        let h = tf.complex(
+            tf.cos(y_ang).mul(mag),
+            tf.sin(y_ang).mul(mag),
+        ) // 用新的相位重建頻譜
+        let y_ifft = <number[]>tf.real(tf.ifft(h)).mul(win).flatten().arraySync() // 計算時域訊號
+        y_ifft.forEach((sample, idx) => { // 以 synthesis 作為步長疊加訊號
+            if (out[offset * synthesis + idx] === undefined) out[offset * synthesis + idx] = 0
+            out[offset * synthesis + idx] += sample
+        })
+
+    })
 }
 ```
 
-4. 依據頻率改變 bandpass 後的大小，在低頻的部分讓其通過，在較高頻的部分則是將其能量縮小(縮至零會導致失去高頻特徵，不減少又會出現雜音)
+4. 經過步驟 3 後會得到變速不變調的訊號，在將此訊號重取樣回原長度便可得到變調不變速的訊號
 ```typescript
-let L = 256 * 2 + 1
-
-let bandpassK1 = bandpass(16000, 110, 550, L)
-let bandpassK2 = bandpass(16000, 550, 1760, L)
-let bandpassK3 = bandpass(16000, 1760, 4000, L)
-let bandpassK = tf.addN([
-    tf.tensor(bandpassK1),
-    tf.tensor(bandpassK2).mul(0.1),
-    tf.tensor(bandpassK3).mul(0.05),
-]).dataSync()
+out = <number[]>tf.image.resizeBilinear(
+    tf.tensor3d(out, [len(out), 1, 1]),
+    [ana_count * analysis + (win_len - analysis), 1]
+).flatten().arraySync()
+out = out.slice(0, len(audioArr))
 ```
 
-5. 進行濾波與 pitch shift
-```typescript
-let pitch_shift_audioArr = <Float32Array>tf.conv1d(
-    tf.tensor3d(audioArr, [1, len(audioArr), 1]),
-    tf.tensor3d(bandpassK, [L, 1, 1]),
-    1,
-    "same").flatten().dataSync()
-pitch_shift_audioArr = new Float32Array(pitchShift(shiftValue, pitch_shift_audioArr))
-
-```
+## 後續
+目前計算方式是將一個 frame 作為一個 batch 進行運算，在 gpu 上進行時效率較低，要耗費較多的時間，但如果將所有 frame 作為一個 batch 進行運算又會使用過量記憶體。因此後續應該會以多個 frame 作為一個 batch，使其可以充分運用 gpu 的並行優勢，又不會使記憶體過載。
