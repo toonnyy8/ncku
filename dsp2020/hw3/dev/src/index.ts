@@ -1,4 +1,3 @@
-import * as g2 from "@antv/g2"
 import * as tf from "@tensorflow/tfjs"
 import { WavAudioEncoder } from "../lib/WavAudioEncoder";
 
@@ -14,16 +13,18 @@ const log10 = (x) => tf.tidy(() => {
 })
 
 const normSpectrogramImage = (spectrogram: tf.Tensor) => {
-    let norm_spectrogram = log10(spectrogram).clipByValue(-5, Infinity)
-    let min = norm_spectrogram.min()
-    let max = norm_spectrogram.max()
-    norm_spectrogram = <tf.Tensor2D>(norm_spectrogram.sub(min).div(max.sub(min)).transpose([1, 0]).reverse(0))
+    return tf.tidy(() => {
+        let norm_spectrogram = log10(spectrogram).clipByValue(-5, Infinity)
+        let min = norm_spectrogram.min()
+        let max = norm_spectrogram.max()
+        norm_spectrogram = <tf.Tensor2D>(norm_spectrogram.sub(min).div(max.sub(min)).transpose([1, 0]).reverse(0))
 
-    return <tf.Tensor3D>tf.stack([
-        norm_spectrogram,
-        tf.zerosLike(norm_spectrogram),
-        tf.sub(1, norm_spectrogram)
-    ], -1).pow(2)
+        return <tf.Tensor3D>tf.stack([
+            norm_spectrogram,
+            tf.zerosLike(norm_spectrogram),
+            tf.sub(1, norm_spectrogram)
+        ], -1).pow(2)
+    })
 }
 
 (<HTMLInputElement>document.getElementById("semitones"))
@@ -59,7 +60,7 @@ tf.setBackend("webgl")
                             let analysis = 64
                             let synthesis = Math.round(analysis * rate)
                             let win_len = analysis * 8
-                            let win = tf.signal.hannWindow(win_len).arraySync()
+                            let win = tf.signal.hannWindow(win_len)
                             let ana_count = Math.ceil(len(audioArr) / analysis)
                             let omega = tf.tensor(
                                 new Array(win_len)
@@ -132,6 +133,24 @@ tf.setBackend("webgl")
                             tf.browser.toPixels(
                                 pitch_shift_spectrogram_img,
                                 pitch_shift_canvas)
+
+                            {
+                                const outContext = new AudioContext({ sampleRate: audioContext.sampleRate })
+                                let source = outContext.createBufferSource();
+                                let outBuffer = outContext.createBuffer(1, len(pitch_shift_audioArr), audioContext.sampleRate);
+                                outBuffer
+                                    .getChannelData(0)
+                                    .set(pitch_shift_audioArr)
+
+                                source.buffer = outBuffer
+
+                                // connect the AudioBufferSourceNode to the
+                                // destination so we can hear the sound
+                                source.connect(outContext.destination);
+
+                                // start the source playing
+                                source.start();
+                            }
 
                             {
                                 let encoder = new WavAudioEncoder(audioContext.sampleRate, 1)
