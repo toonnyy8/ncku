@@ -11,7 +11,7 @@
 -   受污染的 spectrogram  
     ![image](./img/noisy.png)
 
-比較 clean 與 noisy 後可以發現噪音主要集中在 0~100 Hz 與 1100~8000 Hz 的區段，因此使用低通與高通濾波器將其濾除
+比較 clean 與 noisy 後可以發現噪音主要集中在 0\~100 Hz 與 1100\~8000 Hz 的區段，因此使用低通與高通濾波器將其濾除
 
 ```python
 b1, a1 = scipy.signal.butter(8,(100),"highpass",False,"ba",16000)
