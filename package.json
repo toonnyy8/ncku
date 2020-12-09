@@ -21,7 +21,8 @@
     "dev:opencvdl2020-hw1": "parcel ./opencvdl2020/hw1/dev/index.html -p 8080 --open",
     "build:opencvdl2020-hw1": "parcel build --no-content-hash ./opencvdl2020/hw1/dev/index.html --out-dir ./opencvdl2020/hw1/build/  --public-url=./",
     "dev:ip2020-hw1": "parcel ./ip2020/hw1/dev/index.html -p 8080 --open",
-    "build:ip2020-hw1": "parcel build --no-content-hash ./ip2020/hw1/dev/index.html --out-dir ./ip2020/hw1/build/  --public-url=./"
+    "build:ip2020-hw1": "parcel build --no-content-hash ./ip2020/hw1/dev/index.html --out-dir ./ip2020/hw1/build/  --public-url=./",
+    "dev:cvdl2020-hw2": "parcel ./cvdl2020/hw2/dev/index.html -p 8080 --open"
   },
   "repository": {
     "type": "git",
@@ -36,11 +37,17 @@
   "homepage": "https://github.com/toonnyy8/ncku#readme",
   "dependencies": {
     "@antv/g2": "^4.0.15",
+    "@koa/cors": "^3.1.0",
     "@tensorflow/tfjs": "^2.7.0",
     "@tensorflow/tfjs-backend-wasm": "^2.7.0",
     "@tensorflow/tfjs-core": "^2.7.0",
     "@wasmer/wasi": "^0.12.0",
-    "parcel": "^1.12.4"
+    "koa": "^2.13.0",
+    "next": "^10.0.3",
+    "opencv4nodejs": "^5.6.0",
+    "parcel": "^1.12.4",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
     "typescript": "^4.0.5"
