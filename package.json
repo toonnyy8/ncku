@@ -22,7 +22,7 @@
     "build:opencvdl2020-hw1": "parcel build --no-content-hash ./opencvdl2020/hw1/dev/index.html --out-dir ./opencvdl2020/hw1/build/  --public-url=./",
     "dev:ip2020-hw1": "parcel ./ip2020/hw1/dev/index.html -p 8080 --open",
     "build:ip2020-hw1": "parcel build --no-content-hash ./ip2020/hw1/dev/index.html --out-dir ./ip2020/hw1/build/  --public-url=./",
-    "dev:cvdl2020-hw2": "parcel ./cvdl2020/hw2/dev/index.html -p 8080 --open"
+    "dev:cvdl2020-hw2": "parcel ./cvdl2020/hw2/client/index.html -p 8080 --open"
   },
   "repository": {
     "type": "git",
