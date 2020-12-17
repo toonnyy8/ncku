@@ -66,6 +66,6 @@ fetch("http://localhost:5000/q1-inf")
                 loop()
             })
     })
-// .then(() => {
-//     q2.runQ2()
-// })
+    .then(() => {
+        q2.runQ2()
+    })

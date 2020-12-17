@@ -34,10 +34,8 @@ for _next_frame in _opticalFlowFrames[1:]:
     _next_frame = cv2.cvtColor(_next_frame, cv2.IMREAD_GRAYSCALE)
     _next_keyPoint, st, err = cv2.calcOpticalFlowPyrLK(
         _prev_frame, _next_frame, _prev_keyPoint, None, **_lk_params)
-    keyPoints.append([{"x": int(kp[0]), "y":int(kp[1])}
-                      for kp in _prev_keyPoint[st == 1]])
+    keyPoints.append([{"prevX": int(kp[0][0]), "prevY":int(kp[0][1]),
+                       "nextX": int(kp[1][0]), "nextY":int(kp[1][1])}
+                      for kp in zip(_prev_keyPoint[st == 1], _next_keyPoint[st == 1])])
     _prev_frame = _next_frame
     _prev_keyPoint = _next_keyPoint[st == 1].reshape([-1, 1, 2])
-
-keyPoints.append([{"x": int(kp[0]), "y":int(kp[1])}
-                  for kp in _prev_keyPoint[st == 1]])
