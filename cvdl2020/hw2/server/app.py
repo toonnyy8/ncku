@@ -1,7 +1,9 @@
 from cv2 import cv2 as cv2
+import numpy as np
 
 import tool
 import q2
+import q4
 
 from flask import Flask
 from flask import jsonify
@@ -38,3 +40,8 @@ def q2_inf():
         "fps": q2.fps,
         "keyPoints": q2.keyPoints,
     })
+
+
+@app.route("/q4-img")
+def q4_img():
+    return np.concatenate([q4.imgs, q4.imgs_new]).tobytes()
