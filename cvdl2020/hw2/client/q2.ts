@@ -39,12 +39,14 @@ const drawWay = (
     ctx.lineTo(keyPoint.nextX, keyPoint.nextY)
     ctx.stroke()
 }
-
-export const runQ2 = () => {
+export const runQ2_1 = () => {
     let canvas = document.createElement("canvas")
     canvas.style.width = "100%"
     document.body.appendChild(canvas)
-    fetch("http://localhost:5000/q2-inf")
+    let button = document.createElement("button")
+    button.innerText = "Q2-1"
+    document.body.appendChild(button)
+    return fetch("http://localhost:5000/q2-inf")
         .then((response) => {
             return response.json()
         })
@@ -56,29 +58,81 @@ export const runQ2 = () => {
                 fps: number
                 keyPoints: { prevX: number; prevY: number; nextX: number; nextY: number }[][]
             }) => {
+                let play = false
                 let opticalFlow = <HTMLVideoElement>document.getElementById("opticalFlow")
                 const vc = tool.videoCapture(opticalFlow, fps)
                 let frameIdx = 0
                 let loop = () => {
-                    if (frameIdx >= keyPoints.length) {
-                        frameIdx = 0
-                    }
-                    vc.getFrame(frameIdx).then((img) => {
-                        canvas.height = img.height
-                        canvas.width = img.width
-                        const ctx = canvas.getContext("2d")
-                        ctx.drawImage(img, 0, 0)
-                        keyPoints[frameIdx].forEach((keyPoint) => drawMarker(canvas, keyPoint))
-                        keyPoints.slice(0, frameIdx).forEach((_keyPoints) => {
-                            _keyPoints.forEach((keyPoint) => {
-                                drawWay(canvas, keyPoint)
-                            })
+                    if (play) {
+                        if (frameIdx >= keyPoints.length) {
+                            frameIdx = 0
+                        }
+                        vc.getFrame(frameIdx).then((img) => {
+                            canvas.height = img.height
+                            canvas.width = img.width
+                            const ctx = canvas.getContext("2d")
+                            ctx.drawImage(img, 0, 0)
+                            keyPoints[frameIdx].forEach((keyPoint) => drawMarker(canvas, keyPoint))
+                            frameIdx += 1
+                            requestAnimationFrame(loop)
                         })
-                        frameIdx += 1
-                        requestAnimationFrame(loop)
-                    })
+                    }
                 }
-                loop()
+                button.onclick = () => {
+                    play = !play
+                    loop()
+                }
+            }
+        )
+}
+export const runQ2_2 = () => {
+    let canvas = document.createElement("canvas")
+    canvas.style.width = "100%"
+    document.body.appendChild(canvas)
+    let button = document.createElement("button")
+    button.innerText = "Q2-2"
+    document.body.appendChild(button)
+    return fetch("http://localhost:5000/q2-inf")
+        .then((response) => {
+            return response.json()
+        })
+        .then(
+            ({
+                fps,
+                keyPoints,
+            }: {
+                fps: number
+                keyPoints: { prevX: number; prevY: number; nextX: number; nextY: number }[][]
+            }) => {
+                let play = false
+                let opticalFlow = <HTMLVideoElement>document.getElementById("opticalFlow")
+                const vc = tool.videoCapture(opticalFlow, fps)
+                let frameIdx = 0
+                let loop = () => {
+                    if (play) {
+                        if (frameIdx >= keyPoints.length) {
+                            frameIdx = 0
+                        }
+                        vc.getFrame(frameIdx).then((img) => {
+                            canvas.height = img.height
+                            canvas.width = img.width
+                            const ctx = canvas.getContext("2d")
+                            ctx.drawImage(img, 0, 0)
+                            keyPoints[frameIdx].forEach((keyPoint) => drawMarker(canvas, keyPoint))
+                            keyPoints.slice(0, frameIdx).forEach((_keyPoints) => {
+                                _keyPoints.forEach((keyPoint) => {
+                                    drawWay(canvas, keyPoint)
+                                })
+                            })
+                            frameIdx += 1
+                            requestAnimationFrame(loop)
+                        })
+                    }
+                }
+                button.onclick = () => {
+                    play = !play
+                    loop()
+                }
             }
         )
 }
