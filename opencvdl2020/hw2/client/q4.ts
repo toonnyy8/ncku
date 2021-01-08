@@ -41,8 +41,8 @@ export const runQ4 = () => {
                 .then((response) => response.arrayBuffer())
                 .then((buf) => {
                     let rect = canvas.getBoundingClientRect()
-                    let i16buf = new Int16Array(buf)
-                    // console.log(i16buf)
+                    let u8buf = new Uint8Array(buf)
+                    // console.log(u8buf)
                     console.log(rect)
                     canvas.onmousedown = (e) => {
                         let obj = <HTMLElement>canvas
@@ -61,7 +61,7 @@ export const runQ4 = () => {
                         ypos -= obj_top
                         ypos *= w / 600
                         ypos = Math.round(ypos)
-                        let disparity = i16buf[ypos * w + xpos]
+                        let disparity = u8buf[ypos * w + xpos]
                         let depth = calcDepth(disparity)
                         let ctx = canvas.getContext("2d")
                         ctx.drawImage(img, 0, 0, w, h)

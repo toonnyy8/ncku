@@ -4,7 +4,7 @@ import numpy as np
 
 imgL = cv2.imread('../Q4_Image/imgL.png', 0)
 imgR = cv2.imread('../Q4_Image/imgR.png', 0)
-stereo = cv2.StereoBM_create(numDisparities=256, blockSize=15)
+stereo = cv2.StereoBM_create(numDisparities=256, blockSize=25)
 disparity = stereo.compute(imgL, imgR)
 norm_disparity = np.array(disparity)
 norm_disparity = cv2.normalize(disparity, norm_disparity, alpha=0,

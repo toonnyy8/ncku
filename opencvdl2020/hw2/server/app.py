@@ -76,7 +76,7 @@ def q4_img():
 
 @app.route('/q4-disparity')
 def q4_disparity():
-    return q4.disparity.tobytes()
+    return q4.norm_disparity.tobytes()
 
 
 @app.route("/q5-img", methods=['POST'])
