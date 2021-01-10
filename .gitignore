@@ -7,3 +7,6 @@ dist
 *.pkl
 cv-env
 kagglecatsanddogs_3367a
+target
+carpalTunnel
+libtorch

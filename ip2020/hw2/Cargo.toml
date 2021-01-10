@@ -1,0 +1,25 @@
+[package]
+name = "ncku-ip2020-hw2"
+version = "0.1.0"
+authors = ["toonnyy8 <toonnyy8@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+iced = {version = "0.2", features = ["image", "debug"]}
+serde_json = "1.0"
+tch = "0.3.1"
+quit = "1.1.2"
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.reqwest]
+version = "0.10.2"
+features = ["json"]
+
+[dependencies.rand]
+version = "0.7"
+features = ["wasm-bindgen"]
