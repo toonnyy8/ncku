@@ -13,16 +13,16 @@ mod style {
     use iced::{button, Background, Color, Row, Vector};
 
     pub enum Button {
-        Primary,
-        Secondary,
+        Red,
+        Green,
     }
 
     impl button::StyleSheet for Button {
         fn active(&self) -> button::Style {
             button::Style {
                 background: Some(Background::Color(match self {
-                    Button::Primary => Color::from_rgb(0.11, 0.42, 0.87),
-                    Button::Secondary => Color::from_rgb(0.5, 0.5, 0.5),
+                    Button::Red => Color::from_rgb(0.87, 0.11, 0.42),
+                    Button::Green => Color::from_rgb(0.11, 0.87, 0.42),
                 })),
                 border_radius: 5.0,
                 shadow_offset: Vector::new(1.0, 1.0),
@@ -52,8 +52,6 @@ struct Counter {
     segmentation_button: button::State,
     slider: slider::State,
     model: tch::CModule,
-    label: tch::Tensor,
-    inp: tch::Tensor,
     segment: bool,
 }
 
@@ -72,6 +70,13 @@ fn load_img_tensor(path: std::string::String) -> tch::Tensor {
         Err(_) => tch::Tensor::zeros(&[1, 256, 256], (tch::Kind::Int64, tch::Device::Cpu)),
     };
     t2
+}
+
+fn calcDC(a: tch::Tensor, b: tch::Tensor) -> f64 {
+    let c =
+        ((a.copy() * b.copy()).sum(tch::Kind::Float) / (a.copy() + b.copy()).sum(tch::Kind::Float));
+    let c: tch::Tensor = c * 2;
+    Vec::<f64>::from(c)[0]
 }
 
 impl Sandbox for Counter {
@@ -104,8 +109,6 @@ impl Sandbox for Counter {
             segmentation_button: button::State::new(),
             slider: slider::State::new(),
             model: model,
-            label: tch::Tensor::zeros(&[0], (tch::Kind::Float, tch::Device::Cpu)),
-            inp: tch::Tensor::zeros(&[0], (tch::Kind::Float, tch::Device::Cpu)),
             segment: false,
         }
     }
@@ -155,14 +158,14 @@ impl Sandbox for Counter {
         let mut ctrl = Row::new();
         ctrl = ctrl
             .push(
-                Button::new(&mut self.decrement_button, Text::new("-"))
+                Button::new(&mut self.decrement_button, Text::new("prev").size(24))
                     .on_press(Message::DecrementPressed)
-                    .style(style::Button::Secondary),
+                    .style(style::Button::Red),
             )
             .push(
-                Button::new(&mut self.increment_button, Text::new("+"))
+                Button::new(&mut self.increment_button, Text::new("next").size(24))
                     .on_press(Message::IncrementPressed)
-                    .style(style::Button::Primary),
+                    .style(style::Button::Green),
             );
 
         let mut alpha = tch::Tensor::ones(&[1, 256, 256], (tch::Kind::Float, tch::Device::Cpu));
@@ -180,7 +183,7 @@ impl Sandbox for Counter {
         ));
         let t2 = t2.slice(1, 128, 384, 1);
         let t2 = t2.slice(2, 128, 384, 1);
-        self.inp = tch::Tensor::cat(&[t1.copy(), t2.copy()], 0) / 255;
+        let inp = tch::Tensor::cat(&[t1.copy(), t2.copy()], 0) / 255;
 
         let ct = load_img_tensor(format!(
             "{}/CT/{}.jpg",
@@ -200,8 +203,8 @@ impl Sandbox for Counter {
         ));
         let mn = mn.slice(1, 128, 384, 1);
         let mn = mn.slice(2, 128, 384, 1);
-        self.label = tch::Tensor::cat(&[ct.copy(), ft.copy(), mn.copy()], 0) / 255;
-        let label_mask = self.label.copy() * 0.5;
+        let label: tch::Tensor = tch::Tensor::cat(&[ct.copy(), ft.copy(), mn.copy()], 0) / 255;
+        let label_mask: tch::Tensor = label.copy() * 0.5;
 
         let label_t1_img: tch::Tensor =
             t1.repeat(&[3, 1, 1]) * (1 - label_mask.copy()) + label_mask.copy() * 255;
@@ -233,7 +236,7 @@ impl Sandbox for Counter {
 
         let pred_img_container = if self.segment {
             self.segment = false;
-            let pred = self.model.forward_ts(&[self.inp.unsqueeze(0)]);
+            let pred = self.model.forward_ts(&[inp.unsqueeze(0)]);
             let pred = match pred {
                 Ok(pred) => pred.squeeze().round(),
                 Err(e) => panic!("error: {:?}", e),
@@ -255,21 +258,56 @@ impl Sandbox for Counter {
             let pred_t2_img: tch::Tensor = pred_t2_img.to_kind(tch::Kind::Uint8);
             let pred_t2_img = pred_t2_img.movedim(&[0], &[2]);
             let pred_t2_imgh = image::Handle::from_pixels(256, 256, Vec::<u8>::from(&pred_t2_img));
-            Column::new()
+
+            let labels = label.split(1, 0);
+            let preds = pred.split(1, 0);
+
+            Row::new()
                 .push(
-                    Container::new(Image::new(pred_t1_imgh))
-                        .width(Length::Units(256))
-                        .center_x(),
+                    Column::new()
+                        .push(
+                            Container::new(Image::new(pred_t1_imgh))
+                                .width(Length::Units(256))
+                                .center_x(),
+                        )
+                        .push(
+                            Container::new(Image::new(pred_t2_imgh))
+                                .width(Length::Units(256))
+                                .center_x(),
+                        ),
                 )
                 .push(
-                    Container::new(Image::new(pred_t2_imgh))
-                        .width(Length::Units(256))
-                        .center_x(),
+                    Column::new()
+                        .padding(20)
+                        .push(Text::new("Dice Coefficient\n").size(50))
+                        .push(
+                            Text::new(format!(
+                                "Carpal tunnel :{:.3}\n",
+                                calcDC(labels[0].copy(), preds[0].copy())
+                            ))
+                            .size(36),
+                        )
+                        .push(
+                            Text::new(format!(
+                                "Flexor tendons :{:.3}\n",
+                                calcDC(labels[1].copy(), preds[1].copy())
+                            ))
+                            .size(36),
+                        )
+                        .push(
+                            Text::new(format!(
+                                "Median nerve :{:.3}\n",
+                                calcDC(labels[2].copy(), preds[2].copy())
+                            ))
+                            .size(36),
+                        ),
                 )
         } else {
-            Column::new()
-                .push(Text::new("").size(10))
-                .push(Text::new("").size(10))
+            Row::new().push(
+                Column::new()
+                    .push(Text::new("").size(10))
+                    .push(Text::new("").size(10)),
+            )
         };
 
         let main_container = Row::new()
