@@ -15,7 +15,7 @@ const todo = (() => {
                         `更多 vector quantization 的實驗`, html.br(),
                     ]),
                     html.li()([
-                        `關於將 GMM 使用於 SE 的可行性研究`, html.br(), html.br(),
+                        `是否能將語音的頻譜分解成多個 Gaussian Kernel，並將其用來解決 SE 問題`, html.br(), html.br(),
                     ]),
                 ]),
             ]),
