@@ -13,49 +13,15 @@ const glUnit = (() => {
          */
         constructor(gl, doc, bin, imgs) {
             const mesh = doc.meshes[0]
-
-            const texture = gl.createTexture()
-            gl.bindTexture(gl.TEXTURE_2D, texture)
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
-            gl.generateMipmap(gl.TEXTURE_2D)
-
-
             const primitive = mesh.primitives[0]
-            const baseColorTexture = doc
-                .materials[primitive.material]
-                .pbrMetallicRoughness
-                .baseColorTexture
-            const texCoordIdx = baseColorTexture.texCoord
-            gl.activeTexture(gl.TEXTURE0 + texCoordIdx)
-            const texIdx = baseColorTexture
-                .index
-            const tex = doc.textures[texIdx]
-
-            const sampler = doc.samplers[tex.sampler]
-
-            if (sampler["magFilter"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, sampler["magFilter"])
-            }
-            if (sampler["minFilter"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, sampler["minFilter"])
-            }
-            if (sampler["wrapS"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, sampler["wrapS"])
-            }
-            if (sampler["wrapR"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_R, sampler["wrapR"])
-            }
-            if (sampler["wrapT"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, sampler["wrapT"])
-            }
 
             const vao = gl.createVertexArray()
             gl.bindVertexArray(vao)
-            Object
+            let shader_info = Object
                 .keys(primitive.attributes)
-                .forEach((attribute, loc) => {
+                .map((attribute, loc) => {
                     const accessor = doc.accessors[primitive.attributes[attribute]]
-                    const bufferView = doc.bufferViews[accessor.bufferView]
+                    const bufferView = doc.bufferViews[accessor.bufferView];
 
                     gl.enableVertexAttribArray(loc)
                     const vbo = gl.createBuffer()
@@ -76,6 +42,7 @@ const glUnit = (() => {
                         bufferView["byteStride"] || 0,
                         accessor["byteOffset"] || 0
                     )
+                    return { loc, type: accessor.type.toLowerCase(), attribute: attribute.toLowerCase() }
                 })
             {
                 const accessor = doc.accessors[primitive.indices]
@@ -94,6 +61,25 @@ const glUnit = (() => {
             gl.bindVertexArray(null)
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
             gl.bindBuffer(gl.ARRAY_BUFFER, null)
+
+
+            let vs_in = shader_info.map(({ loc, type, attribute }) => {
+                return `layout (location = ${loc}) in ${type} a_${attribute};\n`
+            })
+            let vs_out = shader_info.map(({ loc, type, attribute }) => {
+                return `out ${type} v_${attribute};\n`
+            })
+            let vs_assign = shader_info.map(({ loc, type, attribute }) => {
+                return `v_${attribute} = a_${attribute};\n`
+            })
+
+            console.log(vs_in)
+            console.log(vs_out)
+            console.log(vs_assign)
+            let fs_in = shader_info.map(({ loc, type, attribute }) => {
+                return `in ${type} v_${attribute};\n`
+            })
+            console.log(fs_in)
 
             {
                 this.gl = gl
