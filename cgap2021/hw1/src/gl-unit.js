@@ -1,4 +1,5 @@
 ///<reference path="../src/gltf.js">
+///<reference path="../src/shader.js">
 ///<reference path="../src/gl-matrix.js">
 const glUnit = (() => {
     class GltfDoc extends gltf.types.Doc { }
@@ -31,18 +32,30 @@ const glUnit = (() => {
                         bin.slice(
                             bufferView.byteOffset,
                             bufferView.byteOffset + bufferView.byteLength
-                        ),
+                        ).buffer,
                         gl.STATIC_DRAW,
                     )
+                    let size = (() => {
+                        switch (accessor.type) {
+                            case "SCALAR":
+                                return 1
+                            case "VEC2":
+                                return 2
+                            case "VEC3":
+                                return 3
+                            case "VEC4":
+                                return 4
+                        }
+                    })()
                     gl.vertexAttribPointer(
                         loc,
-                        1,
+                        size,
                         accessor.componentType,
                         false,
                         bufferView["byteStride"] || 0,
                         accessor["byteOffset"] || 0
                     )
-                    return { loc, type: accessor.type.toLowerCase(), attribute: attribute.toLowerCase() }
+                    return { loc, type: accessor.type.toLowerCase(), attribute: attribute.toLowerCase(), vbo }
                 })
             {
                 const accessor = doc.accessors[primitive.indices]
@@ -54,13 +67,10 @@ const glUnit = (() => {
                     bin.slice(
                         bufferView.byteOffset,
                         bufferView.byteOffset + bufferView.byteLength
-                    ),
+                    ).buffer,
                     gl.STATIC_DRAW,
                 )
             }
-            gl.bindVertexArray(null)
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
-            gl.bindBuffer(gl.ARRAY_BUFFER, null)
 
 
             let vs_in = shader_info.map(({ loc, type, attribute }) => {
@@ -72,14 +82,34 @@ const glUnit = (() => {
             let vs_assign = shader_info.map(({ loc, type, attribute }) => {
                 return `v_${attribute} = a_${attribute};\n`
             })
+            let vs_source =
+                `#version 300 es\n` +
+                // `precision mediump float;\n` +
+                `uniform mat4 u_mvp;\n` +
+                vs_in.reduce((prev, curr) => prev + curr, ``) +
+                vs_out.reduce((prev, curr) => prev + curr, ``) +
+                `out vec4 v_color;\n` +
+                `void main(void) {\n` +
+                `   v_color = vec4(1.0, 0.0, 0.0, 1.0);\n` +
+                vs_assign.reduce((prev, curr) => prev + `   ` + curr, ``) +
+                `   gl_Position = u_mvp * vec4(a_position, 1.0);\n` +
+                `}\n`
 
-            console.log(vs_in)
-            console.log(vs_out)
-            console.log(vs_assign)
+            console.log(vs_source)
             let fs_in = shader_info.map(({ loc, type, attribute }) => {
                 return `in ${type} v_${attribute};\n`
             })
-            console.log(fs_in)
+            let fs_source =
+                `#version 300 es\n` +
+                `precision mediump float;\n` +
+                `in vec4 v_color;\n` +
+                fs_in.reduce((prev, curr) => prev + curr, ``) +
+                `out vec4 f_color;\n` +
+                `void main(void) {\n` +
+                `   f_color = v_color;\n` +
+                // `   f_color = vec3(0.0, 0.0, 0.0);\n` +
+                `}\n`
+            console.log(fs_source)
 
             {
                 this.gl = gl
@@ -88,7 +118,8 @@ const glUnit = (() => {
                 this.count = accessor.count
                 this.mode = primitive["mode"] || gl.TRIANGLES
                 this.type = accessor.componentType
-                this.program = null
+                this.program = shader.createProgram(gl, vs_source, fs_source)
+                this.vbo = shader_info.map(({ vbo }) => vbo)
             }
         }
         /**
@@ -98,10 +129,11 @@ const glUnit = (() => {
          */
         draw(mvp, textures) {
             const gl = this.gl
-            gl.useProgram(this.program)
-            let loc = gl.getUniformLocation(this.program, "u_mvp");
-            gl.uniformMatrix4fv(loc, false, mvp)
             gl.bindVertexArray(this.vao)
+            gl.useProgram(this.program)
+            let u_mvp_loc = gl.getUniformLocation(this.program, "u_mvp");
+            console.log(u_mvp_loc)
+            gl.uniformMatrix4fv(u_mvp_loc, false, mvp)
             gl.drawElements(this.mode, this.count, this.type, 0)
             gl.bindVertexArray(null)
         }

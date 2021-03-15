@@ -7,15 +7,6 @@ const shader = (() => {
      * @returns 
      */
     const createProgram = (gl, vsSource, fsSource) => {
-
-        /*const canvas = document.createElement("canvas")
-        canvas.width = 800
-        canvas.height = 600
-        document.body.appendChild(canvas)
-    
-        // 初始化 GL context
-        const gl = canvas.getContext("webgl2", {})*/
-
         const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vsSource);
         const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fsSource);
 
@@ -69,46 +60,8 @@ const shader = (() => {
         return shader;
     }
 
-    /**
-     * 
-     * @param {number} bones 
-     */
-    const createShaderSource = (bones) => {
-        const vertexShader = `#version 300 es
-precision mediump float;
-
-uniform mat4 u_jointMatrix[${bones}];
-uniform mat4 u_mvp;
-
-layout (location = 0) in vec3 v_position;
-layout (location = 1) in vec4 v_joint;
-layout (location = 2) in vec4 v_weight;
-
-void main() {
-    mat4 skinMatrix =
-        v_weight.x * u_jointMatrix[int(v_joint.x)] +
-        v_weight.y * u_jointMatrix[int(v_joint.y)] +
-        v_weight.z * u_jointMatrix[int(v_joint.z)] +
-        v_weight.w * u_jointMatrix[int(v_joint.w)];
-    gl_Position = u_mvp * vec4(v_position, 1.0);
-}`
-        const fragmentShader = `#version 300 es
-precision mediump float;
-
-out vec4 color;
-
-void main()
-{
-    // color = vec4(result, 1.0f);
-}`
-        return {
-            vertexShader,
-            fragmentShader,
-        }
-    }
     return {
         createProgram,
-        createShaderSource,
         compileShader,
     }
 })()
