@@ -105,9 +105,10 @@ const glUnit = (() => {
                 `in vec4 v_color;\n` +
                 fs_in.reduce((prev, curr) => prev + curr, ``) +
                 `out vec4 f_color;\n` +
+                `uniform sampler2D u_texture;\n` +
                 `void main(void) {\n` +
-                `   f_color = v_color;\n` +
-                // `   f_color = vec3(0.0, 0.0, 0.0);\n` +
+                // `   f_color = v_color;\n` +
+                `   f_color =  texture(u_texture, v_texcoord_0);\n` +
                 `}\n`
             console.log(fs_source)
 
@@ -129,8 +130,13 @@ const glUnit = (() => {
          */
         draw(mvp, textures) {
             const gl = this.gl
-            gl.bindVertexArray(this.vao)
             gl.useProgram(this.program)
+            // var u_image0Location = gl.getUniformLocation(this.program, "u_texture");
+            // console.log(u_image0Location)
+            // gl.uniform1i(u_image0Location, 0);
+            gl.activeTexture(gl.TEXTURE0)
+            gl.bindTexture(gl.TEXTURE_2D, textures[0])
+            gl.bindVertexArray(this.vao)
             let u_mvp_loc = gl.getUniformLocation(this.program, "u_mvp");
             console.log(u_mvp_loc)
             gl.uniformMatrix4fv(u_mvp_loc, false, mvp)

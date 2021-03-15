@@ -92,27 +92,33 @@ const gltf = (() => {
             const sampler = doc.samplers[texInfo.sampler]
             if (sampler["magFilter"] != undefined) {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, sampler["magFilter"])
+                console.log(`magFilter`)
             }
             if (sampler["minFilter"] != undefined) {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, sampler["minFilter"])
+                console.log(`minFilter`)
             }
             if (sampler["wrapS"] != undefined) {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, sampler["wrapS"])
+                console.log(`wrapS`)
             }
             if (sampler["wrapT"] != undefined) {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, sampler["wrapT"])
+                console.log(`wrapT`)
             }
             const img = imgs[texInfo.source]
 
-            gl.texImage2D(
-                gl.TEXTURE_2D,
-                0,
-                gl.RGBA,
-                gl.RGBA,
-                gl.UNSIGNED_BYTE,
-                img,
-            )
-
+            // gl.texImage2D(
+            //     gl.TEXTURE_2D,
+            //     0,
+            //     gl.RGBA,
+            //     gl.RGBA,
+            //     gl.UNSIGNED_BYTE,
+            //     img,
+            // )
+            gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, img.width, img.height);
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGB, gl.UNSIGNED_BYTE, img);
+            gl.generateMipmap(gl.TEXTURE_2D);
             return texture
         })
     }
@@ -130,20 +136,20 @@ const gltf = (() => {
                 .reduce((shader, attribute, location) => {
                     let idx = primitive.attributes[attribute]
                     let type = accessors[idx].type.toLowerCase()
-                    return shader + `layout (location = ${location}) in ${type} a_${attribute.toLowerCase()};\n`
+                    return shader + `layout(location = ${location}) in ${type} a_${attribute.toLowerCase()}; \n`
                 }, "") +
             Object
                 .keys(primitive.attributes)
                 .reduce((shader, attribute) => {
                     let idx = primitive.attributes[attribute]
                     let type = accessors[idx].type.toLowerCase()
-                    return shader + `out ${type} v_${attribute};\n`
+                    return shader + `out ${type} v_${attribute}; \n`
                 }, "") +
             "void main() {\n" +
             Object
                 .keys(primitive.attributes)
                 .reduce((shader, attribute) => {
-                    return shader + `v_${attribute} = a_${attribute};\n`
+                    return shader + `v_${attribute} = a_${attribute}; \n`
                 }, "") +
             "   // mat4 skinMatrix =" +
             "   //     a_weight.x * u_jointMatrix[int(a_joint.x)] +\n" +
