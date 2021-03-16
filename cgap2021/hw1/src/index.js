@@ -19,7 +19,6 @@
     gl.enable(gl.CULL_FACE);
     console.log(gl)
 
-
     /**
      * @type {HTMLButtonElement}
      */
@@ -52,22 +51,37 @@
                     zNear,
                     zFar);
                 let cubeRotation = 0.7;
-
-                glMatrix.mat4.translate(projectionMatrix,     // destination matrix
-                    projectionMatrix,     // matrix to translate
+                let v = glMatrix.mat4.translate(
+                    glMatrix.mat4.create(),     // destination matrix
+                    glMatrix.mat4.create(),     // matrix to translate
                     [-0.0, 0.0, -6.0]);  // amount to translate
-                glMatrix.mat4.rotate(projectionMatrix,  // destination matrix
-                    projectionMatrix,  // matrix to rotate
-                    cubeRotation,     // amount to rotate in radians
-                    [0, 0, 1]);       // axis to rotate around (Z)
-                glMatrix.mat4.rotate(projectionMatrix,  // destination matrix
-                    projectionMatrix,  // matrix to rotate
-                    cubeRotation * .7,// amount to rotate in radians
-                    [0, 1, 0]);       // axis to rotate around (X)
-                console.log(projectionMatrix)
-                const primitive = glUnit.primitive(gl, doc, bin)
+                let mvp = glMatrix.mat4.multiply(
+                    glMatrix.mat4.create(),
+                    projectionMatrix,
+                    v,
+                )
+                console.log(mvp)
+
+                // glMatrix.mat4.translate(projectionMatrix,     // destination matrix
+                //     projectionMatrix,     // matrix to translate
+                //     [-0.0, 0.0, -20.0]);  // amount to translate
+                // glMatrix.mat4.rotate(projectionMatrix,  // destination matrix
+                //     projectionMatrix,  // matrix to rotate
+                //     cubeRotation,     // amount to rotate in radians
+                //     [0, 0, 1]);       // axis to rotate around (Z)
+                // glMatrix.mat4.rotate(projectionMatrix,  // destination matrix
+                //     projectionMatrix,  // matrix to rotate
+                //     cubeRotation * .7,// amount to rotate in radians
+                //     [0, 1, 0]);       // axis to rotate around (X)
+
+                const sceneInfo = doc.scenes[0]
+                console.log(sceneInfo)
+                const scene = glUnit.scene(gl, sceneInfo, doc, bin, textures)
+                // const meshInfo1 = doc.meshes[1]
+                // const mesh1 = glUnit.mesh(gl, meshInfo1, doc, bin, textures)
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-                primitive.draw(projectionMatrix, textures)
+                scene.draw(mvp)
+                // mesh1.draw(projectionMatrix)
             })
             reader.readAsArrayBuffer(files[0])
         }

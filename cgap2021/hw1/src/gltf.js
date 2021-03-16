@@ -52,8 +52,8 @@ const gltf = (() => {
 
                 let imgBlob = new Blob(
                     [bin.slice(
-                        bufferView.byteOffset,
-                        bufferView.byteOffset + bufferView.byteLength
+                        (bufferView.byteOffset || 0),
+                        (bufferView.byteOffset || 0) + bufferView.byteLength
                     )],
                     { type: image.mimeType, },
                 )
@@ -89,22 +89,24 @@ const gltf = (() => {
         return (doc.textures || []).map(texInfo => {
             const texture = gl.createTexture()
             gl.bindTexture(gl.TEXTURE_2D, texture)
-            const sampler = doc.samplers[texInfo.sampler]
-            if (sampler["magFilter"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, sampler["magFilter"])
-                console.log(`magFilter`)
-            }
-            if (sampler["minFilter"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, sampler["minFilter"])
-                console.log(`minFilter`)
-            }
-            if (sampler["wrapS"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, sampler["wrapS"])
-                console.log(`wrapS`)
-            }
-            if (sampler["wrapT"] != undefined) {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, sampler["wrapT"])
-                console.log(`wrapT`)
+            if (texInfo["sampler"] != undefined) {
+                const sampler = doc.samplers[texInfo.sampler]
+                if (sampler["magFilter"] != undefined) {
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, sampler["magFilter"])
+                    console.log(`magFilter`)
+                }
+                if (sampler["minFilter"] != undefined) {
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, sampler["minFilter"])
+                    console.log(`minFilter`)
+                }
+                if (sampler["wrapS"] != undefined) {
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, sampler["wrapS"])
+                    console.log(`wrapS`)
+                }
+                if (sampler["wrapT"] != undefined) {
+                    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, sampler["wrapT"])
+                    console.log(`wrapT`)
+                }
             }
             const img = imgs[texInfo.source]
 
