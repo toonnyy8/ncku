@@ -10,14 +10,116 @@
      */
     const canvas = document.getElementById("canvas")
 
-    const gl = canvas.getContext("webgl2")
+    const gl = canvas.getContext("webgl2", { preserveDrawingBuffer: true })
     gl.clearColor(0, 0, 0, 1)
+    gl.clearDepth(1)
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
-    gl.enable(gl.DEPTH_TEST)
+    gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthMask(true)
     gl.depthFunc(gl.LEQUAL)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-    gl.enable(gl.CULL_FACE);
-    console.log(gl)
+
+    const fieldOfView = 60 * Math.PI / 180;   // in radians
+    const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+    const zNear = 0.01;
+    const zFar = 1000;
+    const projectionMatrix = glMatrix.mat4.perspective(
+        glMatrix.mat4.create(),
+        fieldOfView,
+        aspect,
+        zNear,
+        zFar,
+    )
+    let rotationY = 0;
+    let rotationX = 0;
+    let radius = 5
+    let nowRadius = 5
+    let offset = [0, 0, 0]
+    let pointerdown = false
+    let mouseX = 0
+    let mouseY = 0
+
+    canvas.ontouchstart = (e) => { e.preventDefault(); }
+    canvas.ontouchend = (e) => { e.preventDefault(); }
+    canvas.ontouchmove = (e) => { e.preventDefault(); }
+
+    canvas.onmousedown = (e) => { e.preventDefault(); }
+    canvas.onmouseup = (e) => { e.preventDefault(); }
+    canvas.onmousemove = (e) => { e.preventDefault(); }
+
+    canvas.onpointerdown = (e) => {
+        pointerdown = true
+        mouseX = e.x
+        mouseY = e.y
+    }
+    canvas.onpointerup = (e) => { pointerdown = false }
+    canvas.onpointermove = (e) => {
+        e.preventDefault();
+        if (pointerdown) {
+            rotationY += Math.PI * (e.x - mouseX) / 360
+            rotationX += Math.PI * (e.y - mouseY) / 360
+        }
+        mouseX = e.x
+        mouseY = e.y
+    }
+    canvas.onwheel = (e) => {
+        if (e.deltaY > 0) { radius *= 1.05 }
+        else { radius /= 1.05 }
+    }
+    let scene
+    let renderLoop = () => {
+        if (nowRadius > radius / 1.01 && nowRadius < radius * 1.01) {
+            nowRadius = radius
+        } else
+            if (nowRadius < radius) {
+                nowRadius *= 1.01
+            } else if (nowRadius > radius) {
+                nowRadius /= 1.01
+            }
+        let v = glMatrix.mat4.lookAt(
+            glMatrix.mat4.create(),
+            [
+                offset[0],
+                offset[1],
+                nowRadius + offset[2],
+            ],
+            offset,
+            [0, 1, 0],
+        )
+
+        let mvp = glMatrix.mat4.multiply(
+            glMatrix.mat4.create(),
+            projectionMatrix,
+            v,
+        )
+        if (rotationY > Math.PI * 2) {
+            rotationY -= Math.PI * 2
+        }
+        if (rotationX > Math.PI / 2) {
+            rotationX = Math.PI / 2
+        } else if (rotationX < -Math.PI / 2) {
+            rotationX = -Math.PI / 2
+        }
+        mvp = glMatrix.mat4.rotateX(
+            glMatrix.mat4.create(),
+            mvp,
+            rotationX
+        )
+        mvp = glMatrix.mat4.rotateY(
+            glMatrix.mat4.create(),
+            mvp,
+            rotationY
+        )
+
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+        if (scene != undefined) {
+            scene.draw(mvp)
+        }
+
+        requestAnimationFrame(renderLoop)
+    }
+    renderLoop()
 
     /**
      * @type {HTMLButtonElement}
@@ -32,56 +134,21 @@
             const reader = new FileReader()
             reader.addEventListener("loadend", async () => {
                 const { doc, bin, imgs } = await gltf.importFromArrayBuffer(reader.result)
-                console.log(doc)
-                console.log(imgs)
-                imgs.forEach(img => document.body.appendChild(img))
 
                 const textures = gltf.createTexture(gl, doc, imgs)
-                console.log(textures)
-
-                const fieldOfView = 45 * Math.PI / 180;   // in radians
-                const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-                const zNear = 0.1;
-                const zFar = 100.0;
-                const projectionMatrix = glMatrix.mat4.create();
-
-                glMatrix.mat4.perspective(projectionMatrix,
-                    fieldOfView,
-                    aspect,
-                    zNear,
-                    zFar);
-                let cubeRotation = 0.7;
-                let v = glMatrix.mat4.translate(
-                    glMatrix.mat4.create(),     // destination matrix
-                    glMatrix.mat4.create(),     // matrix to translate
-                    [-0.0, 0.0, -6.0]);  // amount to translate
-                let mvp = glMatrix.mat4.multiply(
-                    glMatrix.mat4.create(),
-                    projectionMatrix,
-                    v,
-                )
-                console.log(mvp)
-
-                // glMatrix.mat4.translate(projectionMatrix,     // destination matrix
-                //     projectionMatrix,     // matrix to translate
-                //     [-0.0, 0.0, -20.0]);  // amount to translate
-                // glMatrix.mat4.rotate(projectionMatrix,  // destination matrix
-                //     projectionMatrix,  // matrix to rotate
-                //     cubeRotation,     // amount to rotate in radians
-                //     [0, 0, 1]);       // axis to rotate around (Z)
-                // glMatrix.mat4.rotate(projectionMatrix,  // destination matrix
-                //     projectionMatrix,  // matrix to rotate
-                //     cubeRotation * .7,// amount to rotate in radians
-                //     [0, 1, 0]);       // axis to rotate around (X)
+                console.log(doc)
+                let size_accessors = doc.accessors.filter(accessor => accessor["max"] != undefined)
+                radius = size_accessors
+                    .map(accessor =>
+                        accessor.max
+                            .map((v, idx) => (v - accessor.min[idx]) ** 2)
+                            .reduce((prev, curr) => prev + curr) ** 0.5,
+                        0)
+                    .reduce((prev, curr) => prev > curr ? prev : curr, 0)
+                nowRadius = radius
 
                 const sceneInfo = doc.scenes[0]
-                console.log(sceneInfo)
-                const scene = glUnit.scene(gl, sceneInfo, doc, bin, textures)
-                // const meshInfo1 = doc.meshes[1]
-                // const mesh1 = glUnit.mesh(gl, meshInfo1, doc, bin, textures)
-                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-                scene.draw(mvp)
-                // mesh1.draw(projectionMatrix)
+                scene = glUnit.scene(gl, sceneInfo, doc, bin, textures)
             })
             reader.readAsArrayBuffer(files[0])
         }

@@ -142,8 +142,8 @@ const glUnit = (() => {
             gl.useProgram(this.program)
             var u_basecolorLocation = gl.getUniformLocation(this.program, "u_basecolor");
             gl.uniform4fv(u_basecolorLocation, [0, 0, 0, 0])
+
             var u_textureLocation = gl.getUniformLocation(this.program, "u_texture");
-            console.log(u_textureLocation)
             gl.uniform1i(u_textureLocation, 0)
             gl.activeTexture(gl.TEXTURE0)
             gl.bindTexture(gl.TEXTURE_2D, this.baseColorTexture)
@@ -260,7 +260,6 @@ const glUnit = (() => {
                 p,
                 this.mat,
             )
-            console.log(this.mat)
             if (this.mesh != undefined) {
                 this.mesh.draw(mvp)
             }
@@ -306,7 +305,6 @@ const glUnit = (() => {
          * @param {Float32Array} p
          */
         draw(p) {
-            console.log(this.nodes)
             this.nodes.forEach(node => node.draw(p))
         }
 

@@ -78,7 +78,6 @@ const gltf = (() => {
         return asModel(new Uint8Array(bytes))
     }
 
-
     /**
      *
      * @param {WebGL2RenderingContext} gl
@@ -93,83 +92,24 @@ const gltf = (() => {
                 const sampler = doc.samplers[texInfo.sampler]
                 if (sampler["magFilter"] != undefined) {
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, sampler["magFilter"])
-                    console.log(`magFilter`)
                 }
                 if (sampler["minFilter"] != undefined) {
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, sampler["minFilter"])
-                    console.log(`minFilter`)
                 }
                 if (sampler["wrapS"] != undefined) {
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, sampler["wrapS"])
-                    console.log(`wrapS`)
                 }
                 if (sampler["wrapT"] != undefined) {
                     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, sampler["wrapT"])
-                    console.log(`wrapT`)
                 }
             }
             const img = imgs[texInfo.source]
 
-            // gl.texImage2D(
-            //     gl.TEXTURE_2D,
-            //     0,
-            //     gl.RGBA,
-            //     gl.RGBA,
-            //     gl.UNSIGNED_BYTE,
-            //     img,
-            // )
             gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, img.width, img.height);
             gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGB, gl.UNSIGNED_BYTE, img);
             gl.generateMipmap(gl.TEXTURE_2D);
             return texture
         })
-    }
-
-    /**
-     * 
-     * @param {Primitive} primitive
-     * @param {Accessor[]} accessors
-     */
-    const createShader = (primitive, accessors) => {
-        let vertexShader =
-            "#version 300 es\n" +
-            Object
-                .keys(primitive.attributes)
-                .reduce((shader, attribute, location) => {
-                    let idx = primitive.attributes[attribute]
-                    let type = accessors[idx].type.toLowerCase()
-                    return shader + `layout(location = ${location}) in ${type} a_${attribute.toLowerCase()}; \n`
-                }, "") +
-            Object
-                .keys(primitive.attributes)
-                .reduce((shader, attribute) => {
-                    let idx = primitive.attributes[attribute]
-                    let type = accessors[idx].type.toLowerCase()
-                    return shader + `out ${type} v_${attribute}; \n`
-                }, "") +
-            "void main() {\n" +
-            Object
-                .keys(primitive.attributes)
-                .reduce((shader, attribute) => {
-                    return shader + `v_${attribute} = a_${attribute}; \n`
-                }, "") +
-            "   // mat4 skinMatrix =" +
-            "   //     a_weight.x * u_jointMatrix[int(a_joint.x)] +\n" +
-            "   //     a_weight.y * u_jointMatrix[int(a_joint.y)] +\n" +
-            "   //     a_weight.z * u_jointMatrix[int(a_joint.z)] +\n" +
-            "   //     a_weight.w * u_jointMatrix[int(a_joint.w)];\n" +
-            "   gl_Position = mvp * vec4(a_POSITION, 1.0);\n" +
-            "}"
-        let fragmentShader =
-            "#version 300 es\n" +
-            "precision mediump float;\n" +
-            "in vec2 v_TEXCOORD;\n" +
-            "out vec4 color;\n" +
-            "uniform sampler2D u_TEXTURE;\n" +
-            "void main() {\n" +
-            "   color = texture(u_texture, v_texcoord);\n" +
-            "}"
-        return { vertexShader, fragmentShader }
     }
 
     class Doc {
