@@ -87,7 +87,6 @@ const glUnit = (() => {
             })
             let vs_source =
                 `#version 300 es\n` +
-                // `precision mediump float;\n` +
                 `uniform mat4 u_mvp;\n` +
                 vs_in.reduce((prev, curr) => prev + curr, ``) +
                 vs_out.reduce((prev, curr) => prev + curr, ``) +
@@ -107,13 +106,22 @@ const glUnit = (() => {
                 `out vec4 f_color;\n` +
                 `uniform sampler2D u_texture;\n` +
                 `uniform vec4 u_basecolor;\n` +
+                `uniform int u_useTexture;\n` +
                 `void main(void) {\n` +
                 // `   vec4 texcolor = vec4(0.,0.,0.,0.); \n` +
                 // `   vec4 texcolor = texture(u_texture, v_texcoord_0); \n` +
                 // `   f_color.a = texcolor.a + u_basecolor.a * (1.0 - texcolor.a); \n` +
                 // `   if (f_color.a == 0.) { f_color.rgb = vec3(0., 0., 0.); } \n` +
                 // `   else { f_color.rgb = texcolor.rgb * texcolor.a + u_basecolor.rgb * u_basecolor.a * (1. - texcolor.a); }; \n` +
-                `   f_color = texture(u_texture, v_texcoord_0);\n` +
+                `   if (u_useTexture == 0) {\n` +
+                `      f_color = u_basecolor;\n` +
+                `   } else {\n` +
+                `       vec4 texcolor = texture(u_texture, v_texcoord_0); \n` +
+                `       f_color.a = texcolor.a + u_basecolor.a * (1.0 - texcolor.a); \n` +
+                `       if (f_color.a == 0.) { f_color.rgb = vec3(0., 0., 0.); } \n` +
+                `       else { f_color.rgb = texcolor.rgb * texcolor.a + u_basecolor.rgb * u_basecolor.a * (1. - texcolor.a); }; \n` +
+                // `       f_color = texture(u_texture, v_texcoord_0);\n` +
+                `   }\n` +
                 `}\n`
             console.log(fs_source)
 
@@ -131,6 +139,13 @@ const glUnit = (() => {
                 if (baseColorTexture != undefined) {
                     this.baseColorTexture = textures[baseColorTexture.index]
                 }
+                const baseColorFactor = doc.materials[primitiveInfo.material]
+                    .pbrMetallicRoughness["baseColorFactor"]
+                if (baseColorFactor != undefined) {
+                    this.baseColorFactor = baseColorFactor
+                } else {
+                    this.baseColorFactor = [0, 0, 0, 0]
+                }
             }
         }
         /**
@@ -140,10 +155,18 @@ const glUnit = (() => {
         draw(mvp) {
             const gl = this.gl
             gl.useProgram(this.program)
-            var u_basecolorLocation = gl.getUniformLocation(this.program, "u_basecolor");
-            gl.uniform4fv(u_basecolorLocation, [0, 0, 0, 0])
 
-            var u_textureLocation = gl.getUniformLocation(this.program, "u_texture");
+            let u_useTextureLocation = gl.getUniformLocation(this.program, "u_useTexture");
+            if (this.baseColorTexture == undefined) {
+                gl.uniform1i(u_useTextureLocation, 0)
+            } else {
+                gl.uniform1i(u_useTextureLocation, 1)
+            }
+
+            let u_basecolorLocation = gl.getUniformLocation(this.program, "u_basecolor");
+            gl.uniform4fv(u_basecolorLocation, this.baseColorFactor)
+
+            let u_textureLocation = gl.getUniformLocation(this.program, "u_texture");
             gl.uniform1i(u_textureLocation, 0)
             gl.activeTexture(gl.TEXTURE0)
             gl.bindTexture(gl.TEXTURE_2D, this.baseColorTexture)
@@ -184,6 +207,10 @@ const glUnit = (() => {
          * @type {WebGLTexture}
          */
         baseColorTexture
+        /**
+         * @type {[number, number, number, number]}
+         */
+        baseColorFactor
     }
 
     class Mesh {
