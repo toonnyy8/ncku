@@ -75,6 +75,27 @@ const glUnit = (() => {
                 )
             }
 
+            {
+                this.gl = gl
+                this.vao = vao
+                const accessor = doc.accessors[primitiveInfo.indices]
+                this.count = accessor.count
+                this.mode = primitiveInfo["mode"] || gl.TRIANGLES
+                this.type = accessor.componentType
+                this.vbo = shader_info.map(({ vbo }) => vbo)
+                const baseColorTexture = doc.materials[primitiveInfo.material]
+                    .pbrMetallicRoughness["baseColorTexture"]
+                if (baseColorTexture != undefined) {
+                    this.baseColorTexture = textures[baseColorTexture.index]
+                }
+                const baseColorFactor = doc.materials[primitiveInfo.material]
+                    .pbrMetallicRoughness["baseColorFactor"]
+                if (baseColorFactor != undefined) {
+                    this.baseColorFactor = baseColorFactor
+                } else {
+                    this.baseColorFactor = [0, 0, 0, 0]
+                }
+            }
 
             let vs_in = shader_info.map(({ loc, type, attribute }) => {
                 return `layout (location = ${loc}) in ${type} a_${attribute};\n`
@@ -106,46 +127,27 @@ const glUnit = (() => {
                 `out vec4 f_color;\n` +
                 `uniform sampler2D u_texture;\n` +
                 `uniform vec4 u_basecolor;\n` +
-                `uniform int u_useTexture;\n` +
+                // `uniform int u_useTexture;\n` +
                 `void main(void) {\n` +
-                // `   vec4 texcolor = vec4(0.,0.,0.,0.); \n` +
-                // `   vec4 texcolor = texture(u_texture, v_texcoord_0); \n` +
-                // `   f_color.a = texcolor.a + u_basecolor.a * (1.0 - texcolor.a); \n` +
-                // `   if (f_color.a == 0.) { f_color.rgb = vec3(0., 0., 0.); } \n` +
-                // `   else { f_color.rgb = texcolor.rgb * texcolor.a + u_basecolor.rgb * u_basecolor.a * (1. - texcolor.a); }; \n` +
-                `   if (u_useTexture == 0) {\n` +
-                `      f_color = u_basecolor;\n` +
-                `   } else {\n` +
-                `       vec4 texcolor = texture(u_texture, v_texcoord_0); \n` +
-                `       f_color.a = texcolor.a + u_basecolor.a * (1.0 - texcolor.a); \n` +
-                `       if (f_color.a == 0.) { f_color.rgb = vec3(0., 0., 0.); } \n` +
-                `       else { f_color.rgb = texcolor.rgb * texcolor.a + u_basecolor.rgb * u_basecolor.a * (1. - texcolor.a); }; \n` +
-                // `       f_color = texture(u_texture, v_texcoord_0);\n` +
-                `   }\n` +
+                (() => {
+                    let s = ""
+                    if (this.baseColorTexture != undefined) {
+                        s =
+                            `   vec4 texcolor = texture(u_texture, v_texcoord_0);\n` +
+                            `   f_color.a = texcolor.a + u_basecolor.a * (1.0 - texcolor.a);\n` +
+                            `   if (f_color.a == 0.) { f_color.rgb = vec3(0., 0., 0.); }\n` +
+                            `   else { f_color.rgb = texcolor.rgb * texcolor.a + u_basecolor.rgb * u_basecolor.a * (1. - texcolor.a); };\n`
+                    } else {
+                        s =
+                            `   f_color = u_basecolor;\n`
+                    }
+                    return s
+                })() +
                 `}\n`
             console.log(fs_source)
 
             {
-                this.gl = gl
-                this.vao = vao
-                const accessor = doc.accessors[primitiveInfo.indices]
-                this.count = accessor.count
-                this.mode = primitiveInfo["mode"] || gl.TRIANGLES
-                this.type = accessor.componentType
                 this.program = shader.createProgram(gl, vs_source, fs_source)
-                this.vbo = shader_info.map(({ vbo }) => vbo)
-                const baseColorTexture = doc.materials[primitiveInfo.material]
-                    .pbrMetallicRoughness["baseColorTexture"]
-                if (baseColorTexture != undefined) {
-                    this.baseColorTexture = textures[baseColorTexture.index]
-                }
-                const baseColorFactor = doc.materials[primitiveInfo.material]
-                    .pbrMetallicRoughness["baseColorFactor"]
-                if (baseColorFactor != undefined) {
-                    this.baseColorFactor = baseColorFactor
-                } else {
-                    this.baseColorFactor = [0, 0, 0, 0]
-                }
             }
         }
         /**
@@ -156,12 +158,12 @@ const glUnit = (() => {
             const gl = this.gl
             gl.useProgram(this.program)
 
-            let u_useTextureLocation = gl.getUniformLocation(this.program, "u_useTexture");
-            if (this.baseColorTexture == undefined) {
-                gl.uniform1i(u_useTextureLocation, 0)
-            } else {
-                gl.uniform1i(u_useTextureLocation, 1)
-            }
+            // let u_useTextureLocation = gl.getUniformLocation(this.program, "u_useTexture");
+            // if (this.baseColorTexture == undefined) {
+            //     gl.uniform1i(u_useTextureLocation, 0)
+            // } else {
+            //     gl.uniform1i(u_useTextureLocation, 1)
+            // }
 
             let u_basecolorLocation = gl.getUniformLocation(this.program, "u_basecolor");
             gl.uniform4fv(u_basecolorLocation, this.baseColorFactor)
