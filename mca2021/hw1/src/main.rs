@@ -9,11 +9,11 @@ use indicatif::ProgressBar;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
-    let dev = false;
+    let dev = true;
     let dir_path = if dev {
-        ".data/soccer_out/*.jpg"
+        // ".data/soccer_out/*.jpg"
         // ".data/ngc_out/*.jpeg"
-        // ".data/news_out/*.jpg"
+        ".data/news_out/*.jpg"
     } else {
         args[1].as_str()
     };
@@ -68,18 +68,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{}", dir_path);
     let mut lower_threshold = 250.;
     let mut upper_threshold = 440.;
-    if args.len() >= 4 {
-        if args[2] == "-l" {
-            lower_threshold = args[3].parse::<u32>().unwrap() as f32;
-        } else if args[2] == "-u" {
-            upper_threshold = args[3].parse::<u32>().unwrap() as f32;
-        }
-    }
-    if args.len() >= 6 {
-        if args[4] == "-l" {
-            lower_threshold = args[5].parse::<u32>().unwrap() as f32;
-        } else if args[4] == "-u" {
-            upper_threshold = args[5].parse::<u32>().unwrap() as f32;
+    let mut correction = false;
+    for idx in 2..args.len() {
+        match args[idx].as_str() {
+            "-l" => {
+                lower_threshold = args[idx + 1].parse::<u32>().unwrap() as f32;
+            }
+            "-u" => {
+                upper_threshold = args[idx + 1].parse::<u32>().unwrap() as f32;
+            }
+            "-c" => correction = true,
+            _ => {}
         }
     }
 
@@ -124,26 +123,33 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     bar.finish();
 
-    shot_change_detection(&htg_diff_vec, lower_threshold, upper_threshold, true);
+    if !dev {
+        shot_change_detection(
+            &htg_diff_vec,
+            lower_threshold,
+            upper_threshold,
+            correction,
+            true,
+        );
+    } else {
+        let gt_vec = gt_to_vec(&news_gt, htg_diff_vec.len());
+        let mut pr_curve = Vec::<(f32, f32)>::new();
+        let thresholds = [50., 100., 150., 200., 250., 300., 350., 400.];
+        for &lower in &thresholds {
+            for &upper in &thresholds {
+                let pred_vec =
+                    shot_change_detection(&htg_diff_vec, lower, lower + upper, correction, false);
+                pr_curve.push((recall(&pred_vec, &gt_vec), precision(&pred_vec, &gt_vec)));
+            }
+        }
 
-    // let gt_vec = gt_to_vec(&soccer_gt, htg_diff_vec.len());
-    // let mut pr_curve = Vec::<(f32, f32)>::new();
-    // let thresholds = [50., 100., 150., 200., 250., 300., 350., 400.];
-    // for &lower in &thresholds {
-    //     for &upper in &thresholds {
-    //         let pred_vec = shot_change_detection(&htg_diff_vec, lower, lower + upper, false);
-    //         pr_curve.push((recall(&pred_vec, &gt_vec), precision(&pred_vec, &gt_vec)));
-    //     }
-    // }
-
-    // println!("{:?}", pr_curve);
-    // pr_curve.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-    // pr_curve.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
-    // println!("Recall, Precision",);
-    // for &(r, p) in &pr_curve {
-    //     println!("{}, {}", r, p,);
-    // }
-
+        pr_curve.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+        pr_curve.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+        println!("Recall, Precision",);
+        for &(r, p) in &pr_curve {
+            println!("{}, {}", r, p,);
+        }
+    }
     Ok(())
 }
 
@@ -151,6 +157,7 @@ fn shot_change_detection(
     htg_diff_vec: &Vec<f32>,
     lower_threshold: f32,
     upper_threshold: f32,
+    correction: bool,
     show: bool,
 ) -> Vec<bool> {
     let mut pred_vec = Vec::<bool>::with_capacity(htg_diff_vec.len());
@@ -163,19 +170,21 @@ fn shot_change_detection(
     let mut start_idx = 0;
 
     for idx in 2..htg_diff_vec.len() - 2 {
-        let l_val = htg_diff_vec[idx - 1];
-        let l_max = f32::max(htg_diff_vec[idx - 1], htg_diff_vec[idx - 2]);
-        let r_val = htg_diff_vec[idx + 1];
-        let r_max = f32::max(htg_diff_vec[idx + 1], htg_diff_vec[idx + 2]);
+        if correction {
+            let l_val = htg_diff_vec[idx - 1];
+            let l_max = f32::max(htg_diff_vec[idx - 1], htg_diff_vec[idx - 2]);
+            let r_val = htg_diff_vec[idx + 1];
+            let r_max = f32::max(htg_diff_vec[idx + 1], htg_diff_vec[idx + 2]);
 
-        if (htg_diff_vec[idx] < lower_threshold
-            && lower_threshold < l_max
-            && lower_threshold < r_val)
-            || (htg_diff_vec[idx] < lower_threshold
-                && lower_threshold < l_val
-                && lower_threshold < r_max)
-        {
-            _htg_diff_vec[idx] = f32::max((l_max + r_val) / 2., (l_val + r_max) / 2.);
+            if (htg_diff_vec[idx] < lower_threshold
+                && lower_threshold < l_max
+                && lower_threshold < r_val)
+                || (htg_diff_vec[idx] < lower_threshold
+                    && lower_threshold < l_val
+                    && lower_threshold < r_max)
+            {
+                _htg_diff_vec[idx] = f32::max((l_max + r_val) / 2., (l_val + r_max) / 2.);
+            }
         }
 
         if _htg_diff_vec[idx] >= lower_threshold {
