@@ -9,7 +9,7 @@ use indicatif::ProgressBar;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
-    let dev = true;
+    let dev = false;
     let dir_path = if dev {
         // ".data/soccer_out/*.jpg"
         // ".data/ngc_out/*.jpeg"
