@@ -9,16 +9,16 @@ use indicatif::ProgressBar;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
-    let dev = true;
+    let dev = false;
     let dir_path = if dev {
-        // ".data/soccer_out/*.jpg"
+        ".data/soccer_out/*.jpg"
         // ".data/ngc_out/*.jpeg"
-        ".data/news_out/*.jpg"
+        // ".data/news_out/*.jpg"
     } else {
         args[1].as_str()
     };
-    let soccer_gt = [(89, 96), (378, 385), (567, 573)];
-    let ngc_gt = [
+    let soccer_gt = vec![(89, 96), (378, 385), (567, 573)];
+    let ngc_gt = vec![
         (127, 164),
         (196, 253),
         (285, 285),
@@ -56,7 +56,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         (1038, 1038),
         (1048, 1059),
     ];
-    let news_gt = [
+    let news_gt = vec![
         (73, 73),
         (235, 235),
         (301, 301),
@@ -101,7 +101,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .collect::<Vec<_>>(),
     );
     let mut htg_diff_vec = Vec::new();
-    // let prev_vec = arr1(&prev_img.to_vec());
 
     let bar = ProgressBar::new(paths.len() as u64);
     for idx in (0..paths.len()).step_by(1) {
@@ -120,25 +119,45 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let htg_diff = htg_diff.map(|&v| i64::abs(v) as f32);
         let htg_diff = 1000. * (htg_diff.sum() / size);
         htg_diff_vec.push(htg_diff);
-        // println!("{}:{}", idx, htg_diff);
 
         prev_htg = curr_htg;
-        // idx += 10;
     }
     bar.finish();
 
-    let thresholds = [100., 150., 200., 250., 300.];
-    for &lower in &thresholds {
-        for &upper in &thresholds {
-            println!("lower:{}, upper:{}", lower, lower + upper);
-            shot_change_detection(&htg_diff_vec, lower, lower + upper);
-        }
-    }
+    shot_change_detection(&htg_diff_vec, lower_threshold, upper_threshold, true);
+
+    // let gt_vec = gt_to_vec(&soccer_gt, htg_diff_vec.len());
+    // let mut pr_curve = Vec::<(f32, f32)>::new();
+    // let thresholds = [50., 100., 150., 200., 250., 300., 350., 400.];
+    // for &lower in &thresholds {
+    //     for &upper in &thresholds {
+    //         let pred_vec = shot_change_detection(&htg_diff_vec, lower, lower + upper, false);
+    //         pr_curve.push((recall(&pred_vec, &gt_vec), precision(&pred_vec, &gt_vec)));
+    //     }
+    // }
+
+    // println!("{:?}", pr_curve);
+    // pr_curve.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+    // pr_curve.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+    // println!("Recall, Precision",);
+    // for &(r, p) in &pr_curve {
+    //     println!("{}, {}", r, p,);
+    // }
 
     Ok(())
 }
 
-fn shot_change_detection(htg_diff_vec: &Vec<f32>, lower_threshold: f32, upper_threshold: f32) {
+fn shot_change_detection(
+    htg_diff_vec: &Vec<f32>,
+    lower_threshold: f32,
+    upper_threshold: f32,
+    show: bool,
+) -> Vec<bool> {
+    let mut pred_vec = Vec::<bool>::with_capacity(htg_diff_vec.len());
+    for _ in 0..htg_diff_vec.len() {
+        pred_vec.push(false);
+    }
+
     let mut _htg_diff_vec = htg_diff_vec.clone();
     let mut acc = 0.;
     let mut start_idx = 0;
@@ -158,9 +177,7 @@ fn shot_change_detection(htg_diff_vec: &Vec<f32>, lower_threshold: f32, upper_th
         {
             _htg_diff_vec[idx] = f32::max((l_max + r_val) / 2., (l_val + r_max) / 2.);
         }
-        // if _htg_diff_vec[idx] >= upper_threshold && acc == 0. {
-        //     println!("{}", idx);
-        // } else
+
         if _htg_diff_vec[idx] >= lower_threshold {
             if acc == 0. {
                 start_idx = idx;
@@ -171,12 +188,71 @@ fn shot_change_detection(htg_diff_vec: &Vec<f32>, lower_threshold: f32, upper_th
         } else {
             if acc >= upper_threshold {
                 if start_idx == idx - 1 {
-                    println!("{}", start_idx);
+                    if show {
+                        println!("{}", start_idx);
+                    }
+
+                    pred_vec[start_idx] = true;
                 } else {
-                    println!("{}~{}", start_idx, idx - 1);
+                    if show {
+                        println!("{}~{}", start_idx, idx - 1);
+                    }
+                    for i in start_idx..idx {
+                        pred_vec[i] = true;
+                    }
                 }
             }
             acc = 0.
         }
+    }
+    pred_vec
+}
+
+fn gt_to_vec(gts: &Vec<(usize, usize)>, size: usize) -> Vec<bool> {
+    let mut gt_vec = Vec::<bool>::with_capacity(size);
+    for _ in 0..size {
+        gt_vec.push(false);
+    }
+
+    for gt in gts {
+        for idx in gt.0..gt.1 + 1 {
+            gt_vec[idx] = true;
+        }
+    }
+    gt_vec
+}
+
+fn precision(pred_vec: &Vec<bool>, gt_vec: &Vec<bool>) -> f32 {
+    let mut tp = 0.;
+    for idx in 0..pred_vec.len() {
+        if pred_vec[idx] && gt_vec[idx] {
+            tp += 1.;
+        }
+    }
+    let y = pred_vec
+        .iter()
+        .fold(0., |acc, &pred| if pred { acc + 1. } else { acc });
+    if y != 0. {
+        tp / y
+    } else {
+        1.
+    }
+}
+
+fn recall(pred_vec: &Vec<bool>, gt_vec: &Vec<bool>) -> f32 {
+    let mut tp = 0.;
+    for idx in 0..pred_vec.len() {
+        if pred_vec[idx] && gt_vec[idx] {
+            tp += 1.;
+        }
+    }
+    let p = gt_vec
+        .iter()
+        .fold(0., |acc, &gt| if gt { acc + 1. } else { acc });
+
+    if p != 0. {
+        tp / p
+    } else {
+        1.
     }
 }
