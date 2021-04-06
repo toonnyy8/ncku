@@ -43,6 +43,14 @@ fn main() {
                         .about("Sets max iters")
                         .required(true)
                         .takes_value(true),
+                )
+                .arg(
+                    Arg::new("weights file")
+                        .short('w')
+                        .long("weights")
+                        .value_name("weights file")
+                        .about("save weights file name")
+                        .takes_value(true),
                 ),
         )
         .subcommand(
@@ -110,7 +118,12 @@ fn main() {
             let dataset = load_data::load_imgs(&files);
 
             gmm.train(&dataset).unwrap();
-            let gmm_file = serde_json::to_string(&save::GmmFile::from(&gmm)).unwrap();
+        }
+
+        let gmm_file = serde_json::to_string(&save::GmmFile::from(&gmm)).unwrap();
+        if let Some(weights_name) = matches.value_of("weights file") {
+            fs::write(format!("{}.json", weights_name), gmm_file).unwrap();
+        } else {
             fs::write("gmm_file.json", gmm_file).unwrap();
         }
     } else if let Some(ref matches) = matches.subcommand_matches("eval") {
@@ -133,6 +146,4 @@ fn main() {
             println!("target file：{:?}", file);
         }
     }
-
-    // Continued program logic goes here...
 }
