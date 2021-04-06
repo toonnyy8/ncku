@@ -3,6 +3,11 @@ use image::{self, ImageBuffer};
 use rusty_machine::linalg::{Matrix, Vector};
 use rusty_machine::prelude::BaseMatrix;
 use rusty_machine::{learning::gmm::GaussianMixtureModel, prelude::UnSupModel};
+use serde_derive::{Deserialize, Serialize};
+mod load_data;
+mod save;
+
+use std::fs;
 
 fn main() {
     let matches = App::new("My Super Program")
@@ -15,14 +20,6 @@ fn main() {
                 .long("kernels")
                 .value_name("kernel number")
                 .about("Sets kernel number")
-                .takes_value(true),
-        )
-        .arg(
-            Arg::new("weights file")
-                .short('w')
-                .long("weights")
-                .value_name("weights file")
-                .about("weights file")
                 .takes_value(true),
         )
         .subcommand(
@@ -77,6 +74,14 @@ fn main() {
                         .value_name("target file")
                         .about("target file")
                         .takes_value(true),
+                )
+                .arg(
+                    Arg::new("weights file")
+                        .short('w')
+                        .long("weights")
+                        .value_name("weights file")
+                        .about("weights file")
+                        .takes_value(true),
                 ),
         )
         .get_matches();
@@ -86,31 +91,38 @@ fn main() {
     } else {
         0
     };
-    let weights_file = if let Some(weights_file) = matches.value_of("weights file") {
-        println!("weights file: {}", weights_file);
-        weights_file
-    } else {
-        ""
-    };
-
-    // {
-    //     let mut gmm = GaussianMixtureModel::new(3);
-    //     let inputs = Matrix::new(4, 2, vec![1.0, 2.0, -3.0, -3.0, 0.1, 1.5, -5.0, -2.5]);
-    //     gmm.set_max_iters(1);
-    //     gmm.train(&inputs).unwrap();
-    //     // gmm.predict(&test_data);
-    //     gmm.set(inputs)
-    // }
 
     if let Some(ref matches) = matches.subcommand_matches("train") {
+        let iters = if let Some(iters) = matches.value_of("iters") {
+            let iters = iters.parse::<usize>().unwrap();
+            println!("Sets max iters: {}", iters);
+            iters
+        } else {
+            10
+        };
+        let mut gmm = GaussianMixtureModel::new(k);
+        gmm.set_max_iters(iters);
+
         if let Some(files) = matches.values_of("train files") {
             let files = files.collect::<Vec<_>>();
             println!("train files：{:?}", files);
-        }
-        if let Some(i) = matches.value_of("iters") {
-            println!("Sets max iters: {}", i.parse::<u32>().unwrap());
+
+            let dataset = load_data::load_imgs(&files);
+
+            gmm.train(&dataset).unwrap();
+            let gmm_file = serde_json::to_string(&save::GmmFile::from(&gmm)).unwrap();
+            fs::write("gmm_file.json", gmm_file).unwrap();
         }
     } else if let Some(ref matches) = matches.subcommand_matches("eval") {
+        let mut gmm = if let Some(weights_file) = matches.value_of("weights file") {
+            println!("weights file: {}", weights_file);
+            fs::read_to_string(weights_file);
+            let gmm_file: save::GmmFile =
+                serde_json::from_str(&fs::read_to_string(weights_file).unwrap().as_str()).unwrap();
+            gmm_file.as_gmm(k)
+        } else {
+            GaussianMixtureModel::new(k)
+        };
         if let Some(file) = matches.value_of("test file") {
             println!("test file：{:?}", file);
         }

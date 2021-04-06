@@ -8,15 +8,8 @@ edition = "2018"
 
 [dependencies]
 rusty-machine= { git = "https://github.com/toonnyy8/rusty-machine.git" }
-linfa = "0.3.1"
-linfa-clustering = "0.3.1"
-ndarray = { version = "0.13", features = ["rayon", "approx"]}
-ndarray-linalg = "0.12"
-ndarray-rand = "0.11"
-rand_isaac = "0.2.0"
 image = "0.23.14"
 clap = "3.0.0-beta.2"
-
-num = { version = "0.1.41", default-features = false }
-rand = "0.4.1"
-rulinalg = { git = "https://github.com/AtheMathmo/rulinalg", rev = "1ed8b937" }
+serde = "1.0.125"
+serde_json = "1.0"
+serde_derive = "1.0.125"
