@@ -224,10 +224,10 @@
                 img1Ctx.beginPath();
                 let grad = img1Ctx.createLinearGradient(line[0].x, line[0].y, line[1].x, line[1].y);
 
-                grad.addColorStop(0, `#222222`);
-                grad.addColorStop(Math.min(0.5, 20 / (((line[0].x - line[1].x) ** 2 + (line[0].y - line[1].y) ** 2) ** 0.5)), `#ff5577`);
-                grad.addColorStop(1 - Math.min(0.5, 20 / (((line[0].x - line[1].x) ** 2 + (line[0].y - line[1].y) ** 2) ** 0.5)), `#ffff55`);
-                grad.addColorStop(1, `#222222`);
+                grad.addColorStop(0, `#ff5522`);
+                grad.addColorStop(Math.min(0.5, 40 / (((line[0].x - line[1].x) ** 2 + (line[0].y - line[1].y) ** 2) ** 0.5)), `#222222`);
+                grad.addColorStop(1 - Math.min(0.5, 40 / (((line[0].x - line[1].x) ** 2 + (line[0].y - line[1].y) ** 2) ** 0.5)), `#222222`);
+                grad.addColorStop(1, `#22ffff`);
                 img1Ctx.strokeStyle = grad
 
                 img1Ctx.moveTo(line[0].x, line[0].y);
@@ -239,10 +239,10 @@
             img1Ctx.beginPath();
             let grad = img1Ctx.createLinearGradient(start_xy.x, start_xy.y, e.x, e.y);
 
-            grad.addColorStop(0, `#222222`);
-            grad.addColorStop(Math.min(0.5, 20 / (((start_xy.x - e.x) ** 2 + (start_xy.y - e.y) ** 2) ** 0.5)), `#ff5577`);
-            grad.addColorStop(1 - Math.min(0.5, 20 / (((start_xy.x - e.x) ** 2 + (start_xy.y - e.y) ** 2) ** 0.5)), `#ffff55`);
-            grad.addColorStop(1, `#222222`);
+            grad.addColorStop(0, `#ff5522`);
+            grad.addColorStop(Math.min(0.5, 40 / (((start_xy.x - e.x) ** 2 + (start_xy.y - e.y) ** 2) ** 0.5)), `#222222`);
+            grad.addColorStop(1 - Math.min(0.5, 40 / (((start_xy.x - e.x) ** 2 + (start_xy.y - e.y) ** 2) ** 0.5)), `#222222`);
+            grad.addColorStop(1, `#22ffff`);
             img1Ctx.strokeStyle = grad
 
             img1Ctx.moveTo(start_xy.x, start_xy.y);
