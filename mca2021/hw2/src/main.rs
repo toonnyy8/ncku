@@ -166,15 +166,15 @@ fn main() {
 
         let gmm_file = serde_json::to_string(&save::GmmFile::from(&gmm, &kernel_class)).unwrap();
         if let Some(weights_name) = matches.value_of("weights file") {
-            fs::write(format!("{}.json", weights_name), gmm_file).unwrap();
+            fs::write(format!("{}", weights_name), gmm_file).unwrap();
         } else {
-            fs::write("gmm_file.json", gmm_file).unwrap();
+            fs::write("gmm_file", gmm_file).unwrap();
         }
     } else if let Some(ref matches) = matches.subcommand_matches("eval") {
         if let Some(weights_name) = matches.value_of("weights file") {
             println!("weights file: {}", weights_name);
             let gmm_file: save::GmmFile = serde_json::from_str(
-                &fs::read_to_string(format!("{}.json", weights_name))
+                &fs::read_to_string(format!("{}", weights_name))
                     .unwrap()
                     .as_str(),
             )
