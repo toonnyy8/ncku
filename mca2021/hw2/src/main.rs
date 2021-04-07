@@ -97,6 +97,7 @@ fn main() {
                         .long("weights")
                         .value_name("weights file")
                         .about("weights file")
+                        .required(true)
                         .takes_value(true),
                 ),
         )
