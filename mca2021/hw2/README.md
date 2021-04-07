@@ -7,7 +7,10 @@
 -   Train
 
     ```zsh
-    >> program train -h //查看使用說明
+    //查看訓練模式使用說明
+    >> program train -h
+
+    //執行訓練
     >> program train -e <最大更新次數(可選，預設為 10)> \
                      -k <GMM 的 kernel 數目(可選，預設為 2)> \
                      -w <儲存權重檔名(可選，預設為 "gmm_file")> \
@@ -16,10 +19,14 @@
     ```
 
 -   Evaluation
+
     ```zsh
-    >> program eval -h //查看使用說明
+    //查看評估模式使用說明
+    >> program eval -h
+
+    //執行 gmm 切割
     >> program eval -i <輸入檔案(必要)> \
-                     -w <儲存權重檔名(必要)> \
-                     -o <輸出分割圖檔名(可選)> \
-                     -t <標記圖檔名(可選，有的話會計算  Dice Coefficient)>
+                    -w <儲存權重檔名(必要)> \
+                    -o <輸出分割圖檔名(可選)> \
+                    -t <標記圖檔名(可選，有的話會計算  Dice Coefficient)>
     ```
