@@ -212,6 +212,10 @@ fn main() {
                     println!("target file：{}", target_file);
                     let label = dataset::load_imgs_as_label(&vec![target_file]);
                     println!(
+                        "Pixel Accuracy：{}",
+                        dataset::pixel_accuracy(&pixels_kernel_class, &label)
+                    );
+                    println!(
                         "Dice Coefficient：{}",
                         dataset::dice_coefficient(&pixels_kernel_class, &label)
                     );

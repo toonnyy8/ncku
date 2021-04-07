@@ -92,3 +92,19 @@ pub fn dice_coefficient(pixels_kernel_class: &Vec<usize>, label: &Vec<usize>) ->
     }
     intersect as f32 * 2. / acc as f32
 }
+
+pub fn pixel_accuracy(pixels_kernel_class: &Vec<usize>, label: &Vec<usize>) -> f32 {
+    assert_eq!(
+        pixels_kernel_class.len(),
+        label.len(),
+        "pixels_kernel_class len must be equal to label",
+    );
+
+    let mut accuracy = 0.;
+    for idx in 0..pixels_kernel_class.len() {
+        if pixels_kernel_class[idx] == label[idx] {
+            accuracy += 1.
+        }
+    }
+    accuracy / pixels_kernel_class.len() as f32
+}

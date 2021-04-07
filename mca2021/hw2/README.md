@@ -28,5 +28,5 @@
     >> program eval -i <輸入檔案(必要)> \
                     -w <儲存權重檔名(必要)> \
                     -o <輸出分割圖檔名(可選)> \
-                    -t <標記圖檔名(可選，有的話會計算  Dice Coefficient)>
+                    -t <標記圖檔名(可選，有的話會計算 Pixel Accuracy)>
     ```
