@@ -4,9 +4,10 @@ pub struct GmmFile {
     weights: Vec<f64>,
     means: Mat,
     covars: Vec<Mat>,
+    kernel_class: Vec<usize>,
 }
 impl GmmFile {
-    pub fn from(gmm: &GaussianMixtureModel) -> Self {
+    pub fn from(gmm: &GaussianMixtureModel, kernel_class: &Vec<usize>) -> Self {
         Self {
             weights: gmm.mixture_weights().data().clone(),
             means: Mat::from(gmm.means().unwrap()),
@@ -16,10 +17,12 @@ impl GmmFile {
                 .iter()
                 .map(|covar| Mat::from(covar))
                 .collect::<Vec<_>>(),
+            kernel_class: kernel_class.clone(),
         }
     }
 
-    pub fn as_gmm(&self, k: usize) -> GaussianMixtureModel {
+    pub fn as_gmm(&self) -> GaussianMixtureModel {
+        let k = self.kernel_class.len();
         GaussianMixtureModel::new(k)
             .with_weights(Vector::from(self.weights.clone()))
             .unwrap()
@@ -36,6 +39,9 @@ impl GmmFile {
                     .collect::<Vec<_>>(),
             )
             .unwrap()
+    }
+    pub fn kernel_class(&self) -> &Vec<usize> {
+        self.kernel_class.as_ref()
     }
 }
 
