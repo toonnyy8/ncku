@@ -10,10 +10,8 @@ mod save;
 use std::fs;
 
 fn main() {
-    let matches = App::new("My Super Program")
+    let matches = App::new("GMM Color Image Segmentation")
         .version("1.0")
-        .author("Kevin K. <kbknapp@gmail.com>")
-        .about("Does awesome things")
         .subcommand(
             App::new("train")
                 .about("gmm training")
@@ -131,13 +129,22 @@ fn main() {
 
         let kernel_class = if let Some(files) = matches.values_of("reference files") {
             let files = files.collect::<Vec<_>>();
-            assert_eq!(files.len(), 2, "The number of reference files must be two");
+            assert_eq!(files.len()%2, 0, "The number of reference files must be even.(ref_input_file1, ref_target_file1, ref_input_file2, ref_target_file2,...)");
 
             println!("reference files：{:?}", files);
+            let mut ref_input_files = Vec::<&str>::new();
+            let mut ref_target_files = Vec::<&str>::new();
+            for idx in 0..files.len() {
+                if idx % 2 == 0 {
+                    ref_input_files.push(files[idx])
+                } else {
+                    ref_target_files.push(files[idx])
+                }
+            }
 
             let mut kernel_class = (0..k).map(|_| (0, 0)).collect::<Vec<_>>();
-            let ref_input = dataset::load_imgs(&vec![files[0]]);
-            let ref_target = dataset::load_imgs(&vec![files[1]]);
+            let ref_input = dataset::load_imgs(&ref_input_files);
+            let ref_target = dataset::load_imgs(&ref_target_files);
             &gmm.predict(&ref_input)
                 .unwrap()
                 .row_iter()
