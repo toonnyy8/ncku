@@ -1,56 +1,38 @@
 {
-  "name": "ncku",
-  "version": "1.0.0",
-  "description": "成大課程作業",
-  "app": "dist/index.html",
-  "targets": {
-    "app": {
-      "publicUrl": "./"
+    "name": "ncku",
+    "version": "1.0.0",
+    "description": "成大課程作業",
+    "app": "dist/index.html",
+    "targets": {
+        "app": {
+            "publicUrl": "./"
+        }
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "index": "parcel index.htm -p 8080 --open",
+        "dev:cgap2021-hw2": "parcel ./cgap2021/hw2/dev/index.html -p 8080 --open",
+        "build:cgap2021-hw2": "parcel build ./cgap2021/hw2/dev/index.html --dist-dir ./cgap2021/hw2/build/"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/toonnyy8/ncku.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/toonnyy8/ncku/issues"
+    },
+    "homepage": "https://github.com/toonnyy8/ncku#readme",
+    "dependencies": {
+        "vue": "^3.0.11"
+    },
+    "devDependencies": {
+        "@parcel/transformer-vue": "^2.0.0-beta.2",
+        "autoprefixer": "^10.2.5",
+        "parcel": "^2.0.0-beta.2",
+        "postcss": "^8.2.9",
+        "tailwindcss": "^2.1.1"
     }
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "index": "parcel index.htm -p 8080 --open",
-    "dev:dsp2020-hw1": "parcel ./dsp2020/hw1/dev/index.html -p 8080 --open",
-    "build:dsp2020-hw1": "parcel build --no-content-hash ./dsp2020/hw1/dev/index.html --out-dir ./dsp2020/hw1/build/  --public-url=./",
-    "dev:dsp2020-hw2": "parcel ./dsp2020/hw2/dev/index.html -p 8080 --open",
-    "build:dsp2020-hw2": "parcel build --no-content-hash ./dsp2020/hw2/dev/index.html --out-dir ./dsp2020/hw2/build/  --public-url=./",
-    "dev:dsp2020-hw3": "parcel ./dsp2020/hw3/dev/index.html -p 8080 --open",
-    "build:dsp2020-hw3": "parcel build --no-content-hash ./dsp2020/hw3/dev/index.html --out-dir ./dsp2020/hw3/build/  --public-url=./",
-    "dev:cvdl2020-hw1": "parcel ./cvdl2020/hw1/dev/index.html -p 8080 --open",
-    "dev:opencvdl2020-hw1": "parcel ./opencvdl2020/hw1/dev/index.html -p 8080 --open",
-    "build:opencvdl2020-hw1": "parcel build --no-content-hash ./opencvdl2020/hw1/dev/index.html --out-dir ./opencvdl2020/hw1/build/  --public-url=./",
-    "dev:ip2020-hw1": "parcel ./ip2020/hw1/dev/index.html -p 8080 --open",
-    "build:ip2020-hw1": "parcel build --no-content-hash ./ip2020/hw1/dev/index.html --out-dir ./ip2020/hw1/build/  --public-url=./",
-    "dev:cvdl2020-hw2": "parcel ./cvdl2020/hw2/client/index.html -p 8080 --open",
-    "dev:opencvdl2020-hw2": "parcel ./opencvdl2020/hw2/client/index.html -p 8080 --open"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/toonnyy8/ncku.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/toonnyy8/ncku/issues"
-  },
-  "homepage": "https://github.com/toonnyy8/ncku#readme",
-  "dependencies": {
-    "@antv/g2": "^4.1.4",
-    "@koa/cors": "^3.1.0",
-    "@tensorflow/tfjs": "^2.7.0",
-    "@tensorflow/tfjs-backend-wasm": "^2.8.1",
-    "@tensorflow/tfjs-core": "^2.7.0",
-    "@wasmer/wasi": "^0.12.0",
-    "koa": "^2.13.0",
-    "next": "^10.0.4",
-    "opencv4nodejs": "^5.6.0",
-    "parcel": "^1.12.4",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
-  },
-  "devDependencies": {
-    "typescript": "^4.1.3"
-  }
 }
