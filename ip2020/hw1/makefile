@@ -1,2 +1,0 @@
-module:./dev/cpp/module.cpp
-	emcc ./dev/cpp/module.cpp -s EXPORTED_FUNCTIONS="['_new_int_arr','_delete_int_arr','_gray','_extract_red','_extract_green','_extract_blue','_mean_filter','_median_filter','_histogram','_equalization','_threshold','_vertical_filter','_horizontal_filter','_combined','_overlap','_new_vec','_delete_vec','_transpose','_intensity_difference']" -o ./dev/wasm/module.wasm
