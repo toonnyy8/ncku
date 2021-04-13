@@ -1,81 +1,5 @@
 import * as glm from "gl-matrix"
 
-// class Point {
-//     constructor(x: number, y: number) {
-//         this.x = x
-//         this.y = y
-//     }
-//     x: number
-//     y: number
-//     static create(x: number, y: number) {
-//         return new Point(x, y)
-//     }
-//     static default() {
-//         return Point.create(0, 0)
-//     }
-
-//     static add(p1: Point, p2: Point) {
-//         return p1.add(p2)
-//     }
-//     add(p2: Point) {
-//         return Point.create(this.x + p2.x, this.y + p2.y)
-//     }
-//     static sub(p1: Point, p2: Point) {
-//         return p1.sub(p2)
-//     }
-//     sub(p2: Point) {
-//         return Point.create(this.x - p2.x, this.y - p2.y)
-//     }
-
-//     static mul(p1: Point, a: number) {
-//         return p1.mul(a)
-//     }
-//     mul(a: number) {
-//         return Point.create(this.x * a, this.y * a)
-//     }
-//     static div(p1: Point, a: number) {
-//         return p1.div(a)
-//     }
-//     div(a: number) {
-//         return Point.create(this.x / a, this.y / a)
-//     }
-
-//     static dot(p1: Point, p2: Point) {
-//         return p1.dot(p2)
-//     }
-//     dot(p2: Point) {
-//         return this.x / p2.x + this.y * p2.y
-//     }
-// }
-
-// class Vec {}
-
-// class Line {
-//     constructor(p1: Point, p2: Point) {
-//         this.p = p1
-//         this.v = p2.sub(p1)
-//     }
-//     private p: Point
-//     private v: Point
-//     static create(p1: Point, p2: Point) {
-//         return new Line(p1, p2)
-//     }
-
-//     static to_vec(line: Line) {
-//         return line.to_vec()
-//     }
-//     to_vec() {
-//         return this.v
-//     }
-
-//     // l1.p1 + offset = l2.p1
-//     static offset(l1: Line, l2: Line) {
-//         return l1.offset(l2)
-//     }
-//     offset(l2: Line) {
-//         return l2.p.sub(this.p)
-//     }
-// }
 const r90 = (v: glm.vec2) => {
     return glm.vec2.rotate(glm.vec2.create(), v, [0, 0], Math.PI * 0.5)
 }
@@ -88,7 +12,7 @@ class Mat3 {
         return new Mat3(glm.mat3.mul(glm.mat3.create(), this.mat3, b))
     }
 }
-class Line {
+export class Line {
     constructor(p1: glm.vec2, p2: glm.vec2) {
         this.p = glm.vec2.clone(p1)
         this.v = glm.vec2.sub(glm.vec2.create(), p2, p1)
@@ -105,12 +29,16 @@ class Line {
     angle(line2: Line) {
         let angle = glm.vec2.angle(this.v, line2.v)
         if (glm.vec2.dot(this.v, r90(line2.v)) >= 0) {
-            angle = Math.PI * 2 - angle
+            // angle = Math.PI * 2 - angle
+            angle = -angle
         }
         return angle
     }
     scale(line2: Line) {
         return glm.vec2.len(line2.v) / glm.vec2.len(this.v)
+    }
+    displacement(line2: Line) {
+        return glm.vec2.sub(glm.vec2.create(), line2.p, this.p)
     }
 
     transformMat3(line2: Line) {
@@ -139,16 +67,60 @@ class Line {
         return new Mat3(t).mul(r2).mul(neg_r1).mul(s).mul(r1).mul(t1).mat3
     }
 }
-let l1 = Line.create([1, 0], [2, 0])
-let l2 = Line.create([-1, 0], [0, -1])
-// let l1 = Line.create([0, 0], [2, 0])
-// let l2 = Line.create([0, 0], [3, 3])
-let m = l1.transformMat3(l2)
-let v = glm.vec2.transformMat3(glm.vec2.create(), [0, 0], m)
-console.log(`v: ${v}`)
-// let m2 = glm.mat3.scale(glm.mat3.create(), glm.mat3.create(), [2, 1])
-// let v2 = glm.vec2.transformMat3(glm.vec2.create(), [2, 2], m2)
-// console.log(`v2: ${v2}`)
+
+class Transform {
+    constructor(line1: Line, line2: Line) {
+        this.org = line1.p
+        this.x_angle - line1.angle(Line.create([0, 0], [1, 0]))
+
+        this.angle = line1.angle(line2)
+        this.scale = line1.scale(line2)
+        this.displacement = line1.displacement(line2)
+    }
+
+    org: glm.vec2
+    x_angle: number
+
+    angle: number
+    scale: number
+    displacement: glm.vec2
+    withTime(t) {
+        let angle = t * this.angle
+        let scale = 1 - t + t * this.scale
+        let displacement = glm.vec2.mul(glm.vec2.create(), this.displacement, [t, t])
+
+        let tran2org = glm.mat3.fromTranslation(
+            glm.mat3.create(),
+            glm.vec2.negate(glm.vec2.create(), this.org)
+        )
+
+        let rotate2x = glm.mat3.fromRotation(glm.mat3.create(), this.x_angle)
+
+        let scaling = glm.mat3.fromScaling(glm.mat3.create(), [scale, 1])
+
+        let derotate2x = glm.mat3.fromRotation(glm.mat3.create(), -this.x_angle)
+
+        let rotate2target = glm.mat3.fromRotation(glm.mat3.create(), angle)
+
+        let detran2org = glm.mat3.fromTranslation(glm.mat3.create(), this.org)
+        let tran2target = glm.mat3.fromTranslation(glm.mat3.create(), displacement)
+
+        return new Mat3(tran2target)
+            .mul(detran2org)
+            .mul(rotate2target)
+            .mul(derotate2x)
+            .mul(scaling)
+            .mul(rotate2x)
+            .mul(tran2org).mat3
+    }
+}
+// let l1 = Line.create([1, 0], [2, 0])
+// let l2 = Line.create([-1, 0], [0, -1])
+// // let l1 = Line.create([0, 0], [2, 0])
+// // let l2 = Line.create([0, 0], [3, 3])
+// let m = l1.transformMat3(l2)
+// let v = glm.vec2.transformMat3(glm.vec2.create(), [0, 0], m)
+// console.log(`v: ${v}`)
 
 // test
 {

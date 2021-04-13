@@ -5,5 +5,5 @@ import App from "./App.vue"
 
 import "./imgMorph"
 
-const app = createApp(App)
-app.mount(document.body)
+// const app = createApp(App)
+// app.mount(document.body)
