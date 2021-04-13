@@ -1,4 +1,5 @@
-import * as glm from "./lib/gl-matrix"
+import * as glm from "gl-matrix"
+import "./pose"
 import * as shader from "./shader"
 
 interface Point {
@@ -11,6 +12,9 @@ interface Line {
 }
 const calcVecLen = (vec: Point) => {
     return (vec.x ** 2 + vec.y ** 2) ** 0.5
+}
+const line2vec = (line: Line) => {
+    return { x: line.to.x - line.from.x, y: line.to.y - line.from.y }
 }
 const calcLineLen = (line: Line) => {
     let vec = { x: line.to.x - line.from.x, y: line.to.y - line.from.y }
@@ -45,10 +49,15 @@ const normalizeWeights = (weights: number[]) => {
 const line2line = (line1: Line, line2: Line, t: number) => {
     let translate = { x: (line2.from.x - line1.from.x) * t, y: (line2.from.y - line1.from.y) * t }
     let scale = t * (calcLineLen(line2) / calcLineLen(line1)) + (1 - t)
-    // let rotation = t * (calcLineLen(line2) / calcLineLen(line1)) + (1 - t)
+    let vec1 = line2vec(line1)
+    let vec2 = line2vec(line2)
+    let rotation = Math.acos(
+        (vec1.x * vec2.x + vec1.y * vec2.y) / (calcVecLen(vec1) * calcVecLen(vec2))
+    )
 }
-
-console.log(glm)
+let m = glm.mat3.scale(glm.mat3.create(), glm.mat3.create(), glm.vec2.fromValues(2, 1))
+let v = glm.vec2.transformMat3(glm.vec2.create(), glm.vec2.fromValues(1, 3), m)
+console.log(v)
 ;(async () => {
     const canvas = <HTMLCanvasElement>document.getElementById("canvas")
 

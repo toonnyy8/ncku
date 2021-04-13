@@ -1,61 +1,61 @@
 <template>
-    <div class="text-gray-800 float-left">
-        <canvas
-            v-show="mode == 'src'"
-            class="max-w-7xl"
-            ref="srcCanvasRef"
-            width="800"
-            height="600"
-            v-on:mousedown="srcMousedown"
-            v-on:mousemove="srcMousemove"
-            v-on:mouseup="srcMouseup"
-            v-on:mouseover="srcMouseup"
-        ></canvas>
-        <canvas
-            v-show="mode == 'tar'"
-            class="max-w-7xl"
-            ref="tarCanvasRef"
-            width="800"
-            height="600"
-            v-on:mousedown="tarMousedown"
-            v-on:mousemove="tarMousemove"
-            v-on:mouseup="tarMouseup"
-            v-on:mouseover="tarMouseup"
-        ></canvas>
-        <br />
-        <button
-            v-bind:class="{
-                'bg-blue-300': mode != 'src',
-                'bg-yellow-300': mode == 'src',
-            }"
-            class="py-1 px-5 rounded-b-lg"
-            v-on:click=";(mode = 'src'), renderCanvas()"
-        >
-            src
-        </button>
-        <button
-            v-bind:class="{
-                'bg-blue-300': mode != 'tar',
-                'bg-yellow-300': mode == 'tar',
-            }"
-            class="py-1 px-5 rounded-b-lg"
-            v-on:click=";(mode = 'tar'), renderCanvas()"
-        >
-            tar
-        </button>
-    </div>
-    <div class="text-gray-800">
-        <div class="h-10">
-            <div v-if="lines[lookLineIdx] && lines[lookLineIdx][mode]">
-                from: ({{ lines[lookLineIdx][mode].from.x }}, {{ lines[lookLineIdx][mode].from.y }})
-                <br />
-                to: ({{ lines[lookLineIdx][mode].to.x }}, {{ lines[lookLineIdx][mode].to.y }})
-            </div>
+    <div class="flex justify-start">
+        <div class="text-gray-800">
+            <canvas
+                v-show="mode == 'src'"
+                class="max-w-7xl"
+                ref="srcCanvasRef"
+                width="800"
+                height="600"
+                v-on:mousedown="srcMousedown"
+                v-on:mousemove="srcMousemove"
+                v-on:mouseup="srcMouseup"
+                v-on:mouseover="srcMouseup"
+            ></canvas>
+            <canvas
+                v-show="mode == 'tar'"
+                class="max-w-7xl"
+                ref="tarCanvasRef"
+                width="800"
+                height="600"
+                v-on:mousedown="tarMousedown"
+                v-on:mousemove="tarMousemove"
+                v-on:mouseup="tarMouseup"
+                v-on:mouseover="tarMouseup"
+            ></canvas>
+            <br />
+            <button
+                v-bind:class="{
+                    'bg-blue-300': mode != 'src',
+                    'bg-yellow-300': mode == 'src',
+                }"
+                class="py-1 px-5 rounded-b-lg"
+                v-on:click=";(mode = 'src'), renderCanvas()"
+            >
+                src
+            </button>
+            <button
+                v-bind:class="{
+                    'bg-blue-300': mode != 'tar',
+                    'bg-yellow-300': mode == 'tar',
+                }"
+                class="py-1 px-5 rounded-b-lg"
+                v-on:click=";(mode = 'tar'), renderCanvas()"
+            >
+                tar
+            </button>
         </div>
-        <br />
-        <ul>
-            <li v-for="(value, name) in lines" :key="name">
-                <div class="flex justify-start w-36 m-2">
+        <div class="text-gray-800 w-36 m-2">
+            <div class="h-10">
+                <div v-if="lines[lookLineIdx] && lines[lookLineIdx][mode]">
+                    from: ({{ lines[lookLineIdx][mode].from.x }},
+                    {{ lines[lookLineIdx][mode].from.y }})
+                    <br />
+                    to: ({{ lines[lookLineIdx][mode].to.x }}, {{ lines[lookLineIdx][mode].to.y }})
+                </div>
+            </div>
+            <ul>
+                <li v-for="(value, name) in lines" :key="name" class="flex justify-start my-2">
                     <div
                         v-on:click=";(lookLineIdx = name), renderCanvas()"
                         v-bind:class="{
@@ -73,9 +73,9 @@
                     >
                         <img :src="close_icon" alt="remove" />
                     </div>
-                </div>
-            </li>
-        </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 

@@ -26,6 +26,7 @@
     },
     "homepage": "https://github.com/toonnyy8/ncku#readme",
     "dependencies": {
+        "gl-matrix": "^3.3.0",
         "vue": "^3.0.11"
     },
     "devDependencies": {
