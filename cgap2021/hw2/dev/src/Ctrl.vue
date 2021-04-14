@@ -309,6 +309,9 @@ export default defineComponent({
                     ) {
                         lines.value[lookLineIdx.value].tar = undefined
                     }
+                    if (lines.value.length - 1 > lookLineIdx.value) {
+                        lookLineIdx.value += 1
+                    }
                     renderCanvas.value()
                 }
             }
@@ -340,10 +343,8 @@ export default defineComponent({
         }
         channel.onmessage = (event: MessageEvent<Msg>) => {
             const msg = event.data
-            console.log("AAAAAAa")
             switch (msg.msgType) {
                 case "opened": {
-                    console.log("opened")
                     channel.postMessage(<Msg>{
                         msgType: "lines",
                         lines: JSON.parse(JSON.stringify(lines.value)),

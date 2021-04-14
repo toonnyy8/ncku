@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, Ref } from "vue"
-import { calcWeight, normalizeWeights, genShaderProgram, genBufferData } from "./imgMorph"
+import { calcWeight, genShaderProgram, genBufferData, render, genVAO } from "./imgMorph"
 import { Line as PoseLine, Transform } from "./pose"
 import * as glm from "gl-matrix"
 interface Point {
@@ -73,46 +73,24 @@ export default defineComponent({
             let bg_texture: WebGLTexture
 
             run.value = (t: number) => {
-                {
-                    gl.useProgram(bgProgram)
-                    gl.bindVertexArray(bg_vao)
-
-                    let u_textureLocation = gl.getUniformLocation(bgProgram, "u_texture")
-                    gl.uniform1i(u_textureLocation, 0)
-                    gl.activeTexture(gl.TEXTURE0)
-                    gl.bindTexture(gl.TEXTURE_2D, bg_texture)
-
-                    transforms.forEach(({ tar: tarTransform }, lineIdx) => {
-                        let m = tarTransform.withTime(1 - t)
-                        // let m = glm.mat3.fromTranslation(glm.mat3.create(), [0, 0.5])
-                        let u_mLocation = gl.getUniformLocation(bgProgram, `u_m${lineIdx}`)
-                        gl.uniformMatrix3fv(u_mLocation, false, m)
-                    })
-
-                    gl.drawElements(gl.TRIANGLES, idx_arr.length, gl.UNSIGNED_INT, 0)
-                    gl.bindVertexArray(null)
-                }
-                {
-                    gl.useProgram(fgProgram)
-                    gl.bindVertexArray(fg_vao)
-
-                    let u_textureLocation = gl.getUniformLocation(fgProgram, "u_texture")
-                    gl.uniform1i(u_textureLocation, 0)
-                    gl.activeTexture(gl.TEXTURE0)
-                    gl.bindTexture(gl.TEXTURE_2D, fg_texture)
-
-                    let u_timeLocation = gl.getUniformLocation(fgProgram, "u_time")
-                    gl.uniform1f(u_timeLocation, 1 - t)
-
-                    transforms.forEach(({ src: srcTransform }, lineIdx) => {
-                        let m = srcTransform.withTime(t)
-                        let u_mLocation = gl.getUniformLocation(fgProgram, `u_m${lineIdx}`)
-                        gl.uniformMatrix3fv(u_mLocation, false, m)
-                    })
-
-                    gl.drawElements(gl.TRIANGLES, idx_arr.length, gl.UNSIGNED_INT, 0)
-                    gl.bindVertexArray(null)
-                }
+                render(
+                    t,
+                    gl,
+                    bgProgram,
+                    bg_vao,
+                    bg_texture,
+                    transforms.map(({ tar }) => tar),
+                    idx_arr.length
+                )
+                render(
+                    1 - t,
+                    gl,
+                    fgProgram,
+                    fg_vao,
+                    fg_texture,
+                    transforms.map(({ src }) => src),
+                    idx_arr.length
+                )
             }
 
             const channel = new BroadcastChannel("channel")
@@ -142,47 +120,8 @@ export default defineComponent({
                             let w_acc = ws.reduce((acc, w) => acc + w, 0)
                             ws.forEach((w, lineIdx) => srcWeights[lineIdx].push(w / w_acc))
                         }
-                        {
-                            gl.deleteVertexArray(fg_vao)
-                            fg_vao = gl.createVertexArray()
-                            gl.bindVertexArray(fg_vao)
-                            gl.enableVertexAttribArray(0)
-                            const positionBuffer = gl.createBuffer()
-                            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-                            gl.bufferData(
-                                gl.ARRAY_BUFFER,
-                                new Float32Array(pos_arr),
-                                gl.STATIC_DRAW
-                            )
-                            gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
-
-                            gl.enableVertexAttribArray(1)
-                            const texcoordBuffer = gl.createBuffer()
-                            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer)
-                            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv_arr), gl.STATIC_DRAW)
-                            gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0)
-
-                            srcWeights.forEach((srcWeight, lineIdx) => {
-                                gl.enableVertexAttribArray(2 + lineIdx)
-                                const weightBuffer = gl.createBuffer()
-                                gl.bindBuffer(gl.ARRAY_BUFFER, weightBuffer)
-                                gl.bufferData(
-                                    gl.ARRAY_BUFFER,
-                                    new Float32Array(srcWeight),
-                                    gl.STATIC_DRAW
-                                )
-                                gl.vertexAttribPointer(2 + lineIdx, 1, gl.FLOAT, false, 0, 0)
-                            })
-
-                            const ebo = gl.createBuffer()
-                            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo)
-                            gl.bufferData(
-                                gl.ELEMENT_ARRAY_BUFFER,
-                                new Uint32Array(idx_arr),
-                                gl.STATIC_DRAW
-                            )
-                            gl.bindVertexArray(null)
-                        }
+                        gl.deleteVertexArray(fg_vao)
+                        fg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, srcWeights)
 
                         tarWeights = lines.map(() => [])
                         for (let i = 0; i < pos_arr.length; i += 2) {
@@ -198,47 +137,8 @@ export default defineComponent({
                             let w_acc = ws.reduce((acc, w) => acc + w, 0)
                             ws.forEach((w, lineIdx) => tarWeights[lineIdx].push(w / w_acc))
                         }
-                        {
-                            gl.deleteVertexArray(bg_vao)
-                            bg_vao = gl.createVertexArray()
-                            gl.bindVertexArray(bg_vao)
-                            gl.enableVertexAttribArray(0)
-                            const positionBuffer = gl.createBuffer()
-                            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-                            gl.bufferData(
-                                gl.ARRAY_BUFFER,
-                                new Float32Array(pos_arr),
-                                gl.STATIC_DRAW
-                            )
-                            gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
-
-                            gl.enableVertexAttribArray(1)
-                            const texcoordBuffer = gl.createBuffer()
-                            gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer)
-                            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv_arr), gl.STATIC_DRAW)
-                            gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0)
-
-                            tarWeights.forEach((tarWeight, lineIdx) => {
-                                gl.enableVertexAttribArray(2 + lineIdx)
-                                const weightBuffer = gl.createBuffer()
-                                gl.bindBuffer(gl.ARRAY_BUFFER, weightBuffer)
-                                gl.bufferData(
-                                    gl.ARRAY_BUFFER,
-                                    new Float32Array(tarWeight),
-                                    gl.STATIC_DRAW
-                                )
-                                gl.vertexAttribPointer(2 + lineIdx, 1, gl.FLOAT, false, 0, 0)
-                            })
-
-                            const ebo = gl.createBuffer()
-                            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo)
-                            gl.bufferData(
-                                gl.ELEMENT_ARRAY_BUFFER,
-                                new Uint32Array(idx_arr),
-                                gl.STATIC_DRAW
-                            )
-                            gl.bindVertexArray(null)
-                        }
+                        gl.deleteVertexArray(bg_vao)
+                        bg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, tarWeights)
 
                         bgProgram = genShaderProgram(gl, lines.length, true)
                         fgProgram = genShaderProgram(gl, lines.length, false)
@@ -257,8 +157,6 @@ export default defineComponent({
                                 tar: new Transform(line2, line1),
                             }
                         })
-
-                        // transforms[0].src.withTime(0.2)
                     }
                     case "srcImgLink": {
                         srcImg.src = msg.link

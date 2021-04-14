@@ -1,5 +1,4 @@
-import * as glm from "gl-matrix"
-import "./pose"
+import { Transform } from "./pose"
 import * as shader from "./shader"
 
 interface Point {
@@ -12,9 +11,6 @@ interface Line {
 }
 const calcVecLen = (vec: Point) => {
     return (vec.x ** 2 + vec.y ** 2) ** 0.5
-}
-const line2vec = (line: Line) => {
-    return { x: line.to.x - line.from.x, y: line.to.y - line.from.y }
 }
 const calcLineLen = (line: Line) => {
     let vec = { x: line.to.x - line.from.x, y: line.to.y - line.from.y }
@@ -35,29 +31,11 @@ const calcDist = (point: Point, line: Line) => {
     }
 }
 
-console.log(calcDist({ x: 2, y: 1 }, { from: { x: 0, y: 0 }, to: { x: 1, y: 0 } }))
-
 export const calcWeight = (point: Point, line: Line, a: number, b: number, p: number) => {
     let dist = calcDist(point, line)
     let lineLen = calcLineLen(line)
     return (lineLen ** p / (a + dist)) ** b
 }
-export const normalizeWeights = (weights: number[]) => {
-    let acc = weights.reduce((acc, curr) => acc + curr, 0)
-    return weights.map((w) => w / acc)
-}
-const line2line = (line1: Line, line2: Line, t: number) => {
-    let translate = { x: (line2.from.x - line1.from.x) * t, y: (line2.from.y - line1.from.y) * t }
-    let scale = t * (calcLineLen(line2) / calcLineLen(line1)) + (1 - t)
-    let vec1 = line2vec(line1)
-    let vec2 = line2vec(line2)
-    let rotation = Math.acos(
-        (vec1.x * vec2.x + vec1.y * vec2.y) / (calcVecLen(vec1) * calcVecLen(vec2))
-    )
-}
-let m = glm.mat3.scale(glm.mat3.create(), glm.mat3.create(), glm.vec2.fromValues(2, 1))
-let v = glm.vec2.transformMat3(glm.vec2.create(), glm.vec2.fromValues(1, 3), m)
-console.log(v)
 
 export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => {
     let vs_source =
@@ -114,189 +92,70 @@ export const genBufferData = (x: number, y: number) => {
 
     return { pos_arr, uv_arr, idx_arr }
 }
-;(async () => {
-    const canvas = <HTMLCanvasElement>document.getElementById("canvas")
 
-    const gl = canvas.getContext("webgl2", {
-        preserveDrawingBuffer: true,
-        premultipliedAlpha: false,
+export const render = (
+    time: number,
+    gl: WebGL2RenderingContext,
+    program: WebGLProgram,
+    vao: WebGLVertexArrayObject,
+    texture: WebGLTexture,
+    transforms: Transform[],
+    count
+) => {
+    gl.useProgram(program)
+    gl.bindVertexArray(vao)
+
+    let u_textureLocation = gl.getUniformLocation(program, "u_texture")
+    gl.uniform1i(u_textureLocation, 0)
+    gl.activeTexture(gl.TEXTURE0)
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+
+    let u_timeLocation = gl.getUniformLocation(program, "u_time")
+    gl.uniform1f(u_timeLocation, time)
+
+    transforms.forEach((transform, lineIdx) => {
+        let m = transform.withTime(1 - time)
+        let u_mLocation = gl.getUniformLocation(program, `u_m${lineIdx}`)
+        gl.uniformMatrix3fv(u_mLocation, false, m)
     })
-    gl.clearColor(0, 0, 0, 1)
-    gl.clearDepth(1)
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
-    gl.enable(gl.CULL_FACE)
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthMask(true)
-    gl.depthFunc(gl.LEQUAL)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-    gl.enable(gl.BLEND)
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
-    let bgProgram = genShaderProgram(gl, 11, true)
-    let fgProgram = genShaderProgram(gl, 11, false)
+    gl.drawElements(gl.TRIANGLES, count, gl.UNSIGNED_INT, 0)
+    gl.bindVertexArray(null)
+}
 
-    document.getElementById("load1").onclick = () => {
-        const inp = document.createElement("input")
-        inp.type = "file"
-        inp.accept = "image/*"
-        inp.onchange = () => {
-            const files = inp.files
-            const reader = new FileReader()
-            reader.addEventListener("loadend", async () => {
-                let img = new Image()
-                img.onload = () => {
-                    let { pos_arr, uv_arr, idx_arr } = genBufferData(24, 21)
-                    let vs_source =
-                        `#version 300 es\n` +
-                        `layout (location = 0) in vec2 a_position;\n` +
-                        `layout (location = 1) in vec2 a_texcoord;\n` +
-                        `uniform mat4 u_mvp;\n` +
-                        `out vec2 v_texcoord;\n` +
-                        `void main(void) {\n` +
-                        `   gl_Position = vec4(a_position.x, a_position.y, 0., 1.0);\n` +
-                        `   v_texcoord = a_texcoord;\n` +
-                        `}\n`
-                    let fs_source =
-                        `#version 300 es\n` +
-                        `precision mediump float;\n` +
-                        `in vec2 v_texcoord;\n` +
-                        `uniform sampler2D u_texture;\n` +
-                        `out vec4 f_color;\n` +
-                        `void main(void) {\n` +
-                        `   f_color = texture(u_texture, v_texcoord);\n` +
-                        `   f_color = vec4(f_color.rgb, 0.5);\n` +
-                        // `   f_color = vec4(v_texcoord, 0.5, 1.0);\n` +
-                        `}\n`
+export const genVAO = (
+    gl: WebGL2RenderingContext,
+    pos_arr: number[],
+    uv_arr: number[],
+    idx_arr: number[],
+    weights: number[][]
+) => {
+    let vao = gl.createVertexArray()
+    gl.bindVertexArray(vao)
+    gl.enableVertexAttribArray(0)
+    const positionBuffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pos_arr), gl.STATIC_DRAW)
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 
-                    let program = shader.createProgram(gl, vs_source, fs_source)
+    gl.enableVertexAttribArray(1)
+    const texcoordBuffer = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv_arr), gl.STATIC_DRAW)
+    gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0)
 
-                    gl.enableVertexAttribArray(0)
-                    const positionBuffer = gl.createBuffer()
-                    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-                    gl.bufferData(
-                        gl.ARRAY_BUFFER,
-                        // new Float32Array([
-                        //     -1, -1,
-                        //     -0.8, -1,
-                        //     -0.8, -0.8,
-                        // ]),
-                        new Float32Array(pos_arr),
-                        gl.STATIC_DRAW
-                    )
-                    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
+    weights.forEach((weight, lineIdx) => {
+        gl.enableVertexAttribArray(2 + lineIdx)
+        const weightBuffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, weightBuffer)
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(weight), gl.STATIC_DRAW)
+        gl.vertexAttribPointer(2 + lineIdx, 1, gl.FLOAT, false, 0, 0)
+    })
 
-                    gl.enableVertexAttribArray(1)
-                    const texcoordBuffer = gl.createBuffer()
-                    gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer)
-                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv_arr), gl.STATIC_DRAW)
-                    gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0)
+    const ebo = gl.createBuffer()
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo)
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(idx_arr), gl.STATIC_DRAW)
+    gl.bindVertexArray(null)
 
-                    const ebo = gl.createBuffer()
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo)
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(idx_arr), gl.STATIC_DRAW)
-                    gl.useProgram(program)
-
-                    const texture = gl.createTexture()
-                    gl.bindTexture(gl.TEXTURE_2D, texture)
-
-                    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, img.width, img.height)
-                    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGB, gl.UNSIGNED_BYTE, img)
-                    gl.generateMipmap(gl.TEXTURE_2D)
-
-                    let u_textureLocation = gl.getUniformLocation(program, "u_texture")
-                    gl.uniform1i(u_textureLocation, 0)
-                    gl.activeTexture(gl.TEXTURE0)
-                    gl.bindTexture(gl.TEXTURE_2D, texture)
-
-                    gl.drawElements(gl.TRIANGLES, idx_arr.length, gl.UNSIGNED_INT, 0)
-                }
-                img.src = <string>reader.result
-            })
-            reader.readAsDataURL(files[0])
-        }
-        inp.click()
-    }
-
-    document.getElementById("load2").onclick = () => {
-        const inp = document.createElement("input")
-        inp.type = "file"
-        inp.accept = "image/*"
-        inp.onchange = () => {
-            const files = inp.files
-            const reader = new FileReader()
-            reader.addEventListener("loadend", async () => {
-                let img = new Image()
-                img.onload = () => {
-                    let { pos_arr, uv_arr, idx_arr } = genBufferData(20, 20)
-
-                    let vs_source =
-                        `#version 300 es\n` +
-                        `layout (location = 0) in vec2 a_position;\n` +
-                        `layout (location = 1) in vec2 a_texcoord;\n` +
-                        `uniform mat4 u_mvp;\n` +
-                        `out vec2 v_texcoord;\n` +
-                        `void main(void) {\n` +
-                        `   gl_Position = vec4(a_position.x, a_position.y, 0., 1.0);\n` +
-                        `   v_texcoord = a_texcoord;\n` +
-                        `}\n`
-                    let fs_source =
-                        `#version 300 es\n` +
-                        `precision mediump float;\n` +
-                        `in vec2 v_texcoord;\n` +
-                        `uniform sampler2D u_texture;\n` +
-                        `out vec4 f_color;\n` +
-                        `void main(void) {\n` +
-                        `   f_color = texture(u_texture, v_texcoord);\n` +
-                        // `   f_color = vec4(f_color.rgb, 1);\n` +
-                        // `   f_color = vec4(v_texcoord, 0.5, 1.0);\n` +
-                        `}\n`
-
-                    let program = shader.createProgram(gl, vs_source, fs_source)
-
-                    gl.enableVertexAttribArray(0)
-                    const positionBuffer = gl.createBuffer()
-                    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-                    gl.bufferData(
-                        gl.ARRAY_BUFFER,
-                        // new Float32Array([
-                        //     -1, -1,
-                        //     -0.8, -1,
-                        //     -0.8, -0.8,
-                        // ]),
-                        new Float32Array(pos_arr),
-                        gl.STATIC_DRAW
-                    )
-                    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
-
-                    gl.enableVertexAttribArray(1)
-                    const texcoordBuffer = gl.createBuffer()
-                    gl.bindBuffer(gl.ARRAY_BUFFER, texcoordBuffer)
-                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uv_arr), gl.STATIC_DRAW)
-                    gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 0, 0)
-
-                    const ebo = gl.createBuffer()
-                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ebo)
-                    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(idx_arr), gl.STATIC_DRAW)
-                    gl.useProgram(program)
-
-                    const texture = gl.createTexture()
-                    gl.bindTexture(gl.TEXTURE_2D, texture)
-
-                    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, img.width, img.height)
-                    gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGB, gl.UNSIGNED_BYTE, img)
-                    gl.generateMipmap(gl.TEXTURE_2D)
-
-                    let u_textureLocation = gl.getUniformLocation(program, "u_texture")
-                    gl.uniform1i(u_textureLocation, 0)
-                    gl.activeTexture(gl.TEXTURE0)
-                    gl.bindTexture(gl.TEXTURE_2D, texture)
-
-                    gl.drawElements(gl.TRIANGLES, idx_arr.length, gl.UNSIGNED_INT, 0)
-                }
-                img.src = <string>reader.result
-            })
-            reader.readAsDataURL(files[0])
-        }
-        inp.click()
-    }
-})()
+    return vao
+}
