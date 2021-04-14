@@ -293,7 +293,7 @@ export default defineComponent({
         const channel = new BroadcastChannel("channel")
         interface Msg {
             msgType: "opened" | "lines"
-            data: {}
+            lines?: { src: Line; tar: Line }[]
         }
         channel.onmessage = (event: MessageEvent<Msg>) => {
             const msg = event.data
@@ -303,7 +303,7 @@ export default defineComponent({
                     console.log("opened")
                     channel.postMessage(<Msg>{
                         msgType: "lines",
-                        data: JSON.parse(JSON.stringify(lines.value)),
+                        lines: JSON.parse(JSON.stringify(lines.value)),
                     })
                     break
                 }

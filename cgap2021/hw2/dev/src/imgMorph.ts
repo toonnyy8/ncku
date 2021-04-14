@@ -37,12 +37,12 @@ const calcDist = (point: Point, line: Line) => {
 
 console.log(calcDist({ x: 2, y: 1 }, { from: { x: 0, y: 0 }, to: { x: 1, y: 0 } }))
 
-const calcWeight = (point: Point, line: Line, a: number, b: number, p: number) => {
+export const calcWeight = (point: Point, line: Line, a: number, b: number, p: number) => {
     let dist = calcDist(point, line)
     let lineLen = calcLineLen(line)
     return (lineLen ** p / (a + dist)) ** b
 }
-const normalizeWeights = (weights: number[]) => {
+export const normalizeWeights = (weights: number[]) => {
     let acc = weights.reduce((acc, curr) => acc + curr, 0)
     return weights.map((w) => w / acc)
 }
@@ -59,7 +59,7 @@ let m = glm.mat3.scale(glm.mat3.create(), glm.mat3.create(), glm.vec2.fromValues
 let v = glm.vec2.transformMat3(glm.vec2.create(), glm.vec2.fromValues(1, 3), m)
 console.log(v)
 
-const genShader = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => {
+export const genShader = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => {
     let vs_source =
         `#version 300 es\n` +
         `layout (location = 0) in vec2 a_position;\n` +
@@ -70,7 +70,6 @@ const genShader = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => 
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
             return prev + `uniform mat3 u_m${idx};\n`
         }, ``) +
-        `uniform mat4 u_mvp;\n` +
         `out vec2 v_texcoord;\n` +
         `void main(void) {\n` +
         `   vec3 pos = vec3(0, 0, 0);\n` +
@@ -96,7 +95,7 @@ const genShader = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => 
     let program = shader.createProgram(gl, vs_source, fs_source)
     return program
 }
-const genBufferData = (x: number, y: number) => {
+export const genBufferData = (x: number, y: number) => {
     let pos_arr: number[] = []
     let uv_arr: number[] = []
     let idx_arr: number[] = []
@@ -114,7 +113,6 @@ const genBufferData = (x: number, y: number) => {
 
     return { pos_arr, uv_arr, idx_arr }
 }
-
 ;(async () => {
     const canvas = <HTMLCanvasElement>document.getElementById("canvas")
 

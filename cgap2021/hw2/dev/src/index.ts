@@ -5,8 +5,6 @@ import Ctrl from "./Ctrl.vue"
 // @ts-ignore
 import View from "./View.vue"
 
-import "./imgMorph"
-
 if (window.name == "") {
     window.name = "image morphing control"
 }
