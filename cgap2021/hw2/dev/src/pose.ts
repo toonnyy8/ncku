@@ -68,10 +68,10 @@ export class Line {
     }
 }
 
-class Transform {
+export class Transform {
     constructor(line1: Line, line2: Line) {
         this.org = line1.p
-        this.x_angle - line1.angle(Line.create([0, 0], [1, 0]))
+        this.x_angle = line1.angle(Line.create([0, 0], [1, 0]))
 
         this.angle = line1.angle(line2)
         this.scale = line1.scale(line2)
@@ -119,6 +119,7 @@ class Transform {
 // // let l1 = Line.create([0, 0], [2, 0])
 // // let l2 = Line.create([0, 0], [3, 3])
 // let m = l1.transformMat3(l2)
+// // m = new Transform(l1, l2).withTime(1)
 // let v = glm.vec2.transformMat3(glm.vec2.create(), [0, 0], m)
 // console.log(`v: ${v}`)
 

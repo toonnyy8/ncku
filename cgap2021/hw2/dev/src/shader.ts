@@ -1,11 +1,4 @@
-/**
- *
- * @param {WebGL2RenderingContext} gl
- * @param {string} vsSource
- * @param {string} fsSource
- * @returns
- */
-export const createProgram = (gl, vsSource, fsSource) => {
+export const createProgram = (gl: WebGL2RenderingContext, vsSource: string, fsSource: string) => {
     const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vsSource)
     const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fsSource)
 
@@ -32,14 +25,7 @@ export const createProgram = (gl, vsSource, fsSource) => {
 // creates a shader of the given type, uploads the source and
 // compiles it.
 //
-/**
- *
- * @param {WebGL2RenderingContext} gl
- * @param {number} type
- * @param {string} source
- * @returns
- */
-export const compileShader = (gl, type, source) => {
+export const compileShader = (gl: WebGL2RenderingContext, type: number, source: string) => {
     const shader = gl.createShader(type)
 
     // Send the source to the shader object

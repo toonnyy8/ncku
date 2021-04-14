@@ -59,7 +59,7 @@ let m = glm.mat3.scale(glm.mat3.create(), glm.mat3.create(), glm.vec2.fromValues
 let v = glm.vec2.transformMat3(glm.vec2.create(), glm.vec2.fromValues(1, 3), m)
 console.log(v)
 
-export const genShader = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => {
+export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => {
     let vs_source =
         `#version 300 es\n` +
         `layout (location = 0) in vec2 a_position;\n` +
@@ -74,9 +74,10 @@ export const genShader = (gl: WebGL2RenderingContext, lineNum: number, isBg = tr
         `void main(void) {\n` +
         `   vec3 pos = vec3(0, 0, 0);\n` +
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
-            return prev + `   pos += u_m${idx} * vec3(a_position.xy, 0) * a_w${idx};\n`
+            return prev + `   pos += u_m${idx} * vec3(a_position.xy, 1.) * a_w${idx};\n`
         }, ``) +
-        `   gl_Position = vec4(pos.x, pos.y, 1.0, 1.0);\n` +
+        `   gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\n` +
+        // `   gl_Position = vec4(a_position.xy, 0.0, 1.0);\n` +
         `   v_texcoord = a_texcoord;\n` +
         `}\n`
     let fs_source =
@@ -131,8 +132,8 @@ export const genBufferData = (x: number, y: number) => {
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
-    let bgShader = genShader(gl, 11, true)
-    let fgShader = genShader(gl, 11, false)
+    let bgProgram = genShaderProgram(gl, 11, true)
+    let fgProgram = genShaderProgram(gl, 11, false)
 
     document.getElementById("load1").onclick = () => {
         const inp = document.createElement("input")
