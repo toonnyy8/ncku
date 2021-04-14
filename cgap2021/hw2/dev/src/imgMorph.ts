@@ -92,8 +92,7 @@ const genShader = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => 
         `   f_color = vec4(f_color.rgb, ${isBg ? 1 : "u_time"});\n` +
         // `   f_color = vec4(v_texcoord, 0.5, 1.0);\n` +
         `}\n`
-    console.log(vs_source)
-    console.log(fs_source)
+
     let program = shader.createProgram(gl, vs_source, fs_source)
     return program
 }

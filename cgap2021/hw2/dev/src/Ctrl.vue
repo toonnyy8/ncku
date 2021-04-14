@@ -5,8 +5,8 @@
                 v-show="mode == 'src'"
                 class="max-w-7xl"
                 ref="srcCanvasRef"
-                width="800"
-                height="600"
+                width="500"
+                height="500"
                 v-on:mousedown="srcMousedown"
                 v-on:mousemove="srcMousemove"
                 v-on:mouseup="srcMouseup"
@@ -16,8 +16,8 @@
                 v-show="mode == 'tar'"
                 class="max-w-7xl"
                 ref="tarCanvasRef"
-                width="800"
-                height="600"
+                width="500"
+                height="500"
                 v-on:mousedown="tarMousedown"
                 v-on:mousemove="tarMousemove"
                 v-on:mouseup="tarMouseup"
@@ -44,14 +44,26 @@
             >
                 tar
             </button>
+
+            <button
+                class="bg-red-500 text-white py-1 px-5 rounded-b-lg"
+                v-show="
+                    lines.length != 0 &&
+                    lines.reduce((prev, line) => prev && line.tar != undefined, true)
+                "
+                v-on:click="openView"
+            >
+                open view
+            </button>
         </div>
         <div class="text-gray-800 w-36 m-2">
             <div class="h-10">
                 <div v-if="lines[lookLineIdx] && lines[lookLineIdx][mode]">
-                    from: ({{ lines[lookLineIdx][mode].from.x }},
-                    {{ lines[lookLineIdx][mode].from.y }})
+                    from: ({{ Math.round(lines[lookLineIdx][mode].from.x * 100) / 100 }},
+                    {{ Math.round(lines[lookLineIdx][mode].from.y * 100) / 100 }})
                     <br />
-                    to: ({{ lines[lookLineIdx][mode].to.x }}, {{ lines[lookLineIdx][mode].to.y }})
+                    to: ({{ Math.round(lines[lookLineIdx][mode].to.x * 100) / 100 }},
+                    {{ Math.round(lines[lookLineIdx][mode].to.y * 100) / 100 }})
                 </div>
             </div>
             <ul>
@@ -95,22 +107,22 @@ interface Line {
 const drawLine = (ctx: CanvasRenderingContext2D, line: Line, color: string = `#ffcc33`) => {
     ctx.beginPath()
     ctx.strokeStyle = color
-    ctx.moveTo(line.from.x, line.from.y)
-    ctx.lineTo(line.to.x, line.to.y)
+    ctx.moveTo((line.from.x + 1) * 250, (-line.from.y + 1) * 250)
+    ctx.lineTo((line.to.x + 1) * 250, (-line.to.y + 1) * 250)
     ctx.stroke()
 
     ctx.lineWidth = 3
     ctx.beginPath()
     ctx.strokeStyle = `#ff5522`
     ctx.fillStyle = `#ff5522`
-    ctx.arc(line.from.x, line.from.y, 5, 0, Math.PI * 2, true)
+    ctx.arc((line.from.x + 1) * 250, (-line.from.y + 1) * 250, 5, 0, Math.PI * 2, true)
     ctx.fill()
     ctx.stroke()
 
     ctx.beginPath()
     ctx.strokeStyle = `#22ffff`
     ctx.fillStyle = `#22ffff`
-    ctx.arc(line.to.x, line.to.y, 5, 0, Math.PI * 2, true)
+    ctx.arc((line.to.x + 1) * 250, (-line.to.y + 1) * 250, 5, 0, Math.PI * 2, true)
     ctx.fill()
     ctx.stroke()
 }
@@ -175,12 +187,12 @@ export default defineComponent({
                 down = true
                 tempLine = {
                     from: {
-                        x: e.pageX - srcCanvas.offsetLeft,
-                        y: e.pageY - srcCanvas.offsetTop,
+                        x: (e.pageX - srcCanvas.offsetLeft) / 250 - 1,
+                        y: -((e.pageY - srcCanvas.offsetTop) / 250 - 1),
                     },
                     to: {
-                        x: e.pageX - srcCanvas.offsetLeft,
-                        y: e.pageY - srcCanvas.offsetTop,
+                        x: (e.pageX - srcCanvas.offsetLeft) / 250 - 1,
+                        y: -((e.pageY - srcCanvas.offsetTop) / 250 - 1),
                     },
                 }
                 drawLine(srcCtx, tempLine, color.primary)
@@ -188,8 +200,8 @@ export default defineComponent({
             srcMousemove.value = (e: MouseEvent) => {
                 if (down) {
                     tempLine.to = {
-                        x: e.pageX - srcCanvas.offsetLeft,
-                        y: e.pageY - srcCanvas.offsetTop,
+                        x: (e.pageX - srcCanvas.offsetLeft) / 250 - 1,
+                        y: -((e.pageY - srcCanvas.offsetTop) / 250 - 1),
                     }
                     if (!move) {
                         move = true
@@ -205,9 +217,7 @@ export default defineComponent({
                 }
             }
             srcMouseup.value = (e) => {
-                if (down) {
-                    down = false
-                    move = false
+                if (down && move) {
                     if (
                         lines.value[lookLineIdx.value].src.from.x ==
                             lines.value[lookLineIdx.value].src.to.x &&
@@ -216,8 +226,10 @@ export default defineComponent({
                     ) {
                         lines.value.pop()
                     }
-                    renderCanvas.value()
                 }
+                down = false
+                move = false
+                renderCanvas.value()
             }
 
             tarMousedown.value = (e) => {
@@ -225,12 +237,12 @@ export default defineComponent({
                     down = true
                     tempLine = {
                         from: {
-                            x: e.pageX - tarCanvas.offsetLeft,
-                            y: e.pageY - tarCanvas.offsetTop,
+                            x: (e.pageX - tarCanvas.offsetLeft) / 250 - 1,
+                            y: -((e.pageY - tarCanvas.offsetTop) / 250 - 1),
                         },
                         to: {
-                            x: e.pageX - tarCanvas.offsetLeft,
-                            y: e.pageY - tarCanvas.offsetTop,
+                            x: (e.pageX - tarCanvas.offsetLeft) / 250 - 1,
+                            y: -((e.pageY - tarCanvas.offsetTop) / 250 - 1),
                         },
                     }
                     drawLine(tarCtx, tempLine, color.primary)
@@ -239,8 +251,8 @@ export default defineComponent({
             tarMousemove.value = (e: MouseEvent) => {
                 if (down) {
                     tempLine.to = {
-                        x: e.pageX - tarCanvas.offsetLeft,
-                        y: e.pageY - tarCanvas.offsetTop,
+                        x: (e.pageX - tarCanvas.offsetLeft) / 250 - 1,
+                        y: -((e.pageY - tarCanvas.offsetTop) / 250 - 1),
                     }
                     lines.value[lookLineIdx.value].tar = Object.assign({}, tempLine)
                     renderCanvas.value()
@@ -278,6 +290,29 @@ export default defineComponent({
             }
         })
 
+        const channel = new BroadcastChannel("channel")
+        interface Msg {
+            msgType: "opened" | "lines"
+            data: {}
+        }
+        channel.onmessage = (event: MessageEvent<Msg>) => {
+            const msg = event.data
+            console.log("AAAAAAa")
+            switch (msg.msgType) {
+                case "opened": {
+                    console.log("opened")
+                    channel.postMessage(<Msg>{
+                        msgType: "lines",
+                        data: JSON.parse(JSON.stringify(lines.value)),
+                    })
+                    break
+                }
+            }
+        }
+        const openView = () => {
+            window.open("./index.html", "image morphing view")
+        }
+
         return {
             srcCanvasRef,
             srcMousedown,
@@ -295,6 +330,8 @@ export default defineComponent({
             removeLine,
             mode,
             renderCanvas,
+
+            openView,
         }
     },
 })
