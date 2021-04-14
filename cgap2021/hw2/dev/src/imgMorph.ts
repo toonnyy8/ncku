@@ -43,7 +43,11 @@ export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, is
         `layout (location = 0) in vec2 a_position;\n` +
         `layout (location = 1) in vec2 a_texcoord;\n` +
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
-            return prev + `layout (location = ${idx + 2}) in float a_w${idx};\n`
+            if (idx % 4 == 0) {
+                return prev + `layout (location = ${idx / 4 + 2}) in vec4 a_w${idx / 4};\n`
+            } else {
+                return prev
+            }
         }, ``) +
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
             return prev + `uniform mat3 u_m${idx};\n`
@@ -52,12 +56,18 @@ export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, is
         `void main(void) {\n` +
         `   vec3 pos = vec3(0, 0, 0);\n` +
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
-            return prev + `   pos += u_m${idx} * vec3(a_position.xy, 1.) * a_w${idx};\n`
+            return (
+                prev +
+                `   pos += u_m${idx} * vec3(a_position.xy, 1.) * a_w${Math.floor(idx / 4)}[${
+                    idx % 4
+                }];\n`
+            )
         }, ``) +
         `   gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\n` +
         // `   gl_Position = vec4(a_position.xy, 0.0, 1.0);\n` +
         `   v_texcoord = a_texcoord;\n` +
         `}\n`
+
     let fs_source =
         `#version 300 es\n` +
         `precision mediump float;\n` +
@@ -149,7 +159,7 @@ export const genVAO = (
         const weightBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, weightBuffer)
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(weight), gl.STATIC_DRAW)
-        gl.vertexAttribPointer(2 + lineIdx, 1, gl.FLOAT, false, 0, 0)
+        gl.vertexAttribPointer(2 + lineIdx, 4, gl.FLOAT, false, 0, 0)
     })
 
     const ebo = gl.createBuffer()

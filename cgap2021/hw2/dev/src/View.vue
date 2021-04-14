@@ -106,10 +106,11 @@ export default defineComponent({
                         const lines = msg.lines
                         ;({ pos_arr, uv_arr, idx_arr } = genBufferData(40, 40))
 
-                        srcWeights = lines.map(() => [])
+                        srcWeights = new Array(Math.ceil(lines.length / 4)).fill(0).map(() => []) //lines.map(() => [])
                         for (let i = 0; i < pos_arr.length; i += 2) {
-                            let ws = lines.map((line) => {
-                                return calcWeight(
+                            let ws = new Array(Math.ceil(lines.length / 4) * 4).fill(0)
+                            lines.forEach((line, lineIdx) => {
+                                ws[lineIdx] = calcWeight(
                                     { x: pos_arr[i], y: pos_arr[i + 1] },
                                     line.src,
                                     0.001,
@@ -118,15 +119,18 @@ export default defineComponent({
                                 )
                             })
                             let w_acc = ws.reduce((acc, w) => acc + w, 0)
-                            ws.forEach((w, lineIdx) => srcWeights[lineIdx].push(w / w_acc))
+                            ws.forEach((w, lineIdx) =>
+                                srcWeights[Math.floor(lineIdx / 4)].push(w / w_acc)
+                            )
                         }
                         gl.deleteVertexArray(fg_vao)
                         fg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, srcWeights)
 
-                        tarWeights = lines.map(() => [])
+                        tarWeights = new Array(Math.ceil(lines.length / 4)).fill(0).map(() => []) //lines.map(() => [])
                         for (let i = 0; i < pos_arr.length; i += 2) {
-                            let ws = lines.map((line) => {
-                                return calcWeight(
+                            let ws = new Array(Math.ceil(lines.length / 4) * 4).fill(0)
+                            lines.forEach((line, lineIdx) => {
+                                ws[lineIdx] = calcWeight(
                                     { x: pos_arr[i], y: pos_arr[i + 1] },
                                     line.tar,
                                     0.001,
@@ -135,7 +139,9 @@ export default defineComponent({
                                 )
                             })
                             let w_acc = ws.reduce((acc, w) => acc + w, 0)
-                            ws.forEach((w, lineIdx) => tarWeights[lineIdx].push(w / w_acc))
+                            ws.forEach((w, lineIdx) =>
+                                tarWeights[Math.floor(lineIdx / 4)].push(w / w_acc)
+                            )
                         }
                         gl.deleteVertexArray(bg_vao)
                         bg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, tarWeights)
