@@ -63,8 +63,6 @@ export default defineComponent({
                 tar: Transform
             }[]
             let pos_arr: number[], uv_arr: number[], idx_arr: number[]
-            let srcWeights: number[][]
-            let tarWeights: number[][]
 
             let fg_vao: WebGLVertexArrayObject
             let bg_vao: WebGLVertexArrayObject
@@ -106,7 +104,9 @@ export default defineComponent({
                         const lines = msg.lines
                         ;({ pos_arr, uv_arr, idx_arr } = genBufferData(40, 40))
 
-                        srcWeights = new Array(Math.ceil(lines.length / 4)).fill(0).map(() => []) //lines.map(() => [])
+                        let srcWeights = new Array(Math.ceil(lines.length / 4))
+                            .fill(0)
+                            .map(() => []) //lines.map(() => [])
                         for (let i = 0; i < pos_arr.length; i += 2) {
                             let ws = new Array(Math.ceil(lines.length / 4) * 4).fill(0)
                             lines.forEach((line, lineIdx) => {
@@ -126,7 +126,9 @@ export default defineComponent({
                         gl.deleteVertexArray(fg_vao)
                         fg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, srcWeights)
 
-                        tarWeights = new Array(Math.ceil(lines.length / 4)).fill(0).map(() => []) //lines.map(() => [])
+                        let tarWeights = new Array(Math.ceil(lines.length / 4))
+                            .fill(0)
+                            .map(() => []) //lines.map(() => [])
                         for (let i = 0; i < pos_arr.length; i += 2) {
                             let ws = new Array(Math.ceil(lines.length / 4) * 4).fill(0)
                             lines.forEach((line, lineIdx) => {
@@ -205,6 +207,7 @@ export default defineComponent({
                                 tarImg
                             )
                             gl.generateMipmap(gl.TEXTURE_2D)
+                            run.value(0)
                         }
 
                         break

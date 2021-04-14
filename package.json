@@ -12,7 +12,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "index": "parcel index.htm -p 8080 --open",
         "dev:cgap2021-hw2": "parcel ./cgap2021/hw2/dev/index.html -p 8080 --open",
-        "build:cgap2021-hw2": "parcel build ./cgap2021/hw2/dev/index.html --dist-dir ./cgap2021/hw2/build/"
+        "build:cgap2021-hw2": "parcel build ./cgap2021/hw2/dev/index.html --no-optimize --no-scope-hoist --no-content-hash --public-url=./"
     },
     "repository": {
         "type": "git",
@@ -30,9 +30,9 @@
         "vue": "^3.0.11"
     },
     "devDependencies": {
-        "@parcel/transformer-vue": "^2.0.0-beta.2",
+        "@parcel/transformer-vue": "^2.0.0-nightly.2264",
         "autoprefixer": "^10.2.5",
-        "parcel": "^2.0.0-beta.2",
+        "parcel": "^2.0.0-nightly.640",
         "postcss": "^8.2.9",
         "tailwindcss": "^2.1.1"
     }
