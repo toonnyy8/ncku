@@ -34311,49 +34311,62 @@ exports.default = _vue.defineComponent({
   setup() {
     const run = _vue.ref(t => {});
     const time = _vue.ref(0);
-    const imgMorphCanvasRef = _vue.ref();
-    const srcLink = _vue.ref("");
+    const mode = _vue.ref("morphing");
+    const canvasRef = _vue.ref();
     let srcImg = new Image();
     let tarImg = new Image();
     let width = _vue.ref(500), height = _vue.ref(500);
     _vue.onMounted(() => {
-      const imgMorphCanvas = imgMorphCanvasRef.value;
-      const gl = imgMorphCanvas.getContext("webgl2", {
-        preserveDrawingBuffer: true,
-        premultipliedAlpha: false
-      });
-      gl.clearColor(0, 0, 0, 1);
-      gl.clearDepth(1);
-      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-      gl.enable(gl.CULL_FACE);
-      gl.enable(gl.DEPTH_TEST);
-      gl.depthMask(true);
-      gl.depthFunc(gl.LEQUAL);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      gl.enable(gl.BLEND);
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-      let bgProgram;
-      let fgProgram;
-      let srcTransformMat3s;
-      let tarTransformMat3s;
+      const gl = createGl(canvasRef.value);
+      let bg_program;
+      let fg_program;
+      let transforms;
+      // let srcTransformMat3s: glm.mat3[]
+      // let tarTransformMat3s: glm.mat3[]
       let pos_arr, uv_arr, idx_arr;
       let fg_vao;
       let bg_vao;
       let fg_texture;
       let bg_texture;
       run.value = t => {
-        let w = srcImg.width * (1 - t) + tarImg.width * t;
-        let h = srcImg.height * (1 - t) + tarImg.height * t;
-        if (w > h) {
-          width.value = 500;
-          height.value = 500 * h / w;
-        } else {
-          width.value = 500 * w / h;
-          height.value = 500;
+        switch (mode.value) {
+          case "morphing":
+            {
+              let w = srcImg.width * (1 - t) + tarImg.width * t;
+              let h = srcImg.height * (1 - t) + tarImg.height * t;
+              ({w, h} = calcWH(w, h));
+              width.value = w;
+              height.value = h;
+              gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+              _imgMorph.render(t, gl, bg_program, bg_vao, bg_texture, transforms.map(({tar}) => tar.withTime(1 - t)), idx_arr.length);
+              _imgMorph.render(t, gl, fg_program, fg_vao, fg_texture, transforms.map(({src}) => src.withTime(t)), idx_arr.length);
+              break;
+            }
+          case "src":
+            {
+              let w = srcImg.width;
+              let h = srcImg.height;
+              ({w, h} = calcWH(w, h));
+              width.value = w;
+              height.value = h;
+              gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+              _imgMorph.render(t, gl, bg_program, fg_vao, fg_texture, transforms.map(({src}) => src.withTime(t)), idx_arr.length);
+              _imgMorph.render(t, gl, fg_program, fg_vao, fg_texture, transforms.map(({src}) => src.withTime(t)), idx_arr.length);
+              break;
+            }
+          case "tar":
+            {
+              let w = srcImg.width;
+              let h = srcImg.height;
+              ({w, h} = calcWH(w, h));
+              width.value = w;
+              height.value = h;
+              gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+              _imgMorph.render(t, gl, bg_program, bg_vao, bg_texture, transforms.map(({tar}) => tar.withTime(1 - t)), idx_arr.length);
+              _imgMorph.render(t, gl, fg_program, bg_vao, bg_texture, transforms.map(({tar}) => tar.withTime(1 - t)), idx_arr.length);
+              break;
+            }
         }
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        _imgMorph.render(t, gl, bgProgram, bg_vao, bg_texture, tarTransformMat3s, idx_arr.length);
-        _imgMorph.render(1 - t, gl, fgProgram, fg_vao, fg_texture, srcTransformMat3s, idx_arr.length);
       };
       const channel = new BroadcastChannel("channel");
       channel.onmessage = event => {
@@ -34393,15 +34406,15 @@ exports.default = _vue.defineComponent({
               }
               gl.deleteVertexArray(bg_vao);
               bg_vao = _imgMorph.genVAO(gl, pos_arr, uv_arr, idx_arr, tarWeights);
-              bgProgram = _imgMorph.genShaderProgram(gl, lines.length, true);
-              fgProgram = _imgMorph.genShaderProgram(gl, lines.length, false);
-              srcTransformMat3s = [];
-              tarTransformMat3s = [];
-              lines.forEach(({src, tar}) => {
+              bg_program = _imgMorph.genShaderProgram(gl, lines.length, true);
+              fg_program = _imgMorph.genShaderProgram(gl, lines.length, false);
+              transforms = lines.map(({src, tar}) => {
                 let line1 = _pose.Line.create(_glMatrix.vec2.fromValues(src.from.x, src.from.y), _glMatrix.vec2.fromValues(src.to.x, src.to.y));
                 let line2 = _pose.Line.create(_glMatrix.vec2.fromValues(tar.from.x, tar.from.y), _glMatrix.vec2.fromValues(tar.to.x, tar.to.y));
-                srcTransformMat3s.push(line1.transformMat3(line2));
-                tarTransformMat3s.push(line2.transformMat3(line1));
+                return {
+                  src: new _pose.Transform(line1, line2),
+                  tar: new _pose.Transform(line2, line1)
+                };
               });
             }
           case "srcImgLink":
@@ -34439,14 +34452,44 @@ exports.default = _vue.defineComponent({
     });
     return {
       run,
-      imgMorphCanvasRef,
-      srcLink,
       time,
+      mode,
+      canvasRef,
       width,
       height
     };
   }
 });
+const createGl = canvas => {
+  let gl = canvas.getContext("webgl2", {
+    preserveDrawingBuffer: true,
+    premultipliedAlpha: false
+  });
+  gl.clearColor(0, 0, 0, 1);
+  gl.clearDepth(1);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  gl.enable(gl.CULL_FACE);
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthMask(true);
+  gl.depthFunc(gl.LEQUAL);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.DST_ALPHA);
+  return gl;
+};
+const calcWH = (w, h) => {
+  if (w > h) {
+    return {
+      w: 500,
+      h: 500 * h / w
+    };
+  } else {
+    return {
+      w: 500 * w / h,
+      h: 500
+    };
+  }
+};
 
 },{"vue":"4ayRm","./imgMorph":"5sum9","./pose":"2AmrA","gl-matrix":"1rpaj","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"5sum9":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
@@ -34516,9 +34559,9 @@ const genShaderProgram = (gl, lineNum, isBg = true) => {
     return prev + `uniform mat3 u_m${idx};\n`;
   }, ``) + `uniform float u_time;\n` + `out vec2 v_texcoord;\n` + `void main(void) {\n` + `   mat3 m;\n` + new Array(lineNum).fill(0).reduce((prev, _, idx) => {
     return prev + `   m += u_m${idx} * a_w${Math.floor(idx / 4)}[${idx % 4}];\n`;
-  }, ``) + `   vec3 pos = m * vec3(a_position, 1.0);\n` + `   gl_Position = vec4(u_time * a_position + (1. - u_time) * pos.xy, 0.0, 1.0);\n` + // `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` +
-  `   v_texcoord = a_texcoord;\n` + `}\n`;
-  let fs_source = `#version 300 es\n` + `precision mediump float;\n` + `in vec2 v_texcoord;\n` + `uniform sampler2D u_texture;\n` + `uniform float u_time;\n` + `out vec4 f_color;\n` + `void main(void) {\n` + `   f_color = texture(u_texture, v_texcoord);\n` + `   f_color = vec4(f_color.rgb, ${isBg ? 1 : "u_time"});\n` + // `   f_color = vec4(v_texcoord, 0.5, 1.0);\n` +
+  }, ``) + `   vec3 pos = m * vec3(a_position, 1.0);\n` + // `   gl_Position = vec4(u_time * a_position + (1. - u_time) * pos.xy, 0.0, 1.0);\n` +
+  `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` + `   v_texcoord = a_texcoord;\n` + `}\n`;
+  let fs_source = `#version 300 es\n` + `precision mediump float;\n` + `in vec2 v_texcoord;\n` + `uniform sampler2D u_texture;\n` + `uniform float u_time;\n` + `out vec4 f_color;\n` + `void main(void) {\n` + `   f_color = texture(u_texture, v_texcoord);\n` + `   f_color = vec4(f_color.rgb, ${isBg ? "u_time" : "1. - u_time"});\n` + // `   f_color = vec4(v_texcoord, 0.5, 1.0);\n` +
   `}\n`;
   let program = _shader.createProgram(gl, vs_source, fs_source);
   return program;
@@ -42749,28 +42792,47 @@ _parcelHelpers.export(exports, "render", function () {
 });
 var _vue = require("vue");
 const _withId = /*#__PURE__*/_vue.withScopeId("data-v-b94d24");
-_vue.pushScopeId("data-v-b94d24");
-const _hoisted_1 = {
-  class: "flex justify-start"
-};
-const _hoisted_2 = {
-  class: "text-gray-800"
-};
-_vue.popScopeId();
 const render = /*#__PURE__*/_withId((_ctx, _cache) => {
-  return (_vue.openBlock(), _vue.createBlock("div", _hoisted_1, [_vue.createVNode("div", _hoisted_2, [_vue.createVNode("canvas", {
-    ref: "imgMorphCanvasRef",
+  return (_vue.openBlock(), _vue.createBlock("div", null, [_vue.createVNode("canvas", {
+    ref: "canvasRef",
     style: `width:${_ctx.width}px;height:${_ctx.height}px;`,
-    width: "600",
-    height: "600"
-  }, null, 4), _vue.withDirectives(_vue.createVNode("input", {
+    width: "500",
+    height: "500"
+  }, null, 4), _vue.createVNode("button", {
+    class: [{
+      'bg-blue-300': _ctx.mode != 'morphing',
+      'bg-yellow-300': _ctx.mode == 'morphing'
+    }, "py-1 px-5 rounded-b-lg"],
+    onClick: _cache[1] || (_cache[1] = $event => {
+      ;
+      (_ctx.mode = 'morphing', _ctx.run(_ctx.time));
+    })
+  }, " image morphing ", 2), _vue.createVNode("button", {
+    class: [{
+      'bg-blue-300': _ctx.mode != 'src',
+      'bg-yellow-300': _ctx.mode == 'src'
+    }, "py-1 px-5 rounded-b-lg"],
+    onClick: _cache[2] || (_cache[2] = $event => {
+      ;
+      (_ctx.mode = 'src', _ctx.run(_ctx.time));
+    })
+  }, " src ", 2), _vue.createVNode("button", {
+    class: [{
+      'bg-blue-300': _ctx.mode != 'tar',
+      'bg-yellow-300': _ctx.mode == 'tar'
+    }, "py-1 px-5 rounded-b-lg"],
+    onClick: _cache[3] || (_cache[3] = $event => {
+      ;
+      (_ctx.mode = 'tar', _ctx.run(_ctx.time));
+    })
+  }, " tar ", 2), _vue.createVNode("div", null, [_vue.withDirectives(_vue.createVNode("input", {
     type: "range",
     min: "0",
     max: "1",
     step: "0.001",
-    "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => _ctx.time = $event),
-    onInput: _cache[2] || (_cache[2] = $event => _ctx.run(_ctx.time))
-  }, null, 544), [[_vue.vModelText, _ctx.time]])])]));
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => _ctx.time = $event),
+    onInput: _cache[5] || (_cache[5] = $event => _ctx.run(_ctx.time))
+  }, null, 544), [[_vue.vModelText, _ctx.time]]), _vue.createTextVNode(_vue.toDisplayString(_ctx.time), 1)])]));
 });
 
 },{"vue":"4ayRm","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"4mv51":[function() {},{}],"1o9dn":[function(require,module,exports) {
