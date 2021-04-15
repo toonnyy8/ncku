@@ -40,6 +40,7 @@ export const calcWeight = (point: Point, line: Line, a: number, b: number, p: nu
 export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, isBg = true) => {
     let vs_source =
         `#version 300 es\n` +
+        `precision mediump float;\n` +
         `layout (location = 0) in vec2 a_position;\n` +
         `layout (location = 1) in vec2 a_texcoord;\n` +
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
@@ -52,19 +53,16 @@ export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, is
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
             return prev + `uniform mat3 u_m${idx};\n`
         }, ``) +
+        `uniform float u_time;\n` +
         `out vec2 v_texcoord;\n` +
         `void main(void) {\n` +
-        `   vec3 pos = vec3(0, 0, 0);\n` +
+        `   mat3 m;\n` +
         new Array(lineNum).fill(0).reduce((prev, _, idx) => {
-            return (
-                prev +
-                `   pos += u_m${idx} * vec3(a_position.xy, 1.) * a_w${Math.floor(idx / 4)}[${
-                    idx % 4
-                }];\n`
-            )
+            return prev + `   m += u_m${idx} * a_w${Math.floor(idx / 4)}[${idx % 4}];\n`
         }, ``) +
-        `   gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\n` +
-        // `   gl_Position = vec4(a_position.xy, 0.0, 1.0);\n` +
+        `   vec3 pos = m * vec3(a_position, 1.0);\n` +
+        // `   gl_Position = vec4(u_time*a_position+(1.-u_time)*pos.xy, 0.0, 1.0);\n` +
+        `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` +
         `   v_texcoord = a_texcoord;\n` +
         `}\n`
 

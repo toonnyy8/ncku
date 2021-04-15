@@ -71,6 +71,7 @@ export default defineComponent({
             let bg_texture: WebGLTexture
 
             run.value = (t: number) => {
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
                 render(
                     t,
                     gl,
