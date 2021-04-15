@@ -1,5 +1,5 @@
-import { Transform } from "./pose"
 import * as shader from "./shader"
+import * as glm from "gl-matrix"
 
 interface Point {
     x: number
@@ -61,8 +61,8 @@ export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, is
             return prev + `   m += u_m${idx} * a_w${Math.floor(idx / 4)}[${idx % 4}];\n`
         }, ``) +
         `   vec3 pos = m * vec3(a_position, 1.0);\n` +
-        // `   gl_Position = vec4(u_time*a_position+(1.-u_time)*pos.xy, 0.0, 1.0);\n` +
-        `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` +
+        `   gl_Position = vec4(u_time * a_position + (1. - u_time) * pos.xy, 0.0, 1.0);\n` +
+        // `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` +
         `   v_texcoord = a_texcoord;\n` +
         `}\n`
 
@@ -107,7 +107,7 @@ export const render = (
     program: WebGLProgram,
     vao: WebGLVertexArrayObject,
     texture: WebGLTexture,
-    transforms: Transform[],
+    transformMat3s: glm.mat3[],
     count
 ) => {
     gl.useProgram(program)
@@ -121,8 +121,7 @@ export const render = (
     let u_timeLocation = gl.getUniformLocation(program, "u_time")
     gl.uniform1f(u_timeLocation, time)
 
-    transforms.forEach((transform, lineIdx) => {
-        let m = transform.withTime(1 - time)
+    transformMat3s.forEach((m, lineIdx) => {
         let u_mLocation = gl.getUniformLocation(program, `u_m${lineIdx}`)
         gl.uniformMatrix3fv(u_mLocation, false, m)
     })

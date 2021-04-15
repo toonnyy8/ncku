@@ -58,10 +58,8 @@ export default defineComponent({
             let bgProgram: WebGLProgram
             let fgProgram: WebGLProgram
 
-            let transforms: {
-                src: Transform
-                tar: Transform
-            }[]
+            let srcTransformMat3s: glm.mat3[]
+            let tarTransformMat3s: glm.mat3[]
             let pos_arr: number[], uv_arr: number[], idx_arr: number[]
 
             let fg_vao: WebGLVertexArrayObject
@@ -72,24 +70,8 @@ export default defineComponent({
 
             run.value = (t: number) => {
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-                render(
-                    t,
-                    gl,
-                    bgProgram,
-                    bg_vao,
-                    bg_texture,
-                    transforms.map(({ tar }) => tar),
-                    idx_arr.length
-                )
-                render(
-                    1 - t,
-                    gl,
-                    fgProgram,
-                    fg_vao,
-                    fg_texture,
-                    transforms.map(({ src }) => src),
-                    idx_arr.length
-                )
+                render(t, gl, bgProgram, bg_vao, bg_texture, tarTransformMat3s, idx_arr.length)
+                render(1 - t, gl, fgProgram, fg_vao, fg_texture, srcTransformMat3s, idx_arr.length)
             }
 
             const channel = new BroadcastChannel("channel")
@@ -152,7 +134,9 @@ export default defineComponent({
                         bgProgram = genShaderProgram(gl, lines.length, true)
                         fgProgram = genShaderProgram(gl, lines.length, false)
 
-                        transforms = lines.map(({ src, tar }) => {
+                        srcTransformMat3s = []
+                        tarTransformMat3s = []
+                        lines.forEach(({ src, tar }) => {
                             let line1 = PoseLine.create(
                                 glm.vec2.fromValues(src.from.x, src.from.y),
                                 glm.vec2.fromValues(src.to.x, src.to.y)
@@ -161,10 +145,8 @@ export default defineComponent({
                                 glm.vec2.fromValues(tar.from.x, tar.from.y),
                                 glm.vec2.fromValues(tar.to.x, tar.to.y)
                             )
-                            return {
-                                src: new Transform(line1, line2),
-                                tar: new Transform(line2, line1),
-                            }
+                            srcTransformMat3s.push(line1.transformMat3(line2))
+                            tarTransformMat3s.push(line2.transformMat3(line1))
                         })
                     }
                     case "srcImgLink": {
