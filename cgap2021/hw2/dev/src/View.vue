@@ -1,12 +1,42 @@
 <template>
-    <div class="flex justify-start">
-        <div class="text-gray-800">
-            <canvas
-                ref="imgMorphCanvasRef"
-                v-bind:style="`width:${width}px;height:${height}px;`"
-                width="600"
-                height="600"
-            ></canvas>
+    <div>
+        <canvas
+            ref="canvasRef"
+            v-bind:style="`width:${width}px;height:${height}px;`"
+            width="500"
+            height="500"
+        ></canvas>
+        <button
+            v-bind:class="{
+                'bg-blue-300': mode != 'morphing',
+                'bg-yellow-300': mode == 'morphing',
+            }"
+            class="py-1 px-5 rounded-b-lg"
+            v-on:click=";(mode = 'morphing'), run(time)"
+        >
+            image morphing
+        </button>
+        <button
+            v-bind:class="{
+                'bg-blue-300': mode != 'src',
+                'bg-yellow-300': mode == 'src',
+            }"
+            class="py-1 px-5 rounded-b-lg"
+            v-on:click=";(mode = 'src'), run(time)"
+        >
+            src
+        </button>
+        <button
+            v-bind:class="{
+                'bg-blue-300': mode != 'tar',
+                'bg-yellow-300': mode == 'tar',
+            }"
+            class="py-1 px-5 rounded-b-lg"
+            v-on:click=";(mode = 'tar'), run(time)"
+        >
+            tar
+        </button>
+        <div>
             <input
                 type="range"
                 min="0"
@@ -14,7 +44,7 @@
                 step="0.001"
                 v-model="time"
                 v-on:input="run(time)"
-            />
+            />{{ time }}
         </div>
     </div>
 </template>
@@ -37,36 +67,24 @@ export default defineComponent({
     setup() {
         const run = ref((t: number) => {})
         const time = ref(0)
-        const imgMorphCanvasRef: Ref<HTMLCanvasElement> = ref()
+        const mode = ref("morphing")
 
-        const srcLink = ref("")
+        const canvasRef: Ref<HTMLCanvasElement> = ref()
+
         let srcImg: HTMLImageElement = new Image()
         let tarImg: HTMLImageElement = new Image()
         let width = ref(500),
             height = ref(500)
 
         onMounted(() => {
-            const imgMorphCanvas = imgMorphCanvasRef.value
-            const gl = imgMorphCanvas.getContext("webgl2", {
-                preserveDrawingBuffer: true,
-                premultipliedAlpha: false,
-            })
-            gl.clearColor(0, 0, 0, 1)
-            gl.clearDepth(1)
-            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
-            gl.enable(gl.CULL_FACE)
-            gl.enable(gl.DEPTH_TEST)
-            gl.depthMask(true)
-            gl.depthFunc(gl.LEQUAL)
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-            gl.enable(gl.BLEND)
-            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+            const gl = createGl(canvasRef.value)
 
-            let bgProgram: WebGLProgram
-            let fgProgram: WebGLProgram
+            let bg_program: WebGLProgram
+            let fg_program: WebGLProgram
 
-            let srcTransformMat3s: glm.mat3[]
-            let tarTransformMat3s: glm.mat3[]
+            let transforms: { src: Transform; tar: Transform }[]
+            // let srcTransformMat3s: glm.mat3[]
+            // let tarTransformMat3s: glm.mat3[]
             let pos_arr: number[], uv_arr: number[], idx_arr: number[]
 
             let fg_vao: WebGLVertexArrayObject
@@ -76,18 +94,92 @@ export default defineComponent({
             let bg_texture: WebGLTexture
 
             run.value = (t: number) => {
-                let w = srcImg.width * (1 - t) + tarImg.width * t
-                let h = srcImg.height * (1 - t) + tarImg.height * t
-                if (w > h) {
-                    width.value = 500
-                    height.value = (500 * h) / w
-                } else {
-                    width.value = (500 * w) / h
-                    height.value = 500
+                switch (mode.value) {
+                    case "morphing": {
+                        let w = srcImg.width * (1 - t) + tarImg.width * t
+                        let h = srcImg.height * (1 - t) + tarImg.height * t
+                        ;({ w, h } = calcWH(w, h))
+                        width.value = w
+                        height.value = h
+
+                        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+                        render(
+                            t,
+                            gl,
+                            bg_program,
+                            bg_vao,
+                            bg_texture,
+                            transforms.map(({ tar }) => tar.withTime(1 - t)),
+                            idx_arr.length
+                        )
+                        render(
+                            t,
+                            gl,
+                            fg_program,
+                            fg_vao,
+                            fg_texture,
+                            transforms.map(({ src }) => src.withTime(t)),
+                            idx_arr.length
+                        )
+                        break
+                    }
+                    case "src": {
+                        let w = srcImg.width
+                        let h = srcImg.height
+                        ;({ w, h } = calcWH(w, h))
+                        width.value = w
+                        height.value = h
+
+                        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+                        render(
+                            t,
+                            gl,
+                            bg_program,
+                            fg_vao,
+                            fg_texture,
+                            transforms.map(({ src }) => src.withTime(t)),
+                            idx_arr.length
+                        )
+                        render(
+                            t,
+                            gl,
+                            fg_program,
+                            fg_vao,
+                            fg_texture,
+                            transforms.map(({ src }) => src.withTime(t)),
+                            idx_arr.length
+                        )
+                        break
+                    }
+                    case "tar": {
+                        let w = srcImg.width
+                        let h = srcImg.height
+                        ;({ w, h } = calcWH(w, h))
+                        width.value = w
+                        height.value = h
+
+                        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+                        render(
+                            t,
+                            gl,
+                            bg_program,
+                            bg_vao,
+                            bg_texture,
+                            transforms.map(({ tar }) => tar.withTime(1 - t)),
+                            idx_arr.length
+                        )
+                        render(
+                            t,
+                            gl,
+                            fg_program,
+                            bg_vao,
+                            bg_texture,
+                            transforms.map(({ tar }) => tar.withTime(1 - t)),
+                            idx_arr.length
+                        )
+                        break
+                    }
                 }
-                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-                render(t, gl, bgProgram, bg_vao, bg_texture, tarTransformMat3s, idx_arr.length)
-                render(1 - t, gl, fgProgram, fg_vao, fg_texture, srcTransformMat3s, idx_arr.length)
             }
 
             const channel = new BroadcastChannel("channel")
@@ -147,12 +239,10 @@ export default defineComponent({
                         gl.deleteVertexArray(bg_vao)
                         bg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, tarWeights)
 
-                        bgProgram = genShaderProgram(gl, lines.length, true)
-                        fgProgram = genShaderProgram(gl, lines.length, false)
+                        bg_program = genShaderProgram(gl, lines.length, true)
+                        fg_program = genShaderProgram(gl, lines.length, false)
 
-                        srcTransformMat3s = []
-                        tarTransformMat3s = []
-                        lines.forEach(({ src, tar }) => {
+                        transforms = lines.map(({ src, tar }) => {
                             let line1 = PoseLine.create(
                                 glm.vec2.fromValues(src.from.x, src.from.y),
                                 glm.vec2.fromValues(src.to.x, src.to.y)
@@ -161,9 +251,26 @@ export default defineComponent({
                                 glm.vec2.fromValues(tar.from.x, tar.from.y),
                                 glm.vec2.fromValues(tar.to.x, tar.to.y)
                             )
-                            srcTransformMat3s.push(line1.transformMat3(line2))
-                            tarTransformMat3s.push(line2.transformMat3(line1))
+                            return {
+                                src: new Transform(line1, line2),
+                                tar: new Transform(line2, line1),
+                            }
                         })
+
+                        // srcTransformMat3s = []
+                        // tarTransformMat3s = []
+                        // lines.forEach(({ src, tar }) => {
+                        //     let line1 = PoseLine.create(
+                        //         glm.vec2.fromValues(src.from.x, src.from.y),
+                        //         glm.vec2.fromValues(src.to.x, src.to.y)
+                        //     )
+                        //     let line2 = PoseLine.create(
+                        //         glm.vec2.fromValues(tar.from.x, tar.from.y),
+                        //         glm.vec2.fromValues(tar.to.x, tar.to.y)
+                        //     )
+                        //     srcTransformMat3s.push(line1.transformMat3(line2))
+                        //     tarTransformMat3s.push(line2.transformMat3(line1))
+                        // })
                     }
                     case "srcImgLink": {
                         srcImg.src = msg.link
@@ -218,14 +325,47 @@ export default defineComponent({
 
         return {
             run,
-            imgMorphCanvasRef,
-            srcLink,
             time,
+            mode,
+            canvasRef,
             width,
             height,
         }
     },
 })
+
+const createGl = (canvas: HTMLCanvasElement) => {
+    let gl = canvas.getContext("webgl2", {
+        preserveDrawingBuffer: true,
+        premultipliedAlpha: false,
+    })
+    gl.clearColor(0, 0, 0, 1)
+    gl.clearDepth(1)
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+    gl.enable(gl.CULL_FACE)
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthMask(true)
+    gl.depthFunc(gl.LEQUAL)
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    gl.enable(gl.BLEND)
+    gl.blendFunc(gl.SRC_ALPHA, gl.DST_ALPHA)
+
+    return gl
+}
+
+const calcWH = (w: number, h: number) => {
+    if (w > h) {
+        return {
+            w: 500,
+            h: (500 * h) / w,
+        }
+    } else {
+        return {
+            w: (500 * w) / h,
+            h: 500,
+        }
+    }
+}
 </script>
 
 <style scoped>

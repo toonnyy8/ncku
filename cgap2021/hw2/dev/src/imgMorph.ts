@@ -61,8 +61,8 @@ export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, is
             return prev + `   m += u_m${idx} * a_w${Math.floor(idx / 4)}[${idx % 4}];\n`
         }, ``) +
         `   vec3 pos = m * vec3(a_position, 1.0);\n` +
-        `   gl_Position = vec4(u_time * a_position + (1. - u_time) * pos.xy, 0.0, 1.0);\n` +
-        // `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` +
+        // `   gl_Position = vec4(u_time * a_position + (1. - u_time) * pos.xy, 0.0, 1.0);\n` +
+        `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` +
         `   v_texcoord = a_texcoord;\n` +
         `}\n`
 
@@ -75,7 +75,7 @@ export const genShaderProgram = (gl: WebGL2RenderingContext, lineNum: number, is
         `out vec4 f_color;\n` +
         `void main(void) {\n` +
         `   f_color = texture(u_texture, v_texcoord);\n` +
-        `   f_color = vec4(f_color.rgb, ${isBg ? 1 : "u_time"});\n` +
+        `   f_color = vec4(f_color.rgb, ${isBg ? "u_time" : "1. - u_time"});\n` +
         // `   f_color = vec4(v_texcoord, 0.5, 1.0);\n` +
         `}\n`
 
