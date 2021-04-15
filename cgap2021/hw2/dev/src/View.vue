@@ -113,8 +113,8 @@ export default defineComponent({
                                     { x: pos_arr[i], y: pos_arr[i + 1] },
                                     line.src,
                                     0.001,
-                                    1,
-                                    0
+                                    2,
+                                    0.5
                                 )
                             })
                             let w_acc = ws.reduce((acc, w) => acc + w, 0)
@@ -135,8 +135,8 @@ export default defineComponent({
                                     { x: pos_arr[i], y: pos_arr[i + 1] },
                                     line.tar,
                                     0.001,
-                                    1,
-                                    0
+                                    2,
+                                    0.5
                                 )
                             })
                             let w_acc = ws.reduce((acc, w) => acc + w, 0)
