@@ -25,7 +25,8 @@
             ></canvas>
             <button
                 v-bind:class="{
-                    'bg-blue-300': mode != 'src',
+                    'bg-green-300': srcImg != undefined && mode != 'src',
+                    'bg-blue-300': srcImg == undefined && mode != 'src',
                     'bg-yellow-300': mode == 'src',
                 }"
                 class="py-1 px-5 rounded-b-lg"
@@ -35,7 +36,8 @@
             </button>
             <button
                 v-bind:class="{
-                    'bg-blue-300': mode != 'tar',
+                    'bg-green-300': tarImg != undefined && mode != 'tar',
+                    'bg-blue-300': tarImg == undefined && mode != 'tar',
                     'bg-yellow-300': mode == 'tar',
                 }"
                 class="py-1 px-5 rounded-b-lg"
@@ -43,25 +45,8 @@
             >
                 tar
             </button>
-            <button
-                v-bind:class="{
-                    'bg-blue-300': srcImg == undefined,
-                    'bg-green-300': srcImg != undefined,
-                }"
-                class="py-1 px-5 rounded-b-lg"
-                v-on:click="loadSrcImg()"
-            >
-                load src img
-            </button>
-            <button
-                v-bind:class="{
-                    'bg-blue-300': tarImg == undefined,
-                    'bg-green-300': tarImg != undefined,
-                }"
-                class="py-1 px-5 rounded-b-lg"
-                v-on:click="loadTarImg()"
-            >
-                load tar img
+            <button class="bg-pink-500 text-white py-1 px-5 rounded-b-lg" v-on:click="loadImg()">
+                load img
             </button>
 
             <button
@@ -367,7 +352,7 @@ export default defineComponent({
 
         let srcImg: Ref<HTMLImageElement> = ref()
         let tarImg: Ref<HTMLImageElement> = ref()
-        const loadSrcImg = () => {
+        const loadImg = () => {
             const inp = document.createElement("input")
             inp.type = "file"
             inp.accept = "image/*"
@@ -377,26 +362,8 @@ export default defineComponent({
                 reader.addEventListener("loadend", async () => {
                     let img = new Image()
                     img.onload = () => {
-                        srcImg.value = img
-                        renderCanvas.value()
-                    }
-                    img.src = <string>reader.result
-                })
-                reader.readAsDataURL(files[0])
-            }
-            inp.click()
-        }
-        const loadTarImg = () => {
-            const inp = document.createElement("input")
-            inp.type = "file"
-            inp.accept = "image/*"
-            inp.onchange = () => {
-                const files = inp.files
-                const reader = new FileReader()
-                reader.addEventListener("loadend", async () => {
-                    let img = new Image()
-                    img.onload = () => {
-                        tarImg.value = img
+                        if (mode.value == "src") srcImg.value = img
+                        else if (mode.value == "tar") tarImg.value = img
                         renderCanvas.value()
                     }
                     img.src = <string>reader.result
@@ -426,8 +393,7 @@ export default defineComponent({
 
             openView,
 
-            loadSrcImg,
-            loadTarImg,
+            loadImg,
 
             srcImg,
             tarImg,
