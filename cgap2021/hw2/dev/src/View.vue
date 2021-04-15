@@ -1,7 +1,12 @@
 <template>
     <div class="flex justify-start">
         <div class="text-gray-800">
-            <canvas ref="imgMorphCanvasRef" width="600" height="600"></canvas>
+            <canvas
+                ref="imgMorphCanvasRef"
+                v-bind:style="`width:${width}px;height:${height}px;`"
+                width="600"
+                height="600"
+            ></canvas>
             <input
                 type="range"
                 min="0"
@@ -37,6 +42,8 @@ export default defineComponent({
         const srcLink = ref("")
         let srcImg: HTMLImageElement = new Image()
         let tarImg: HTMLImageElement = new Image()
+        let width = ref(500),
+            height = ref(500)
 
         onMounted(() => {
             const imgMorphCanvas = imgMorphCanvasRef.value
@@ -69,6 +76,15 @@ export default defineComponent({
             let bg_texture: WebGLTexture
 
             run.value = (t: number) => {
+                let w = srcImg.width * (1 - t) + tarImg.width * t
+                let h = srcImg.height * (1 - t) + tarImg.height * t
+                if (w > h) {
+                    width.value = 500
+                    height.value = (500 * h) / w
+                } else {
+                    width.value = (500 * w) / h
+                    height.value = 500
+                }
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
                 render(t, gl, bgProgram, bg_vao, bg_texture, tarTransformMat3s, idx_arr.length)
                 render(1 - t, gl, fgProgram, fg_vao, fg_texture, srcTransformMat3s, idx_arr.length)
@@ -85,7 +101,7 @@ export default defineComponent({
                 switch (msg.msgType) {
                     case "lines": {
                         const lines = msg.lines
-                        ;({ pos_arr, uv_arr, idx_arr } = genBufferData(40, 40))
+                        ;({ pos_arr, uv_arr, idx_arr } = genBufferData(25, 25))
 
                         let srcWeights = new Array(Math.ceil(lines.length / 4))
                             .fill(0)
@@ -205,6 +221,8 @@ export default defineComponent({
             imgMorphCanvasRef,
             srcLink,
             time,
+            width,
+            height,
         }
     },
 })
