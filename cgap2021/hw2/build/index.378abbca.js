@@ -33986,7 +33986,7 @@ exports.default = _vue.defineComponent({
     };
     let srcImg = _vue.ref();
     let tarImg = _vue.ref();
-    const loadSrcImg = () => {
+    const loadImg = () => {
       const inp = document.createElement("input");
       inp.type = "file";
       inp.accept = "image/*";
@@ -33996,26 +33996,7 @@ exports.default = _vue.defineComponent({
         reader.addEventListener("loadend", async () => {
           let img = new Image();
           img.onload = () => {
-            srcImg.value = img;
-            renderCanvas.value();
-          };
-          img.src = reader.result;
-        });
-        reader.readAsDataURL(files[0]);
-      };
-      inp.click();
-    };
-    const loadTarImg = () => {
-      const inp = document.createElement("input");
-      inp.type = "file";
-      inp.accept = "image/*";
-      inp.onchange = () => {
-        const files = inp.files;
-        const reader = new FileReader();
-        reader.addEventListener("loadend", async () => {
-          let img = new Image();
-          img.onload = () => {
-            tarImg.value = img;
+            if (mode.value == "src") srcImg.value = img; else if (mode.value == "tar") tarImg.value = img;
             renderCanvas.value();
           };
           img.src = reader.result;
@@ -34040,8 +34021,7 @@ exports.default = _vue.defineComponent({
       mode,
       renderCanvas,
       openView,
-      loadSrcImg,
-      loadTarImg,
+      loadImg,
       srcImg,
       tarImg
     };
@@ -34250,7 +34230,8 @@ const render = /*#__PURE__*/_withId((_ctx, _cache) => {
     onMouseover: _cache[8] || (_cache[8] = (...args) => _ctx.tarMouseup && _ctx.tarMouseup(...args))
   }, null, 544), [[_vue.vShow, _ctx.mode == 'tar']]), _vue.createVNode("button", {
     class: [{
-      'bg-blue-300': _ctx.mode != 'src',
+      'bg-green-300': _ctx.srcImg != undefined && _ctx.mode != 'src',
+      'bg-blue-300': _ctx.srcImg == undefined && _ctx.mode != 'src',
       'bg-yellow-300': _ctx.mode == 'src'
     }, "py-1 px-5 rounded-b-lg"],
     onClick: _cache[9] || (_cache[9] = $event => {
@@ -34259,7 +34240,8 @@ const render = /*#__PURE__*/_withId((_ctx, _cache) => {
     })
   }, " src ", 2), _vue.createVNode("button", {
     class: [{
-      'bg-blue-300': _ctx.mode != 'tar',
+      'bg-green-300': _ctx.tarImg != undefined && _ctx.mode != 'tar',
+      'bg-blue-300': _ctx.tarImg == undefined && _ctx.mode != 'tar',
       'bg-yellow-300': _ctx.mode == 'tar'
     }, "py-1 px-5 rounded-b-lg"],
     onClick: _cache[10] || (_cache[10] = $event => {
@@ -34267,20 +34249,11 @@ const render = /*#__PURE__*/_withId((_ctx, _cache) => {
       (_ctx.mode = 'tar', _ctx.renderCanvas());
     })
   }, " tar ", 2), _vue.createVNode("button", {
-    class: [{
-      'bg-blue-300': _ctx.srcImg == undefined,
-      'bg-green-300': _ctx.srcImg != undefined
-    }, "py-1 px-5 rounded-b-lg"],
-    onClick: _cache[11] || (_cache[11] = $event => _ctx.loadSrcImg())
-  }, " load src img ", 2), _vue.createVNode("button", {
-    class: [{
-      'bg-blue-300': _ctx.tarImg == undefined,
-      'bg-green-300': _ctx.tarImg != undefined
-    }, "py-1 px-5 rounded-b-lg"],
-    onClick: _cache[12] || (_cache[12] = $event => _ctx.loadTarImg())
-  }, " load tar img ", 2), _vue.withDirectives(_vue.createVNode("button", {
+    class: "bg-pink-500 text-white py-1 px-5 rounded-b-lg",
+    onClick: _cache[11] || (_cache[11] = $event => _ctx.loadImg())
+  }, " load img "), _vue.withDirectives(_vue.createVNode("button", {
     class: "bg-red-600 text-white py-1 px-5 rounded-b-lg",
-    onClick: _cache[13] || (_cache[13] = (...args) => _ctx.openView && _ctx.openView(...args))
+    onClick: _cache[12] || (_cache[12] = (...args) => _ctx.openView && _ctx.openView(...args))
   }, " open view ", 512), [[_vue.vShow, _ctx.lines.length != 0 && _ctx.lines.reduce((prev, line) => prev && line.tar != undefined, true) && _ctx.srcImg != undefined && _ctx.tarImg != undefined]])]), _vue.createVNode("div", _hoisted_3, [_vue.createVNode("div", _hoisted_4, [_ctx.lines[_ctx.lookLineIdx] && _ctx.lines[_ctx.lookLineIdx][_ctx.mode] ? (_vue.openBlock(), _vue.createBlock("div", _hoisted_5, [_vue.createTextVNode(" from: (" + _vue.toDisplayString(Math.round(_ctx.lines[_ctx.lookLineIdx][_ctx.mode].from.x * 100) / 100) + ", " + _vue.toDisplayString(Math.round(_ctx.lines[_ctx.lookLineIdx][_ctx.mode].from.y * 100) / 100) + ") ", 1), _hoisted_6, _vue.createTextVNode(" to: (" + _vue.toDisplayString(Math.round(_ctx.lines[_ctx.lookLineIdx][_ctx.mode].to.x * 100) / 100) + ", " + _vue.toDisplayString(Math.round(_ctx.lines[_ctx.lookLineIdx][_ctx.mode].to.y * 100) / 100) + ") ", 1)])) : _vue.createCommentVNode("", true)]), _vue.createVNode("ul", null, [(_vue.openBlock(true), _vue.createBlock(_vue.Fragment, null, _vue.renderList(_ctx.lines, (value, name) => {
     return (_vue.openBlock(), _vue.createBlock("li", {
       key: name,
@@ -34342,6 +34315,7 @@ exports.default = _vue.defineComponent({
     const srcLink = _vue.ref("");
     let srcImg = new Image();
     let tarImg = new Image();
+    let width = _vue.ref(500), height = _vue.ref(500);
     _vue.onMounted(() => {
       const imgMorphCanvas = imgMorphCanvasRef.value;
       const gl = imgMorphCanvas.getContext("webgl2", {
@@ -34360,15 +34334,26 @@ exports.default = _vue.defineComponent({
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
       let bgProgram;
       let fgProgram;
-      let transforms;
+      let srcTransformMat3s;
+      let tarTransformMat3s;
       let pos_arr, uv_arr, idx_arr;
       let fg_vao;
       let bg_vao;
       let fg_texture;
       let bg_texture;
       run.value = t => {
-        _imgMorph.render(t, gl, bgProgram, bg_vao, bg_texture, transforms.map(({tar}) => tar), idx_arr.length);
-        _imgMorph.render(1 - t, gl, fgProgram, fg_vao, fg_texture, transforms.map(({src}) => src), idx_arr.length);
+        let w = srcImg.width * (1 - t) + tarImg.width * t;
+        let h = srcImg.height * (1 - t) + tarImg.height * t;
+        if (w > h) {
+          width.value = 500;
+          height.value = 500 * h / w;
+        } else {
+          width.value = 500 * w / h;
+          height.value = 500;
+        }
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        _imgMorph.render(t, gl, bgProgram, bg_vao, bg_texture, tarTransformMat3s, idx_arr.length);
+        _imgMorph.render(1 - t, gl, fgProgram, fg_vao, fg_texture, srcTransformMat3s, idx_arr.length);
       };
       const channel = new BroadcastChannel("channel");
       channel.onmessage = event => {
@@ -34377,7 +34362,7 @@ exports.default = _vue.defineComponent({
           case "lines":
             {
               const lines = msg.lines;
-              ({pos_arr, uv_arr, idx_arr} = _imgMorph.genBufferData(40, 40));
+              ({pos_arr, uv_arr, idx_arr} = _imgMorph.genBufferData(25, 25));
               let srcWeights = new Array(Math.ceil(lines.length / 4)).fill(0).map(() => []);
               // lines.map(() => [])
               for (let i = 0; i < pos_arr.length; i += 2) {
@@ -34386,7 +34371,7 @@ exports.default = _vue.defineComponent({
                   ws[lineIdx] = _imgMorph.calcWeight({
                     x: pos_arr[i],
                     y: pos_arr[i + 1]
-                  }, line.src, 0.001, 1, 0);
+                  }, line.src, 0.001, 2, 0.5);
                 });
                 let w_acc = ws.reduce((acc, w) => acc + w, 0);
                 ws.forEach((w, lineIdx) => srcWeights[Math.floor(lineIdx / 4)].push(w / w_acc));
@@ -34401,7 +34386,7 @@ exports.default = _vue.defineComponent({
                   ws[lineIdx] = _imgMorph.calcWeight({
                     x: pos_arr[i],
                     y: pos_arr[i + 1]
-                  }, line.tar, 0.001, 1, 0);
+                  }, line.tar, 0.001, 2, 0.5);
                 });
                 let w_acc = ws.reduce((acc, w) => acc + w, 0);
                 ws.forEach((w, lineIdx) => tarWeights[Math.floor(lineIdx / 4)].push(w / w_acc));
@@ -34410,13 +34395,13 @@ exports.default = _vue.defineComponent({
               bg_vao = _imgMorph.genVAO(gl, pos_arr, uv_arr, idx_arr, tarWeights);
               bgProgram = _imgMorph.genShaderProgram(gl, lines.length, true);
               fgProgram = _imgMorph.genShaderProgram(gl, lines.length, false);
-              transforms = lines.map(({src, tar}) => {
+              srcTransformMat3s = [];
+              tarTransformMat3s = [];
+              lines.forEach(({src, tar}) => {
                 let line1 = _pose.Line.create(_glMatrix.vec2.fromValues(src.from.x, src.from.y), _glMatrix.vec2.fromValues(src.to.x, src.to.y));
                 let line2 = _pose.Line.create(_glMatrix.vec2.fromValues(tar.from.x, tar.from.y), _glMatrix.vec2.fromValues(tar.to.x, tar.to.y));
-                return {
-                  src: new _pose.Transform(line1, line2),
-                  tar: new _pose.Transform(line2, line1)
-                };
+                srcTransformMat3s.push(line1.transformMat3(line2));
+                tarTransformMat3s.push(line2.transformMat3(line1));
               });
             }
           case "srcImgLink":
@@ -34456,7 +34441,9 @@ exports.default = _vue.defineComponent({
       run,
       imgMorphCanvasRef,
       srcLink,
-      time
+      time,
+      width,
+      height
     };
   }
 });
@@ -34519,7 +34506,7 @@ const calcWeight = (point, line, a, b, p) => {
   return (lineLen ** p / (a + dist)) ** b;
 };
 const genShaderProgram = (gl, lineNum, isBg = true) => {
-  let vs_source = `#version 300 es\n` + `layout (location = 0) in vec2 a_position;\n` + `layout (location = 1) in vec2 a_texcoord;\n` + new Array(lineNum).fill(0).reduce((prev, _, idx) => {
+  let vs_source = `#version 300 es\n` + `precision mediump float;\n` + `layout (location = 0) in vec2 a_position;\n` + `layout (location = 1) in vec2 a_texcoord;\n` + new Array(lineNum).fill(0).reduce((prev, _, idx) => {
     if (idx % 4 == 0) {
       return prev + `layout (location = ${idx / 4 + 2}) in vec4 a_w${idx / 4};\n`;
     } else {
@@ -34527,9 +34514,9 @@ const genShaderProgram = (gl, lineNum, isBg = true) => {
     }
   }, ``) + new Array(lineNum).fill(0).reduce((prev, _, idx) => {
     return prev + `uniform mat3 u_m${idx};\n`;
-  }, ``) + `out vec2 v_texcoord;\n` + `void main(void) {\n` + `   vec3 pos = vec3(0, 0, 0);\n` + new Array(lineNum).fill(0).reduce((prev, _, idx) => {
-    return prev + `   pos += u_m${idx} * vec3(a_position.xy, 1.) * a_w${Math.floor(idx / 4)}[${idx % 4}];\n`;
-  }, ``) + `   gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\n` + // `   gl_Position = vec4(a_position.xy, 0.0, 1.0);\n` +
+  }, ``) + `uniform float u_time;\n` + `out vec2 v_texcoord;\n` + `void main(void) {\n` + `   mat3 m;\n` + new Array(lineNum).fill(0).reduce((prev, _, idx) => {
+    return prev + `   m += u_m${idx} * a_w${Math.floor(idx / 4)}[${idx % 4}];\n`;
+  }, ``) + `   vec3 pos = m * vec3(a_position, 1.0);\n` + `   gl_Position = vec4(u_time * a_position + (1. - u_time) * pos.xy, 0.0, 1.0);\n` + // `   gl_Position = vec4(pos.xy, 0.0, 1.0);\n` +
   `   v_texcoord = a_texcoord;\n` + `}\n`;
   let fs_source = `#version 300 es\n` + `precision mediump float;\n` + `in vec2 v_texcoord;\n` + `uniform sampler2D u_texture;\n` + `uniform float u_time;\n` + `out vec4 f_color;\n` + `void main(void) {\n` + `   f_color = texture(u_texture, v_texcoord);\n` + `   f_color = vec4(f_color.rgb, ${isBg ? 1 : "u_time"});\n` + // `   f_color = vec4(v_texcoord, 0.5, 1.0);\n` +
   `}\n`;
@@ -34557,7 +34544,7 @@ const genBufferData = (x, y) => {
     idx_arr
   };
 };
-const render = (time, gl, program, vao, texture, transforms, count) => {
+const render = (time, gl, program, vao, texture, transformMat3s, count) => {
   gl.useProgram(program);
   gl.bindVertexArray(vao);
   let u_textureLocation = gl.getUniformLocation(program, "u_texture");
@@ -34566,8 +34553,7 @@ const render = (time, gl, program, vao, texture, transforms, count) => {
   gl.bindTexture(gl.TEXTURE_2D, texture);
   let u_timeLocation = gl.getUniformLocation(program, "u_time");
   gl.uniform1f(u_timeLocation, time);
-  transforms.forEach((transform, lineIdx) => {
-    let m = transform.withTime(1 - time);
+  transformMat3s.forEach((m, lineIdx) => {
     let u_mLocation = gl.getUniformLocation(program, `u_m${lineIdx}`);
     gl.uniformMatrix3fv(u_mLocation, false, m);
   });
@@ -42770,14 +42756,14 @@ const _hoisted_1 = {
 const _hoisted_2 = {
   class: "text-gray-800"
 };
-const _hoisted_3 = {
-  ref: "imgMorphCanvasRef",
-  width: "600",
-  height: "600"
-};
 _vue.popScopeId();
 const render = /*#__PURE__*/_withId((_ctx, _cache) => {
-  return (_vue.openBlock(), _vue.createBlock("div", _hoisted_1, [_vue.createVNode("div", _hoisted_2, [_vue.createVNode("canvas", _hoisted_3, null, 512), _vue.withDirectives(_vue.createVNode("input", {
+  return (_vue.openBlock(), _vue.createBlock("div", _hoisted_1, [_vue.createVNode("div", _hoisted_2, [_vue.createVNode("canvas", {
+    ref: "imgMorphCanvasRef",
+    style: `width:${_ctx.width}px;height:${_ctx.height}px;`,
+    width: "600",
+    height: "600"
+  }, null, 4), _vue.withDirectives(_vue.createVNode("input", {
     type: "range",
     min: "0",
     max: "1",
