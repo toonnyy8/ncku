@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-start">
+    <div class="flex justify-sdstt">
         <div class="text-gray-800">
             <canvas
                 v-show="mode == 'src'"
@@ -13,15 +13,15 @@
                 v-on:mouseover="srcMouseup"
             ></canvas>
             <canvas
-                v-show="mode == 'tar'"
+                v-show="mode == 'dst'"
                 class="max-w-7xl"
-                ref="tarCanvasRef"
+                ref="dstCanvasRef"
                 width="600"
                 height="600"
-                v-on:mousedown="tarMousedown"
-                v-on:mousemove="tarMousemove"
-                v-on:mouseup="tarMouseup"
-                v-on:mouseover="tarMouseup"
+                v-on:mousedown="dstMousedown"
+                v-on:mousemove="dstMousemove"
+                v-on:mouseup="dstMouseup"
+                v-on:mouseover="dstMouseup"
             ></canvas>
             <button
                 v-bind:class="{
@@ -36,14 +36,14 @@
             </button>
             <button
                 v-bind:class="{
-                    'bg-green-300': tarImg != undefined && mode != 'tar',
-                    'bg-blue-300': tarImg == undefined && mode != 'tar',
-                    'bg-yellow-300': mode == 'tar',
+                    'bg-green-300': dstImg != undefined && mode != 'dst',
+                    'bg-blue-300': dstImg == undefined && mode != 'dst',
+                    'bg-yellow-300': mode == 'dst',
                 }"
                 class="py-1 px-5 rounded-b-lg"
-                v-on:click=";(mode = 'tar'), renderCanvas()"
+                v-on:click=";(mode = 'dst'), renderCanvas()"
             >
-                tar
+                dst
             </button>
             <button class="bg-pink-500 text-white py-1 px-5 rounded-b-lg" v-on:click="loadImg()">
                 load img
@@ -53,9 +53,9 @@
                 class="bg-red-600 text-white py-1 px-5 rounded-b-lg"
                 v-show="
                     lines.length != 0 &&
-                    lines.reduce((prev, line) => prev && line.tar != undefined, true) &&
+                    lines.reduce((prev, line) => prev && line.dst != undefined, true) &&
                     srcImg != undefined &&
-                    tarImg != undefined
+                    dstImg != undefined
                 "
                 v-on:click="openView"
             >
@@ -73,12 +73,12 @@
                 </div>
             </div>
             <ul>
-                <li v-for="(value, name) in lines" :key="name" class="flex justify-start my-2">
+                <li v-for="(value, name) in lines" :key="name" class="flex justify-sdstt my-2">
                     <div
                         v-on:click=";(lookLineIdx = name), renderCanvas()"
                         v-bind:class="{
-                            'bg-blue-300': value.tar == undefined && name != lookLineIdx,
-                            'bg-green-300': value.tar != undefined && name != lookLineIdx,
+                            'bg-blue-300': value.dst == undefined && name != lookLineIdx,
+                            'bg-green-300': value.dst != undefined && name != lookLineIdx,
                             'bg-yellow-300': name == lookLineIdx,
                         }"
                         class="py-1 px-3 w-full rounded-l-lg"
@@ -162,13 +162,13 @@ export default defineComponent({
         const srcMousemove = ref((e: MouseEvent) => {})
         const srcMouseup = ref((e: MouseEvent) => {})
 
-        const tarCanvasRef: Ref<HTMLCanvasElement> = ref()
+        const dstCanvasRef: Ref<HTMLCanvasElement> = ref()
 
-        const tarMousedown = ref((e: MouseEvent) => {})
-        const tarMousemove = ref((e: MouseEvent) => {})
-        const tarMouseup = ref((e: MouseEvent) => {})
+        const dstMousedown = ref((e: MouseEvent) => {})
+        const dstMousemove = ref((e: MouseEvent) => {})
+        const dstMouseup = ref((e: MouseEvent) => {})
 
-        const lines: Ref<{ src: Line; tar: Line }[]> = ref([])
+        const lines: Ref<{ src: Line; dst: Line }[]> = ref([])
 
         const lookLineIdx = ref(-1)
 
@@ -196,13 +196,13 @@ export default defineComponent({
         const renderCanvas = ref(() => {})
 
         let srcCtx: CanvasRenderingContext2D
-        let tarCtx: CanvasRenderingContext2D
+        let dstCtx: CanvasRenderingContext2D
 
         onMounted(() => {
             const srcCanvas = srcCanvasRef.value
             srcCtx = srcCanvas.getContext("2d")
-            const tarCanvas = tarCanvasRef.value
-            tarCtx = tarCanvas.getContext("2d")
+            const dstCanvas = dstCanvasRef.value
+            dstCtx = dstCanvas.getContext("2d")
 
             let down = false
             let move = false
@@ -230,12 +230,12 @@ export default defineComponent({
                     }
                     if (!move) {
                         move = true
-                        lines.value.push({ src: Object.assign({}, tempLine), tar: undefined })
+                        lines.value.push({ src: Object.assign({}, tempLine), dst: undefined })
                         lookLineIdx.value = lines.value.length - 1
                     } else {
                         lines.value[lookLineIdx.value] = {
                             src: Object.assign({}, tempLine),
-                            tar: undefined,
+                            dst: undefined,
                         }
                     }
                     renderCanvas.value()
@@ -257,42 +257,42 @@ export default defineComponent({
                 renderCanvas.value()
             }
 
-            tarMousedown.value = (e) => {
+            dstMousedown.value = (e) => {
                 if (lookLineIdx.value != -1) {
                     down = true
                     tempLine = {
                         from: {
-                            x: (e.pageX - tarCanvas.offsetLeft) / (imgSize / 2) - 1,
-                            y: -((e.pageY - tarCanvas.offsetTop) / (imgSize / 2) - 1),
+                            x: (e.pageX - dstCanvas.offsetLeft) / (imgSize / 2) - 1,
+                            y: -((e.pageY - dstCanvas.offsetTop) / (imgSize / 2) - 1),
                         },
                         to: {
-                            x: (e.pageX - tarCanvas.offsetLeft) / (imgSize / 2) - 1,
-                            y: -((e.pageY - tarCanvas.offsetTop) / (imgSize / 2) - 1),
+                            x: (e.pageX - dstCanvas.offsetLeft) / (imgSize / 2) - 1,
+                            y: -((e.pageY - dstCanvas.offsetTop) / (imgSize / 2) - 1),
                         },
                     }
-                    drawLine(tarCtx, tempLine, color.primary)
+                    drawLine(dstCtx, tempLine, color.primary)
                 }
             }
-            tarMousemove.value = (e: MouseEvent) => {
+            dstMousemove.value = (e: MouseEvent) => {
                 if (down) {
                     tempLine.to = {
-                        x: (e.pageX - tarCanvas.offsetLeft) / (imgSize / 2) - 1,
-                        y: -((e.pageY - tarCanvas.offsetTop) / (imgSize / 2) - 1),
+                        x: (e.pageX - dstCanvas.offsetLeft) / (imgSize / 2) - 1,
+                        y: -((e.pageY - dstCanvas.offsetTop) / (imgSize / 2) - 1),
                     }
-                    lines.value[lookLineIdx.value].tar = Object.assign({}, tempLine)
+                    lines.value[lookLineIdx.value].dst = Object.assign({}, tempLine)
                     renderCanvas.value()
                 }
             }
-            tarMouseup.value = (e: MouseEvent) => {
+            dstMouseup.value = (e: MouseEvent) => {
                 if (down) {
                     down = false
                     if (
-                        lines.value[lookLineIdx.value].tar.from.x ==
-                            lines.value[lookLineIdx.value].tar.to.x &&
-                        lines.value[lookLineIdx.value].tar.from.y ==
-                            lines.value[lookLineIdx.value].tar.to.y
+                        lines.value[lookLineIdx.value].dst.from.x ==
+                            lines.value[lookLineIdx.value].dst.to.x &&
+                        lines.value[lookLineIdx.value].dst.from.y ==
+                            lines.value[lookLineIdx.value].dst.to.y
                     ) {
-                        lines.value[lookLineIdx.value].tar = undefined
+                        lines.value[lookLineIdx.value].dst = undefined
                     }
                     if (lines.value.length - 1 > lookLineIdx.value) {
                         lookLineIdx.value += 1
@@ -302,13 +302,13 @@ export default defineComponent({
             }
 
             renderCanvas.value = () => {
-                const ctx = mode.value == "src" ? srcCtx : tarCtx
+                const ctx = mode.value == "src" ? srcCtx : dstCtx
                 ctx.clearRect(0, 0, 800, imgSize)
-                const img = mode.value == "src" ? srcImg.value : tarImg.value
+                const img = mode.value == "src" ? srcImg.value : dstImg.value
                 if (img != undefined) ctx.drawImage(img, 0, 0, imgSize, imgSize)
                 lines.value.forEach((line, i) => {
                     if (line[mode.value]) {
-                        if (i != lookLineIdx.value && line.tar) {
+                        if (i != lookLineIdx.value && line.dst) {
                             drawLine(ctx, line[mode.value], color.success)
                         } else if (i != lookLineIdx.value) {
                             drawLine(ctx, line[mode.value], color.other)
@@ -322,8 +322,8 @@ export default defineComponent({
 
         const channel = new BroadcastChannel("channel")
         interface Msg {
-            msgType: "opened" | "lines" | "srcImgLink" | "tarImgLink"
-            lines?: { src: Line; tar: Line }[]
+            msgType: "opened" | "lines" | "srcImgLink" | "dstImgLink"
+            lines?: { src: Line; dst: Line }[]
             link?: string
         }
         channel.onmessage = (event: MessageEvent<Msg>) => {
@@ -339,8 +339,8 @@ export default defineComponent({
                         link: srcImg.value.src,
                     })
                     channel.postMessage(<Msg>{
-                        msgType: "tarImgLink",
-                        link: tarImg.value.src,
+                        msgType: "dstImgLink",
+                        link: dstImg.value.src,
                     })
                     break
                 }
@@ -351,7 +351,7 @@ export default defineComponent({
         }
 
         let srcImg: Ref<HTMLImageElement> = ref()
-        let tarImg: Ref<HTMLImageElement> = ref()
+        let dstImg: Ref<HTMLImageElement> = ref()
         const loadImg = () => {
             const inp = document.createElement("input")
             inp.type = "file"
@@ -363,7 +363,7 @@ export default defineComponent({
                     let img = new Image()
                     img.onload = () => {
                         if (mode.value == "src") srcImg.value = img
-                        else if (mode.value == "tar") tarImg.value = img
+                        else if (mode.value == "dst") dstImg.value = img
                         renderCanvas.value()
                     }
                     img.src = <string>reader.result
@@ -379,10 +379,10 @@ export default defineComponent({
             srcMousemove,
             srcMouseup,
 
-            tarCanvasRef,
-            tarMousedown,
-            tarMousemove,
-            tarMouseup,
+            dstCanvasRef,
+            dstMousedown,
+            dstMousemove,
+            dstMouseup,
 
             lines,
             close_icon,
@@ -396,7 +396,7 @@ export default defineComponent({
             loadImg,
 
             srcImg,
-            tarImg,
+            dstImg,
         }
     },
 })

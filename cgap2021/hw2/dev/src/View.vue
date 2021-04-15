@@ -28,13 +28,13 @@
         </button>
         <button
             v-bind:class="{
-                'bg-blue-300': mode != 'tar',
-                'bg-yellow-300': mode == 'tar',
+                'bg-blue-300': mode != 'dst',
+                'bg-yellow-300': mode == 'dst',
             }"
             class="py-1 px-5 rounded-b-lg"
-            v-on:click=";(mode = 'tar'), run(time)"
+            v-on:click=";(mode = 'dst'), run(time)"
         >
-            tar
+            dst
         </button>
         <div>
             <input
@@ -72,7 +72,7 @@ export default defineComponent({
         const canvasRef: Ref<HTMLCanvasElement> = ref()
 
         let srcImg: HTMLImageElement = new Image()
-        let tarImg: HTMLImageElement = new Image()
+        let dstImg: HTMLImageElement = new Image()
         let width = ref(500),
             height = ref(500)
 
@@ -82,9 +82,8 @@ export default defineComponent({
             let bg_program: WebGLProgram
             let fg_program: WebGLProgram
 
-            let transforms: { src: Transform; tar: Transform }[]
-            // let srcTransformMat3s: glm.mat3[]
-            // let tarTransformMat3s: glm.mat3[]
+            let transforms: { src: Transform; dst: Transform }[]
+
             let pos_arr: number[], uv_arr: number[], idx_arr: number[]
 
             let fg_vao: WebGLVertexArrayObject
@@ -96,8 +95,8 @@ export default defineComponent({
             run.value = (t: number) => {
                 switch (mode.value) {
                     case "morphing": {
-                        let w = srcImg.width * (1 - t) + tarImg.width * t
-                        let h = srcImg.height * (1 - t) + tarImg.height * t
+                        let w = srcImg.width * (1 - t) + dstImg.width * t
+                        let h = srcImg.height * (1 - t) + dstImg.height * t
                         ;({ w, h } = calcWH(w, h))
                         width.value = w
                         height.value = h
@@ -109,7 +108,7 @@ export default defineComponent({
                             bg_program,
                             bg_vao,
                             bg_texture,
-                            transforms.map(({ tar }) => tar.withTime(1 - t)),
+                            transforms.map(({ dst }) => dst.withTime(1 - t)),
                             idx_arr.length
                         )
                         render(
@@ -151,7 +150,7 @@ export default defineComponent({
                         )
                         break
                     }
-                    case "tar": {
+                    case "dst": {
                         let w = srcImg.width
                         let h = srcImg.height
                         ;({ w, h } = calcWH(w, h))
@@ -165,7 +164,7 @@ export default defineComponent({
                             bg_program,
                             bg_vao,
                             bg_texture,
-                            transforms.map(({ tar }) => tar.withTime(1 - t)),
+                            transforms.map(({ dst }) => dst.withTime(1 - t)),
                             idx_arr.length
                         )
                         render(
@@ -174,7 +173,7 @@ export default defineComponent({
                             fg_program,
                             bg_vao,
                             bg_texture,
-                            transforms.map(({ tar }) => tar.withTime(1 - t)),
+                            transforms.map(({ dst }) => dst.withTime(1 - t)),
                             idx_arr.length
                         )
                         break
@@ -184,8 +183,8 @@ export default defineComponent({
 
             const channel = new BroadcastChannel("channel")
             interface Msg {
-                msgType: "opened" | "lines" | "srcImgLink" | "tarImgLink"
-                lines?: { src: Line; tar: Line }[]
+                msgType: "opened" | "lines" | "srcImgLink" | "dstImgLink"
+                lines?: { src: Line; dst: Line }[]
                 link?: string
             }
             channel.onmessage = (event: MessageEvent<Msg>) => {
@@ -217,7 +216,7 @@ export default defineComponent({
                         gl.deleteVertexArray(fg_vao)
                         fg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, srcWeights)
 
-                        let tarWeights = new Array(Math.ceil(lines.length / 4))
+                        let dstWeights = new Array(Math.ceil(lines.length / 4))
                             .fill(0)
                             .map(() => []) //lines.map(() => [])
                         for (let i = 0; i < pos_arr.length; i += 2) {
@@ -225,7 +224,7 @@ export default defineComponent({
                             lines.forEach((line, lineIdx) => {
                                 ws[lineIdx] = calcWeight(
                                     { x: pos_arr[i], y: pos_arr[i + 1] },
-                                    line.tar,
+                                    line.dst,
                                     0.001,
                                     2,
                                     0.5
@@ -233,44 +232,29 @@ export default defineComponent({
                             })
                             let w_acc = ws.reduce((acc, w) => acc + w, 0)
                             ws.forEach((w, lineIdx) =>
-                                tarWeights[Math.floor(lineIdx / 4)].push(w / w_acc)
+                                dstWeights[Math.floor(lineIdx / 4)].push(w / w_acc)
                             )
                         }
                         gl.deleteVertexArray(bg_vao)
-                        bg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, tarWeights)
+                        bg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, dstWeights)
 
                         bg_program = genShaderProgram(gl, lines.length, true)
                         fg_program = genShaderProgram(gl, lines.length, false)
 
-                        transforms = lines.map(({ src, tar }) => {
+                        transforms = lines.map(({ src, dst }) => {
                             let line1 = PoseLine.create(
                                 glm.vec2.fromValues(src.from.x, src.from.y),
                                 glm.vec2.fromValues(src.to.x, src.to.y)
                             )
                             let line2 = PoseLine.create(
-                                glm.vec2.fromValues(tar.from.x, tar.from.y),
-                                glm.vec2.fromValues(tar.to.x, tar.to.y)
+                                glm.vec2.fromValues(dst.from.x, dst.from.y),
+                                glm.vec2.fromValues(dst.to.x, dst.to.y)
                             )
                             return {
                                 src: new Transform(line1, line2),
-                                tar: new Transform(line2, line1),
+                                dst: new Transform(line2, line1),
                             }
                         })
-
-                        // srcTransformMat3s = []
-                        // tarTransformMat3s = []
-                        // lines.forEach(({ src, tar }) => {
-                        //     let line1 = PoseLine.create(
-                        //         glm.vec2.fromValues(src.from.x, src.from.y),
-                        //         glm.vec2.fromValues(src.to.x, src.to.y)
-                        //     )
-                        //     let line2 = PoseLine.create(
-                        //         glm.vec2.fromValues(tar.from.x, tar.from.y),
-                        //         glm.vec2.fromValues(tar.to.x, tar.to.y)
-                        //     )
-                        //     srcTransformMat3s.push(line1.transformMat3(line2))
-                        //     tarTransformMat3s.push(line2.transformMat3(line1))
-                        // })
                     }
                     case "srcImgLink": {
                         srcImg.src = msg.link
@@ -294,15 +278,15 @@ export default defineComponent({
                         }
                         break
                     }
-                    case "tarImgLink": {
-                        tarImg.src = msg.link
+                    case "dstImgLink": {
+                        dstImg.src = msg.link
 
-                        tarImg.onload = () => {
+                        dstImg.onload = () => {
                             gl.deleteTexture(bg_texture)
                             bg_texture = gl.createTexture()
                             gl.bindTexture(gl.TEXTURE_2D, bg_texture)
 
-                            gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, tarImg.width, tarImg.height)
+                            gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, dstImg.width, dstImg.height)
                             gl.texSubImage2D(
                                 gl.TEXTURE_2D,
                                 0,
@@ -310,7 +294,7 @@ export default defineComponent({
                                 0,
                                 gl.RGB,
                                 gl.UNSIGNED_BYTE,
-                                tarImg
+                                dstImg
                             )
                             gl.generateMipmap(gl.TEXTURE_2D)
                             run.value(0)
