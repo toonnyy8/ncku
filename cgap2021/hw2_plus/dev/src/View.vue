@@ -40,9 +40,10 @@
             <input
                 type="range"
                 min="0"
-                max="1"
+                v-bind:max="imgsNum - 1"
                 step="0.001"
                 v-model="time"
+                v-bind:style="`width:${(imgsNum - 1) * 100}px;`"
                 v-on:input="run(time)"
             />{{ time }}
         </div>
@@ -71,6 +72,8 @@ export default defineComponent({
 
         const canvasRef: Ref<HTMLCanvasElement> = ref()
 
+        let imgsNum = ref(2)
+        let imgs = <HTMLImageElement[]>[]
         let srcImg: HTMLImageElement = new Image()
         let dstImg: HTMLImageElement = new Image()
         let width = ref(500),
@@ -82,98 +85,89 @@ export default defineComponent({
             let bg_program: WebGLProgram
             let fg_program: WebGLProgram
 
-            let transforms: { src: Transform; dst: Transform }[]
+            let transforms: { src: Transform; dst: Transform }[][]
 
-            let pos_arr: number[], uv_arr: number[], idx_arr: number[]
+            let { pos_arr, uv_arr, idx_arr } = genBufferData(25, 25)
 
             let fg_vao: WebGLVertexArrayObject
             let bg_vao: WebGLVertexArrayObject
+            let vaos: WebGLVertexArrayObject[] = []
 
             let fg_texture: WebGLTexture
             let bg_texture: WebGLTexture
+            let textures: WebGLTexture[] = []
 
             run.value = (t: number) => {
+                let time = t == transforms.length ? 1 : t - Math.floor(t)
+                let idx = t == transforms.length ? t - 1 : Math.floor(t)
+                let w = imgs[idx].width * (1 - time) + (imgs[idx + 1]?.width ?? 0) * time
+                let h = imgs[idx].height * (1 - time) + (imgs[idx + 1]?.height ?? 0) * time
+                ;({ w, h } = calcWH(w, h))
+                width.value = w
+                height.value = h
                 switch (mode.value) {
                     case "morphing": {
-                        let w = srcImg.width * (1 - t) + dstImg.width * t
-                        let h = srcImg.height * (1 - t) + dstImg.height * t
-                        ;({ w, h } = calcWH(w, h))
-                        width.value = w
-                        height.value = h
-
                         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
                         render(
-                            t,
+                            time,
                             gl,
                             bg_program,
-                            bg_vao,
-                            bg_texture,
-                            transforms.map(({ dst }) => dst.withTime(1 - t)),
+                            vaos[idx + 1],
+                            textures[idx + 1],
+                            transforms[idx].map(({ dst }) => dst.withTime(1 - time)),
                             idx_arr.length
                         )
                         render(
-                            t,
+                            time,
                             gl,
                             fg_program,
-                            fg_vao,
-                            fg_texture,
-                            transforms.map(({ src }) => src.withTime(t)),
+                            vaos[idx],
+                            textures[idx],
+                            transforms[idx].map(({ src }) => src.withTime(time)),
                             idx_arr.length
                         )
                         break
                     }
                     case "src": {
-                        let w = srcImg.width
-                        let h = srcImg.height
-                        ;({ w, h } = calcWH(w, h))
-                        width.value = w
-                        height.value = h
-
                         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
                         render(
-                            t,
+                            time,
                             gl,
                             bg_program,
-                            fg_vao,
-                            fg_texture,
-                            transforms.map(({ src }) => src.withTime(t)),
+                            vaos[idx],
+                            textures[idx],
+                            transforms[idx].map(({ src }) => src.withTime(time)),
                             idx_arr.length
                         )
                         render(
-                            t,
+                            time,
                             gl,
                             fg_program,
-                            fg_vao,
-                            fg_texture,
-                            transforms.map(({ src }) => src.withTime(t)),
+                            vaos[idx],
+                            textures[idx],
+                            transforms[idx].map(({ src }) => src.withTime(time)),
                             idx_arr.length
                         )
                         break
                     }
                     case "dst": {
-                        let w = srcImg.width
-                        let h = srcImg.height
-                        ;({ w, h } = calcWH(w, h))
-                        width.value = w
-                        height.value = h
-
                         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
                         render(
-                            t,
+                            time,
                             gl,
                             bg_program,
-                            bg_vao,
-                            bg_texture,
-                            transforms.map(({ dst }) => dst.withTime(1 - t)),
+                            vaos[idx + 1],
+                            textures[idx + 1],
+                            transforms[idx].map(({ dst }) => dst.withTime(1 - time)),
                             idx_arr.length
                         )
                         render(
-                            t,
+                            time,
                             gl,
                             fg_program,
-                            bg_vao,
-                            bg_texture,
-                            transforms.map(({ dst }) => dst.withTime(1 - t)),
+                            vaos[idx + 1],
+                            textures[idx + 1],
+                            transforms[idx].map(({ dst }) => dst.withTime(1 - time)),
                             idx_arr.length
                         )
                         break
@@ -183,123 +177,102 @@ export default defineComponent({
 
             const channel = new BroadcastChannel("channel")
             interface Msg {
-                msgType: "opened" | "lines" | "srcImgLink" | "dstImgLink"
-                lines?: { src: Line; dst: Line }[]
-                link?: string
+                msgType: "opened" | "image morphing"
+                lines?: Line[][]
+                links?: string[]
             }
-            channel.onmessage = (event: MessageEvent<Msg>) => {
+            channel.onmessage = async (event: MessageEvent<Msg>) => {
                 const msg = event.data
                 switch (msg.msgType) {
-                    case "lines": {
+                    case "image morphing": {
+                        textures.forEach((texture) => gl.deleteTexture(texture))
+                        textures = msg.links.map(() => gl.createTexture())
+                        imgs = []
+                        for (let idx = 0; idx < msg.links.length; idx++) {
+                            let img = await new Promise(
+                                (resolve: (value: HTMLImageElement) => void, reject) => {
+                                    let img = new Image()
+                                    img.onload = () => {
+                                        gl.bindTexture(gl.TEXTURE_2D, textures[idx])
+
+                                        gl.texStorage2D(
+                                            gl.TEXTURE_2D,
+                                            1,
+                                            gl.RGB8,
+                                            img.width,
+                                            img.height
+                                        )
+                                        gl.texSubImage2D(
+                                            gl.TEXTURE_2D,
+                                            0,
+                                            0,
+                                            0,
+                                            gl.RGB,
+                                            gl.UNSIGNED_BYTE,
+                                            img
+                                        )
+                                        gl.generateMipmap(gl.TEXTURE_2D)
+                                        resolve(img)
+                                    }
+                                    img.src = msg.links[idx]
+                                }
+                            )
+                            imgs.push(img)
+                        }
+                        imgsNum.value = imgs.length
+
                         const lines = msg.lines
-                        ;({ pos_arr, uv_arr, idx_arr } = genBufferData(25, 25))
-
-                        let srcWeights = new Array(Math.ceil(lines.length / 4))
-                            .fill(0)
-                            .map(() => []) //lines.map(() => [])
-                        for (let i = 0; i < pos_arr.length; i += 2) {
-                            let ws = new Array(Math.ceil(lines.length / 4) * 4).fill(0)
-                            lines.forEach((line, lineIdx) => {
-                                ws[lineIdx] = calcWeight(
-                                    { x: pos_arr[i], y: pos_arr[i + 1] },
-                                    line.src,
-                                    0.001,
-                                    2,
-                                    0.5
+                        vaos.forEach((vao) => gl.deleteVertexArray(vao))
+                        vaos = imgs.map((_, imgIdx) => {
+                            let weights = new Array(Math.ceil(lines.length / 4))
+                                .fill(0)
+                                .map(() => [])
+                            for (let i = 0; i < pos_arr.length; i += 2) {
+                                let ws = new Array(Math.ceil(lines.length / 4) * 4).fill(0)
+                                lines.forEach((line, lineIdx) => {
+                                    ws[lineIdx] = calcWeight(
+                                        { x: pos_arr[i], y: pos_arr[i + 1] },
+                                        line[imgIdx],
+                                        0.001,
+                                        2,
+                                        0.5
+                                    )
+                                })
+                                let w_acc = ws.reduce((acc, w) => acc + w, 0)
+                                ws.forEach((w, lineIdx) =>
+                                    weights[Math.floor(lineIdx / 4)].push(w / w_acc)
                                 )
-                            })
-                            let w_acc = ws.reduce((acc, w) => acc + w, 0)
-                            ws.forEach((w, lineIdx) =>
-                                srcWeights[Math.floor(lineIdx / 4)].push(w / w_acc)
-                            )
-                        }
-                        gl.deleteVertexArray(fg_vao)
-                        fg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, srcWeights)
-
-                        let dstWeights = new Array(Math.ceil(lines.length / 4))
-                            .fill(0)
-                            .map(() => []) //lines.map(() => [])
-                        for (let i = 0; i < pos_arr.length; i += 2) {
-                            let ws = new Array(Math.ceil(lines.length / 4) * 4).fill(0)
-                            lines.forEach((line, lineIdx) => {
-                                ws[lineIdx] = calcWeight(
-                                    { x: pos_arr[i], y: pos_arr[i + 1] },
-                                    line.dst,
-                                    0.001,
-                                    2,
-                                    0.5
-                                )
-                            })
-                            let w_acc = ws.reduce((acc, w) => acc + w, 0)
-                            ws.forEach((w, lineIdx) =>
-                                dstWeights[Math.floor(lineIdx / 4)].push(w / w_acc)
-                            )
-                        }
-                        gl.deleteVertexArray(bg_vao)
-                        bg_vao = genVAO(gl, pos_arr, uv_arr, idx_arr, dstWeights)
+                            }
+                            return genVAO(gl, pos_arr, uv_arr, idx_arr, weights)
+                        })
 
                         bg_program = genShaderProgram(gl, lines.length, true)
                         fg_program = genShaderProgram(gl, lines.length, false)
 
-                        transforms = lines.map(({ src, dst }) => {
-                            let line1 = PoseLine.create(
-                                glm.vec2.fromValues(src.from.x, src.from.y),
-                                glm.vec2.fromValues(src.to.x, src.to.y)
+                        transforms = []
+                        for (let i = 0; i < imgs.length - 1; i++) {
+                            transforms.push(
+                                lines.map((_lines) => {
+                                    let line1 = PoseLine.create(
+                                        glm.vec2.fromValues(_lines[i].from.x, _lines[i].from.y),
+                                        glm.vec2.fromValues(_lines[i].to.x, _lines[i].to.y)
+                                    )
+                                    let line2 = PoseLine.create(
+                                        glm.vec2.fromValues(
+                                            _lines[i + 1].from.x,
+                                            _lines[i + 1].from.y
+                                        ),
+                                        glm.vec2.fromValues(_lines[i + 1].to.x, _lines[i + 1].to.y)
+                                    )
+                                    return {
+                                        src: new Transform(line1, line2),
+                                        dst: new Transform(line2, line1),
+                                    }
+                                })
                             )
-                            let line2 = PoseLine.create(
-                                glm.vec2.fromValues(dst.from.x, dst.from.y),
-                                glm.vec2.fromValues(dst.to.x, dst.to.y)
-                            )
-                            return {
-                                src: new Transform(line1, line2),
-                                dst: new Transform(line2, line1),
-                            }
-                        })
-                    }
-                    case "srcImgLink": {
-                        srcImg.src = msg.link
-
-                        srcImg.onload = () => {
-                            gl.deleteTexture(fg_texture)
-                            fg_texture = gl.createTexture()
-                            gl.bindTexture(gl.TEXTURE_2D, fg_texture)
-
-                            gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, srcImg.width, srcImg.height)
-                            gl.texSubImage2D(
-                                gl.TEXTURE_2D,
-                                0,
-                                0,
-                                0,
-                                gl.RGB,
-                                gl.UNSIGNED_BYTE,
-                                srcImg
-                            )
-                            gl.generateMipmap(gl.TEXTURE_2D)
-                        }
-                        break
-                    }
-                    case "dstImgLink": {
-                        dstImg.src = msg.link
-
-                        dstImg.onload = () => {
-                            gl.deleteTexture(bg_texture)
-                            bg_texture = gl.createTexture()
-                            gl.bindTexture(gl.TEXTURE_2D, bg_texture)
-
-                            gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, dstImg.width, dstImg.height)
-                            gl.texSubImage2D(
-                                gl.TEXTURE_2D,
-                                0,
-                                0,
-                                0,
-                                gl.RGB,
-                                gl.UNSIGNED_BYTE,
-                                dstImg
-                            )
-                            gl.generateMipmap(gl.TEXTURE_2D)
-                            run.value(0)
                         }
 
+                        run.value(time.value)
                         break
                     }
                 }
@@ -312,6 +285,7 @@ export default defineComponent({
             time,
             mode,
             canvasRef,
+            imgsNum,
             width,
             height,
         }

@@ -288,9 +288,8 @@ export default defineComponent({
 
         const channel = new BroadcastChannel("channel")
         interface Msg {
-            msgType: "opened" | "lines" | "imgsLink" | "srcImgLink" | "dstImgLink"
+            msgType: "opened" | "image morphing"
             lines?: Line[][]
-            link?: string
             links?: string[]
         }
         channel.onmessage = (event: MessageEvent<Msg>) => {
@@ -298,11 +297,8 @@ export default defineComponent({
             switch (msg.msgType) {
                 case "opened": {
                     channel.postMessage(<Msg>{
-                        msgType: "lines",
+                        msgType: "image morphing",
                         lines: JSON.parse(JSON.stringify(lines.value)),
-                    })
-                    channel.postMessage(<Msg>{
-                        msgType: "imgsLink",
                         links: imgs.value.map((img) => img.src),
                     })
                     break
