@@ -13,7 +13,8 @@
         "index": "parcel index.htm -p 8080 --open",
         "dev:cgap2021-hw2": "parcel ./cgap2021/hw2/dev/index.html -p 8080 --open",
         "build:cgap2021-hw2": "parcel build ./cgap2021/hw2/dev/index.html --no-optimize --no-scope-hoist --no-content-hash --public-url=./",
-        "dev:cgap2021-hw2-plus": "parcel ./cgap2021/hw2_plus/dev/index.html -p 8080 --open"
+        "dev:cgap2021-hw2-plus": "parcel ./cgap2021/hw2_plus/dev/index.html -p 8080 --open",
+        "dev:cgap2021-hw2-plus2": "parcel ./cgap2021/hw2_plus2/dev/index.html -p 8080 --open"
     },
     "repository": {
         "type": "git",
