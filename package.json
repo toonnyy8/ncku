@@ -10,20 +10,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "index": "parcel index.htm -p 8080 --open",
-    "dev:dsp2020-hw1": "parcel ./dsp2020/hw1/dev/index.html -p 8080 --open",
-    "build:dsp2020-hw1": "parcel build --no-content-hash ./dsp2020/hw1/dev/index.html --out-dir ./dsp2020/hw1/build/  --public-url=./",
-    "dev:dsp2020-hw2": "parcel ./dsp2020/hw2/dev/index.html -p 8080 --open",
-    "build:dsp2020-hw2": "parcel build --no-content-hash ./dsp2020/hw2/dev/index.html --out-dir ./dsp2020/hw2/build/  --public-url=./",
-    "dev:dsp2020-hw3": "parcel ./dsp2020/hw3/dev/index.html -p 8080 --open",
-    "build:dsp2020-hw3": "parcel build --no-content-hash ./dsp2020/hw3/dev/index.html --out-dir ./dsp2020/hw3/build/  --public-url=./",
-    "dev:cvdl2020-hw1": "parcel ./cvdl2020/hw1/dev/index.html -p 8080 --open",
-    "dev:opencvdl2020-hw1": "parcel ./opencvdl2020/hw1/dev/index.html -p 8080 --open",
-    "build:opencvdl2020-hw1": "parcel build --no-content-hash ./opencvdl2020/hw1/dev/index.html --out-dir ./opencvdl2020/hw1/build/  --public-url=./",
-    "dev:ip2020-hw1": "parcel ./ip2020/hw1/dev/index.html -p 8080 --open",
-    "build:ip2020-hw1": "parcel build --no-content-hash ./ip2020/hw1/dev/index.html --out-dir ./ip2020/hw1/build/  --public-url=./",
-    "dev:cvdl2020-hw2": "parcel ./cvdl2020/hw2/client/index.html -p 8080 --open",
-    "dev:opencvdl2020-hw2": "parcel ./opencvdl2020/hw2/client/index.html -p 8080 --open"
+    "build:hw3": "esbuild ./dev/hw3/index.ts --bundle --outfile=./build/hw3/index.js"
   },
   "repository": {
     "type": "git",
@@ -37,20 +24,8 @@
   },
   "homepage": "https://github.com/toonnyy8/ncku#readme",
   "dependencies": {
-    "@antv/g2": "^4.1.4",
-    "@koa/cors": "^3.1.0",
-    "@tensorflow/tfjs": "^2.7.0",
-    "@tensorflow/tfjs-backend-wasm": "^2.8.1",
-    "@tensorflow/tfjs-core": "^2.7.0",
-    "@wasmer/wasi": "^0.12.0",
-    "koa": "^2.13.0",
-    "next": "^10.0.4",
-    "opencv4nodejs": "^5.6.0",
-    "parcel": "^1.12.4",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "esbuild": "^0.11.16",
+    "gl-matrix": "^3.3.0"
   },
-  "devDependencies": {
-    "typescript": "^4.1.3"
-  }
+  "devDependencies": {}
 }
