@@ -58,7 +58,7 @@ export const importFromArrayBuffer = (bytes: ArrayBuffer) => {
 }
 
 export const createTexture = (gl: WebGL2RenderingContext, doc: Doc, imgs: HTMLImageElement[]) => {
-    return (doc.textures || []).map((texInfo) => {
+    return <WebGLTexture[]>(doc.textures || []).map((texInfo) => {
         const texture = gl.createTexture()
         gl.bindTexture(gl.TEXTURE_2D, texture)
         if (texInfo["sampler"] != undefined) {
@@ -86,290 +86,103 @@ export const createTexture = (gl: WebGL2RenderingContext, doc: Doc, imgs: HTMLIm
 }
 
 export class Doc {
-    /**
-     * @type {Accessor[]}
-     */
-    accessors
-    /**
-     * @type {Asset}
-     */
-    asset
-
-    /**
-     * @type {BufferView[]}
-     */
-    bufferViews
-
-    /**
-     * @type {Buffer[]}
-     */
-    buffers
-
-    /**
-     * @type {GltfImage[]}
-     */
-    images
-
-    /**
-     * @type {Material[]}
-     */
-    materials
-
-    /**
-     * @type {Mesh[]}
-     */
-    meshes
-
-    /**
-     * @type {Node[]}
-     */
-    nodes
-
-    /**
-     * @type {Sampler[]}
-     */
-    samplers
-
-    /**
-     * @type {number}
-     */
-    scene
-
-    /**
-     * @type {Scene[]}
-     */
-    scenes
-
-    /**
-     * @type {Skin[]}
-     */
-    skins
-
-    /**
-     * @type {Texture[]}
-     */
-    textures
+    accessors: Accessor[]
+    asset: Asset
+    bufferViews: BufferView[]
+    buffers: Buffer[]
+    images: GltfImage[]
+    materials: Material[]
+    meshes: Mesh[]
+    nodes: Node[]
+    samplers: Sampler[]
+    scene: number
+    scenes: Scene[]
+    skins: Skin[]
+    textures: Texture[]
 }
 
 export class Asset {
-    /**
-     * @type {string}
-     */
-    generator
-    /**
-     * @type {string}
-     */
-    version
+    generator: string
+    version: string
 }
 
 export class Accessor {
-    /**
-     * @type {number}
-     */
-    bufferView
-
-    /**
-     * @type {number}
-     */
-    componentType
-
-    /**
-     * @type {number}
-     */
-    count
-
-    /**
-     * @type {number[]}
-     */
-    max
-
-    /**
-     * @type {number[]}
-     */
-    min
-
-    /**
-     * @type {"VEC2"|"VEC3"|"VEC4"}
-     */
-    type
+    bufferView: number
+    componentType: number
+    count: number
+    max: number[]
+    min: number[]
+    type: "VEC2" | "VEC3" | "VEC4"
 }
 
 export class BufferView {
-    /**
-     * @type {number}
-     */
-    buffer
-    /**
-     * @type {number}
-     */
-    byteLength
-    /**
-     * @type {number}
-     */
-    byteOffset
+    buffer: number
+    byteLength: number
+    byteOffset: number
 }
 
 export class Buffer {
-    /**
-     * @type {number}
-     */
-    byteLength
+    byteLength: number
 }
 
 export class GltfImage {
-    /**
-     * @type {number}
-     */
-    bufferView
-    /**
-     * @type {string}
-     */
-    mimeType
-    /**
-     * @type {string}
-     */
-    name
+    bufferView: number
+    mimeType: string
+    name: string
 }
 
 export class Material {
-    /**
-     * @type {boolean}
-     */
-    doubleSided
-    /**
-     * @type {string}
-     */
-    name
-    /**
-     * @type {PbrMetallicRoughness}
-     */
-    pbrMetallicRoughness
+    doubleSided: boolean
+    name: string
+    pbrMetallicRoughness: PbrMetallicRoughness
 }
 export class PbrMetallicRoughness {
-    /**
-     * @type {BaseColorTexture}
-     */
-    baseColorTexture
-    /**
-     * @type {number}
-     */
-    metallicFactor
-    /**
-     * @type {number}
-     */
-    roughnessFactor
+    baseColorTexture: BaseColorTexture
+    metallicFactor: number
+    roughnessFactor: number
 }
 export class BaseColorTexture {
-    /**
-     * @type {number}
-     */
-    index
-    /**
-     * @type {number}
-     */
-    texCoord
+    index: number
+    texCoord: number
 }
 
 export class Mesh {
-    /**
-     * @type {string}
-     */
-    name
-    /**
-     * @type {Primitive[]}
-     */
-    primitives
+    name: string
+    primitives: Primitive[]
 }
 export class Primitive {
-    /**
-     * @type {{[attribute:string]:number}}
-     */
-    attributes
-    /**
-     * @type {number}
-     */
-    indices
-    /**
-     * @type {number}
-     */
-    material
+    attributes: { [attribute: string]: number }
+    indices: number
+    material: number
 }
 
 export class Node {
-    /**
-     * @type {number[]}
-     */
-    children
-    /**
-     * @type {string}
-     */
-    name
-    /**
-     * @type {[number,number,number,number]}
-     */
-    rotation
-    /**
-     * @type {[number,number,number]}
-     */
-    scale
-    /**
-     * @type {[number,number,number]}
-     */
-    translation
+    children: number[]
+    name: string
+    rotation: [number, number, number, number]
+    scale: [number, number, number]
+    translation: [number, number, number]
 }
 
 export class Sampler {
-    /**
-     * @type {number}
-     */
-    magFilter
-    /**
-     * @type {number}
-     */
-    minFilter
-    /**
-     * @type {number}
-     */
-    wrapS
-    /**
-     * @type {number}
-     */
-    wrapT
+    magFilter: number
+    minFilter: number
+    wrapS: number
+    wrapT: number
 }
 
 export class Scene {
-    /**
-     * @type {string}
-     */
-    name
-    /**
-     * @type {number[]}
-     */
-    nodes
+    name: string
+    nodes: number[]
 }
 
 export class Skin {
-    /**
-     * @type {number}
-     */
-    inverseBindMatrices
-    /**
-     * @type {number[]}
-     */
-    joints
-    /**
-     * @type {string}
-     */
-    name
+    inverseBindMatrices: number
+    joints: number[]
+    name: string
 }
 
 export class Texture {
-    /**
-     * @type {number}
-     */
-    sampler
-    /**
-     * @type {number}
-     */
-    source
+    sampler: number
+    source: number
 }

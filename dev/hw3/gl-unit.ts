@@ -55,7 +55,7 @@ class Primitive {
                 vbo,
             }
         })
-        {
+        if (primitiveInfo.indices != undefined) {
             const accessor = doc.accessors[primitiveInfo.indices]
             const bufferView = doc.bufferViews[accessor.bufferView]
             const ebo = gl.createBuffer()
@@ -66,15 +66,18 @@ class Primitive {
                     .buffer,
                 gl.STATIC_DRAW
             )
+
+            this.count = accessor.count
+            this.type = accessor.componentType
+        } else {
+            const accessor = doc.accessors[primitiveInfo.attributes.POSITION]
+            this.count = accessor.count
         }
 
         {
             this.gl = gl
             this.vao = vao
-            const accessor = doc.accessors[primitiveInfo.indices]
-            this.count = accessor.count
             this.mode = primitiveInfo["mode"] || gl.TRIANGLES
-            this.type = accessor.componentType
             const baseColorTexture =
                 doc.materials[primitiveInfo.material].pbrMetallicRoughness["baseColorTexture"]
             if (baseColorTexture != undefined) {
@@ -164,7 +167,35 @@ class Primitive {
         let u_mvp_loc = gl.getUniformLocation(this.program, "u_mvp")
         gl.uniformMatrix4fv(u_mvp_loc, false, mvp)
 
-        gl.drawElements(this.mode, this.count, this.type, 0)
+        if (this.type != undefined) gl.drawElements(this.mode, this.count, this.type, 0)
+        else gl.drawArrays(this.mode, 0, this.count)
+        gl.bindVertexArray(null)
+    }
+    drawAnim(mvp: glm.mat4) {
+        const gl = this.gl
+        gl.useProgram(this.program)
+
+        // let u_useTextureLocation = gl.getUniformLocation(this.program, "u_useTexture");
+        // if (this.baseColorTexture == undefined) {
+        //     gl.uniform1i(u_useTextureLocation, 0)
+        // } else {
+        //     gl.uniform1i(u_useTextureLocation, 1)
+        // }
+
+        let u_basecolorLocation = gl.getUniformLocation(this.program, "u_basecolor")
+        gl.uniform4fv(u_basecolorLocation, this.baseColorFactor)
+
+        let u_textureLocation = gl.getUniformLocation(this.program, "u_texture")
+        gl.uniform1i(u_textureLocation, 0)
+        gl.activeTexture(gl.TEXTURE0)
+        gl.bindTexture(gl.TEXTURE_2D, this.baseColorTexture)
+        gl.bindVertexArray(this.vao)
+
+        let u_mvp_loc = gl.getUniformLocation(this.program, "u_mvp")
+        gl.uniformMatrix4fv(u_mvp_loc, false, mvp)
+
+        if (this.type != undefined) gl.drawElements(this.mode, this.count, this.type, 0)
+        else gl.drawArrays(this.mode, 0, this.count)
         gl.bindVertexArray(null)
     }
 
@@ -173,7 +204,7 @@ class Primitive {
     program: WebGLProgram
     count: number
     mode: number
-    type: number
+    type?: number
     baseColorTexture: WebGLTexture
     baseColorFactor: [number, number, number, number]
 }
