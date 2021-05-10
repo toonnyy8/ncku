@@ -99,6 +99,7 @@ export class Doc {
     scenes: Scene[]
     skins: Skin[]
     textures: Texture[]
+    animations: Animation[]
 }
 
 export class Asset {
@@ -112,13 +113,15 @@ export class Accessor {
     count: number
     max: number[]
     min: number[]
-    type: "VEC2" | "VEC3" | "VEC4"
+    type: "SCALAR" | "VEC2" | "VEC3" | "VEC4" | "MAT2" | "MAT3" | "MAT4"
+    byteOffset?: number
 }
 
 export class BufferView {
     buffer: number
     byteLength: number
     byteOffset: number
+    byteStride: number
 }
 
 export class Buffer {
@@ -185,4 +188,13 @@ export class Skin {
 export class Texture {
     sampler: number
     source: number
+}
+
+export class Animation {
+    name: string
+    samplers: { input: number; output: number }[]
+    channels: {
+        sampler: number
+        target: { node: number; path: "rotation" | "scale" | "translation" }
+    }[]
 }

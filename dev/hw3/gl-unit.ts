@@ -1,6 +1,3 @@
-///<reference path="../src/gltf.js">
-///<reference path="../src/shader.js">
-///<reference path="../src/gl-matrix.js">
 import * as gltf from "./gltf"
 import * as shader from "./shader"
 import * as glm from "gl-matrix"
@@ -11,7 +8,8 @@ class Primitive {
         primitiveInfo: gltf.Primitive,
         doc: gltf.Doc,
         bin: Uint8Array,
-        textures: WebGLTexture[]
+        textures: WebGLTexture[],
+        bones?: number
     ) {
         const vao = gl.createVertexArray()
         gl.bindVertexArray(vao)
@@ -104,13 +102,18 @@ class Primitive {
         let vs_source =
             `#version 300 es\n` +
             `uniform mat4 u_mvp;\n` +
+            `uniform mat4[${bones ?? 1}] u_jointMatrix;\n` +
             vs_in.reduce((prev, curr) => prev + curr, ``) +
             vs_out.reduce((prev, curr) => prev + curr, ``) +
             `void main(void) {\n` +
             vs_assign.reduce((prev, curr) => prev + `   ` + curr, ``) +
-            `   gl_Position = u_mvp * vec4(a_position, 1.0);\n` +
+            `   mat4 skinMatrix =` +
+            `   v_weights_0.x * u_jointMatrix[int(v_joints_0.x)] +` +
+            `   v_weights_0.y * u_jointMatrix[int(v_joints_0.y)] +` +
+            `   v_weights_0.z * u_jointMatrix[int(v_joints_0.z)] +` +
+            `   v_weights_0.w * u_jointMatrix[int(v_joints_0.w)];` +
+            `   gl_Position = u_mvp * skinMatrix * vec4(a_position, 1.0);\n` +
             `}\n`
-
         console.log(vs_source)
         let fs_in = shader_info.map(({ loc, type, attribute }) => {
             return `in ${type} v_${attribute};\n`
@@ -171,16 +174,9 @@ class Primitive {
         else gl.drawArrays(this.mode, 0, this.count)
         gl.bindVertexArray(null)
     }
-    drawAnim(mvp: glm.mat4) {
+    drawAnim(mvp: glm.mat4, bones: glm.mat4[]) {
         const gl = this.gl
         gl.useProgram(this.program)
-
-        // let u_useTextureLocation = gl.getUniformLocation(this.program, "u_useTexture");
-        // if (this.baseColorTexture == undefined) {
-        //     gl.uniform1i(u_useTextureLocation, 0)
-        // } else {
-        //     gl.uniform1i(u_useTextureLocation, 1)
-        // }
 
         let u_basecolorLocation = gl.getUniformLocation(this.program, "u_basecolor")
         gl.uniform4fv(u_basecolorLocation, this.baseColorFactor)
@@ -193,6 +189,11 @@ class Primitive {
 
         let u_mvp_loc = gl.getUniformLocation(this.program, "u_mvp")
         gl.uniformMatrix4fv(u_mvp_loc, false, mvp)
+
+        bones.forEach((bone, idx) => {
+            let u_jointMatrix_loc = gl.getUniformLocation(this.program, `u_jointMatrix[${idx}]`)
+            gl.uniformMatrix4fv(u_jointMatrix_loc, false, bone)
+        })
 
         if (this.type != undefined) gl.drawElements(this.mode, this.count, this.type, 0)
         else gl.drawArrays(this.mode, 0, this.count)
@@ -282,13 +283,42 @@ class Scene {
     nodes: Node[]
 }
 
+class _Skeleton {}
+
+class Skeleton {
+    constructor(skin: gltf.Skin, doc: gltf.Doc, bin: Uint8Array) {
+        const accessor = doc.accessors[skin.inverseBindMatrices]
+        const bv = doc.bufferViews[accessor.bufferView]
+        const buf = bin.slice(
+            bv.byteOffset + (accessor?.byteOffset ?? 0),
+            bv.byteOffset + bv.byteLength
+        )
+        const f32arr = new Float32Array(buf.buffer)
+        this.inverseBindMatrices = new Array(accessor.count).fill(0).map((_, idx) => {
+            return f32arr.slice(idx * 16, (idx + 1) * 16)
+        })
+        this.bones = new Array(accessor.count).fill(0).map((_, idx) => {
+            return glm.mat4.create()
+        })
+        this.boneNum = accessor.count
+        this.skele = doc.nodes
+    }
+
+    boneMats() {}
+    skele: gltf.Node[]
+    boneNum: number
+    inverseBindMatrices: glm.mat4[]
+    bones: glm.mat4[]
+}
+
 export const primitive = (
     gl: WebGL2RenderingContext,
     primitiveInfo: gltf.Primitive,
     doc: gltf.Doc,
     bin: Uint8Array,
-    textures: WebGLTexture[]
-) => new Primitive(gl, primitiveInfo, doc, bin, textures)
+    textures: WebGLTexture[],
+    bones?: number
+) => new Primitive(gl, primitiveInfo, doc, bin, textures, bones)
 
 export const mesh = (
     gl: WebGL2RenderingContext,
@@ -313,3 +343,6 @@ export const scene = (
     bin: Uint8Array,
     textures: WebGLTexture[]
 ) => new Scene(gl, sceneInfo, doc, bin, textures)
+
+export const skeleton = (skin: gltf.Skin, doc: gltf.Doc, bin: Uint8Array) =>
+    new Skeleton(skin, doc, bin)
