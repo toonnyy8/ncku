@@ -85,18 +85,28 @@ interface AnimUnit {
     path: "rotation" | "scale" | "translation"
 }
 
-export const getAnimStruct = (anim: gltf.Animation, doc: gltf.Doc, bin: Uint8Array) => {
-    return anim.channels.map((ch) => {
-        const { input, output } = anim.samplers[ch.sampler]
-        return {
-            ...ch.target,
-            input: getAccessorBuff(input, doc, bin).reduce(
-                (prev, curr) => [...prev, ...curr],
-                <number[]>[]
-            ),
-            output: getAccessorBuff(output, doc, bin),
-        }
-    })
+export const getAnimStruct = (
+    anim: gltf.Animation,
+    doc: gltf.Doc,
+    bin: Uint8Array
+): [AnimUnit[], number] => {
+    return [
+        anim.channels.map((ch) => {
+            const { input, output } = anim.samplers[ch.sampler]
+            return {
+                ...ch.target,
+                input: getAccessorBuff(input, doc, bin).reduce(
+                    (prev, curr) => [...prev, ...curr],
+                    <number[]>[]
+                ),
+                output: getAccessorBuff(output, doc, bin),
+            }
+        }),
+        anim.channels.reduce((timeMax, ch) => {
+            const { input } = anim.samplers[ch.sampler]
+            return Math.max(timeMax, doc.accessors[input].max[0])
+        }, 0),
+    ]
 }
 
 export const getAnimNodes = (animStruct: AnimUnit[], time: number) => {

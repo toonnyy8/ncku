@@ -51,11 +51,10 @@ gltf.importFromArrayBuffer(uint8array).then(({ doc, bin, imgs }) => {
     )
     let nodes = <gltf.Node[]>JSON.parse(JSON.stringify(doc.nodes))
     console.log(nodes)
-    const animStruct = getAnimStruct(doc.animations[1], doc, bin)
+    const [animStruct, timeMax] = getAnimStruct(doc.animations[1], doc, bin)
     console.log(animStruct)
-    let t = 0.00001
+    let t = 0
     const loop = () => {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         const animNodes = getAnimNodes(animStruct, t)
 
         const globalJointTransforms = getAnimGlobalJointTransforms(
@@ -73,12 +72,10 @@ gltf.importFromArrayBuffer(uint8array).then(({ doc, bin, imgs }) => {
                 inverseBindMatrices[invIdx]
             )
         })
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         primitive.drawAnim(mvp, jointMats)
-        if (t > 0.7) {
-            t = 0.00001
-        } else {
-            t += 0.0166
-        }
+        t += 0.0166
+        t %= timeMax
         requestAnimationFrame(loop)
     }
     loop()

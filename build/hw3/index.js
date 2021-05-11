@@ -1521,14 +1521,20 @@ void main(void) {
     return getAccessorBuff(skin.inverseBindMatrices, doc, bin);
   };
   var getAnimStruct = (anim, doc, bin) => {
-    return anim.channels.map((ch) => {
-      const {input, output} = anim.samplers[ch.sampler];
-      return {
-        ...ch.target,
-        input: getAccessorBuff(input, doc, bin).reduce((prev, curr) => [...prev, ...curr], []),
-        output: getAccessorBuff(output, doc, bin)
-      };
-    });
+    return [
+      anim.channels.map((ch) => {
+        const {input, output} = anim.samplers[ch.sampler];
+        return {
+          ...ch.target,
+          input: getAccessorBuff(input, doc, bin).reduce((prev, curr) => [...prev, ...curr], []),
+          output: getAccessorBuff(output, doc, bin)
+        };
+      }),
+      anim.channels.reduce((timeMax, ch) => {
+        const {input} = anim.samplers[ch.sampler];
+        return Math.max(timeMax, doc.accessors[input].max[0]);
+      }, 0)
+    ];
   };
   var getAnimNodes = (animStruct, time) => {
     let nodes = {};
@@ -1585,23 +1591,20 @@ void main(void) {
     const primitive2 = primitive(gl, doc.meshes[0].primitives[0], doc, bin, textures, doc.skins[0].joints.length);
     let nodes = JSON.parse(JSON.stringify(doc.nodes));
     console.log(nodes);
-    const animStruct = getAnimStruct(doc.animations[1], doc, bin);
+    const [animStruct, timeMax] = getAnimStruct(doc.animations[1], doc, bin);
     console.log(animStruct);
-    let t = 1e-5;
+    let t = 0;
     const loop = () => {
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       const animNodes = getAnimNodes(animStruct, t);
       const globalJointTransforms = getAnimGlobalJointTransforms(2, nodes, animNodes, mat4_exports.create(), {});
       const inverseBindMatrices = getInverseBindMats(doc.skins[0], doc, bin);
       let jointMats = doc.skins[0].joints.map((jointIdx, invIdx) => {
         return mat4_exports.mul(mat4_exports.create(), globalJointTransforms[jointIdx], inverseBindMatrices[invIdx]);
       });
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       primitive2.drawAnim(mvp, jointMats);
-      if (t > 0.7) {
-        t = 1e-5;
-      } else {
-        t += 0.0166;
-      }
+      t += 0.0166;
+      t %= timeMax;
       requestAnimationFrame(loop);
     };
     loop();
