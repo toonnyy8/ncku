@@ -110,7 +110,9 @@ export const getAnimStruct = (
 }
 
 export const getAnimNodes = (animStruct: AnimUnit[], time: number) => {
-    let nodes = {}
+    let nodes: {
+        [idx: number]: { rotation?: number[]; scale?: number[]; translation?: number[] }
+    } = {}
     animStruct.map((animUnit) => {
         const idx = animUnit.input.findIndex((t) => t >= time)
         let total = animUnit.input[idx] - (animUnit.input[idx - 1] ?? 0)
@@ -121,9 +123,10 @@ export const getAnimNodes = (animStruct: AnimUnit[], time: number) => {
             return animUnit.output[idx - 1]?.[j] * a + animUnit.output[idx]?.[j] * b
         })
         if (nodes[animUnit.node] == undefined) {
-            nodes[animUnit.node] = {}
+            nodes[animUnit.node] = { [animUnit.path]: vec }
+        } else {
+            nodes[animUnit.node][animUnit.path] = vec
         }
-        nodes[animUnit.node][animUnit.path] = <any>vec
     })
     return nodes
 }
@@ -134,17 +137,9 @@ export const getAnimGlobalJointTransforms = (
     animNodes: gltf.Node[],
     gMat: glm.mat4,
     jointMats: { [idx: number]: glm.mat4 }
-) => {
-    // jointMats[idx] = glm.mat4.mul(
-    //     glm.mat4.create(),
-    //     gMat,
-    //     glm.mat4.fromRotationTranslationScale(
-    //         glm.mat4.create(),
-    //         nodes[idx]["rotation"] || [0, 0, 0, 0],
-    //         nodes[idx]["translation"] || [0, 0, 0],
-    //         nodes[idx]["scale"] || [1, 1, 1]
-    //     )
-    // )
+): {
+    [idx: number]: glm.mat4
+} => {
     jointMats[idx] = glm.mat4.mul(
         glm.mat4.create(),
         gMat,

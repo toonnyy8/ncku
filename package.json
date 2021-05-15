@@ -25,7 +25,10 @@
     "homepage": "https://github.com/toonnyy8/ncku#readme",
     "dependencies": {
         "esbuild": "^0.11.16",
-        "gl-matrix": "^3.3.0"
+        "gl-matrix": "^3.3.0",
+        "vue": "^2.6.12"
     },
-    "devDependencies": {}
+    "devDependencies": {
+        "tailwindcss": "^2.1.2"
+    }
 }

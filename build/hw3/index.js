@@ -24,6 +24,7 @@
   // node_modules/gl-matrix/esm/common.js
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
+  var RANDOM = Math.random;
   var degree = Math.PI / 180;
   if (!Math.hypot)
     Math.hypot = function() {
@@ -423,7 +424,7 @@
   }
   function rotate(out, a, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
-    var len = Math.hypot(x, y, z);
+    var len2 = Math.hypot(x, y, z);
     var s, c, t;
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
@@ -431,13 +432,13 @@
     var b00, b01, b02;
     var b10, b11, b12;
     var b20, b21, b22;
-    if (len < EPSILON) {
+    if (len2 < EPSILON) {
       return null;
     }
-    len = 1 / len;
-    x *= len;
-    y *= len;
-    z *= len;
+    len2 = 1 / len2;
+    x *= len2;
+    y *= len2;
+    z *= len2;
     s = Math.sin(rad);
     c = Math.cos(rad);
     t = 1 - c;
@@ -615,15 +616,15 @@
   }
   function fromRotation(out, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
-    var len = Math.hypot(x, y, z);
+    var len2 = Math.hypot(x, y, z);
     var s, c, t;
-    if (len < EPSILON) {
+    if (len2 < EPSILON) {
       return null;
     }
-    len = 1 / len;
-    x *= len;
-    y *= len;
-    z *= len;
+    len2 = 1 / len2;
+    x *= len2;
+    y *= len2;
+    z *= len2;
     s = Math.sin(rad);
     c = Math.cos(rad);
     t = 1 - c;
@@ -1031,7 +1032,7 @@
     return out;
   }
   function lookAt(out, eye, center, up) {
-    var x0, x1, x2, y0, y1, y2, z0, z1, z2, len;
+    var x0, x1, x2, y0, y1, y2, z0, z1, z2, len2;
     var eyex = eye[0];
     var eyey = eye[1];
     var eyez = eye[2];
@@ -1047,37 +1048,37 @@
     z0 = eyex - centerx;
     z1 = eyey - centery;
     z2 = eyez - centerz;
-    len = 1 / Math.hypot(z0, z1, z2);
-    z0 *= len;
-    z1 *= len;
-    z2 *= len;
+    len2 = 1 / Math.hypot(z0, z1, z2);
+    z0 *= len2;
+    z1 *= len2;
+    z2 *= len2;
     x0 = upy * z2 - upz * z1;
     x1 = upz * z0 - upx * z2;
     x2 = upx * z1 - upy * z0;
-    len = Math.hypot(x0, x1, x2);
-    if (!len) {
+    len2 = Math.hypot(x0, x1, x2);
+    if (!len2) {
       x0 = 0;
       x1 = 0;
       x2 = 0;
     } else {
-      len = 1 / len;
-      x0 *= len;
-      x1 *= len;
-      x2 *= len;
+      len2 = 1 / len2;
+      x0 *= len2;
+      x1 *= len2;
+      x2 *= len2;
     }
     y0 = z1 * x2 - z2 * x1;
     y1 = z2 * x0 - z0 * x2;
     y2 = z0 * x1 - z1 * x0;
-    len = Math.hypot(y0, y1, y2);
-    if (!len) {
+    len2 = Math.hypot(y0, y1, y2);
+    if (!len2) {
       y0 = 0;
       y1 = 0;
       y2 = 0;
     } else {
-      len = 1 / len;
-      y0 *= len;
-      y1 *= len;
-      y2 *= len;
+      len2 = 1 / len2;
+      y0 *= len2;
+      y1 *= len2;
+      y2 *= len2;
     }
     out[0] = x0;
     out[1] = y0;
@@ -1100,20 +1101,20 @@
   function targetTo(out, eye, target, up) {
     var eyex = eye[0], eyey = eye[1], eyez = eye[2], upx = up[0], upy = up[1], upz = up[2];
     var z0 = eyex - target[0], z1 = eyey - target[1], z2 = eyez - target[2];
-    var len = z0 * z0 + z1 * z1 + z2 * z2;
-    if (len > 0) {
-      len = 1 / Math.sqrt(len);
-      z0 *= len;
-      z1 *= len;
-      z2 *= len;
+    var len2 = z0 * z0 + z1 * z1 + z2 * z2;
+    if (len2 > 0) {
+      len2 = 1 / Math.sqrt(len2);
+      z0 *= len2;
+      z1 *= len2;
+      z2 *= len2;
     }
     var x0 = upy * z2 - upz * z1, x1 = upz * z0 - upx * z2, x2 = upx * z1 - upy * z0;
-    len = x0 * x0 + x1 * x1 + x2 * x2;
-    if (len > 0) {
-      len = 1 / Math.sqrt(len);
-      x0 *= len;
-      x1 *= len;
-      x2 *= len;
+    len2 = x0 * x0 + x1 * x1 + x2 * x2;
+    if (len2 > 0) {
+      len2 = 1 / Math.sqrt(len2);
+      x0 *= len2;
+      x1 *= len2;
+      x2 *= len2;
     }
     out[0] = x0;
     out[1] = x1;
@@ -1196,23 +1197,23 @@
     out[15] = a[15] * b;
     return out;
   }
-  function multiplyScalarAndAdd(out, a, b, scale2) {
-    out[0] = a[0] + b[0] * scale2;
-    out[1] = a[1] + b[1] * scale2;
-    out[2] = a[2] + b[2] * scale2;
-    out[3] = a[3] + b[3] * scale2;
-    out[4] = a[4] + b[4] * scale2;
-    out[5] = a[5] + b[5] * scale2;
-    out[6] = a[6] + b[6] * scale2;
-    out[7] = a[7] + b[7] * scale2;
-    out[8] = a[8] + b[8] * scale2;
-    out[9] = a[9] + b[9] * scale2;
-    out[10] = a[10] + b[10] * scale2;
-    out[11] = a[11] + b[11] * scale2;
-    out[12] = a[12] + b[12] * scale2;
-    out[13] = a[13] + b[13] * scale2;
-    out[14] = a[14] + b[14] * scale2;
-    out[15] = a[15] + b[15] * scale2;
+  function multiplyScalarAndAdd(out, a, b, scale3) {
+    out[0] = a[0] + b[0] * scale3;
+    out[1] = a[1] + b[1] * scale3;
+    out[2] = a[2] + b[2] * scale3;
+    out[3] = a[3] + b[3] * scale3;
+    out[4] = a[4] + b[4] * scale3;
+    out[5] = a[5] + b[5] * scale3;
+    out[6] = a[6] + b[6] * scale3;
+    out[7] = a[7] + b[7] * scale3;
+    out[8] = a[8] + b[8] * scale3;
+    out[9] = a[9] + b[9] * scale3;
+    out[10] = a[10] + b[10] * scale3;
+    out[11] = a[11] + b[11] * scale3;
+    out[12] = a[12] + b[12] * scale3;
+    out[13] = a[13] + b[13] * scale3;
+    out[14] = a[14] + b[14] * scale3;
+    out[15] = a[15] + b[15] * scale3;
     return out;
   }
   function exactEquals(a, b) {
@@ -1231,6 +1232,390 @@
   }
   var mul = multiply;
   var sub = subtract;
+
+  // node_modules/gl-matrix/esm/vec3.js
+  var vec3_exports = {};
+  __export(vec3_exports, {
+    add: () => add2,
+    angle: () => angle,
+    bezier: () => bezier,
+    ceil: () => ceil,
+    clone: () => clone2,
+    copy: () => copy2,
+    create: () => create2,
+    cross: () => cross,
+    dist: () => dist,
+    distance: () => distance,
+    div: () => div,
+    divide: () => divide,
+    dot: () => dot,
+    equals: () => equals2,
+    exactEquals: () => exactEquals2,
+    floor: () => floor,
+    forEach: () => forEach,
+    fromValues: () => fromValues2,
+    hermite: () => hermite,
+    inverse: () => inverse,
+    len: () => len,
+    length: () => length,
+    lerp: () => lerp,
+    max: () => max,
+    min: () => min,
+    mul: () => mul2,
+    multiply: () => multiply2,
+    negate: () => negate,
+    normalize: () => normalize,
+    random: () => random,
+    rotateX: () => rotateX2,
+    rotateY: () => rotateY2,
+    rotateZ: () => rotateZ2,
+    round: () => round,
+    scale: () => scale2,
+    scaleAndAdd: () => scaleAndAdd,
+    set: () => set2,
+    sqrDist: () => sqrDist,
+    sqrLen: () => sqrLen,
+    squaredDistance: () => squaredDistance,
+    squaredLength: () => squaredLength,
+    str: () => str2,
+    sub: () => sub2,
+    subtract: () => subtract2,
+    transformMat3: () => transformMat3,
+    transformMat4: () => transformMat4,
+    transformQuat: () => transformQuat,
+    zero: () => zero
+  });
+  function create2() {
+    var out = new ARRAY_TYPE(3);
+    if (ARRAY_TYPE != Float32Array) {
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+    }
+    return out;
+  }
+  function clone2(a) {
+    var out = new ARRAY_TYPE(3);
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    return out;
+  }
+  function length(a) {
+    var x = a[0];
+    var y = a[1];
+    var z = a[2];
+    return Math.hypot(x, y, z);
+  }
+  function fromValues2(x, y, z) {
+    var out = new ARRAY_TYPE(3);
+    out[0] = x;
+    out[1] = y;
+    out[2] = z;
+    return out;
+  }
+  function copy2(out, a) {
+    out[0] = a[0];
+    out[1] = a[1];
+    out[2] = a[2];
+    return out;
+  }
+  function set2(out, x, y, z) {
+    out[0] = x;
+    out[1] = y;
+    out[2] = z;
+    return out;
+  }
+  function add2(out, a, b) {
+    out[0] = a[0] + b[0];
+    out[1] = a[1] + b[1];
+    out[2] = a[2] + b[2];
+    return out;
+  }
+  function subtract2(out, a, b) {
+    out[0] = a[0] - b[0];
+    out[1] = a[1] - b[1];
+    out[2] = a[2] - b[2];
+    return out;
+  }
+  function multiply2(out, a, b) {
+    out[0] = a[0] * b[0];
+    out[1] = a[1] * b[1];
+    out[2] = a[2] * b[2];
+    return out;
+  }
+  function divide(out, a, b) {
+    out[0] = a[0] / b[0];
+    out[1] = a[1] / b[1];
+    out[2] = a[2] / b[2];
+    return out;
+  }
+  function ceil(out, a) {
+    out[0] = Math.ceil(a[0]);
+    out[1] = Math.ceil(a[1]);
+    out[2] = Math.ceil(a[2]);
+    return out;
+  }
+  function floor(out, a) {
+    out[0] = Math.floor(a[0]);
+    out[1] = Math.floor(a[1]);
+    out[2] = Math.floor(a[2]);
+    return out;
+  }
+  function min(out, a, b) {
+    out[0] = Math.min(a[0], b[0]);
+    out[1] = Math.min(a[1], b[1]);
+    out[2] = Math.min(a[2], b[2]);
+    return out;
+  }
+  function max(out, a, b) {
+    out[0] = Math.max(a[0], b[0]);
+    out[1] = Math.max(a[1], b[1]);
+    out[2] = Math.max(a[2], b[2]);
+    return out;
+  }
+  function round(out, a) {
+    out[0] = Math.round(a[0]);
+    out[1] = Math.round(a[1]);
+    out[2] = Math.round(a[2]);
+    return out;
+  }
+  function scale2(out, a, b) {
+    out[0] = a[0] * b;
+    out[1] = a[1] * b;
+    out[2] = a[2] * b;
+    return out;
+  }
+  function scaleAndAdd(out, a, b, scale3) {
+    out[0] = a[0] + b[0] * scale3;
+    out[1] = a[1] + b[1] * scale3;
+    out[2] = a[2] + b[2] * scale3;
+    return out;
+  }
+  function distance(a, b) {
+    var x = b[0] - a[0];
+    var y = b[1] - a[1];
+    var z = b[2] - a[2];
+    return Math.hypot(x, y, z);
+  }
+  function squaredDistance(a, b) {
+    var x = b[0] - a[0];
+    var y = b[1] - a[1];
+    var z = b[2] - a[2];
+    return x * x + y * y + z * z;
+  }
+  function squaredLength(a) {
+    var x = a[0];
+    var y = a[1];
+    var z = a[2];
+    return x * x + y * y + z * z;
+  }
+  function negate(out, a) {
+    out[0] = -a[0];
+    out[1] = -a[1];
+    out[2] = -a[2];
+    return out;
+  }
+  function inverse(out, a) {
+    out[0] = 1 / a[0];
+    out[1] = 1 / a[1];
+    out[2] = 1 / a[2];
+    return out;
+  }
+  function normalize(out, a) {
+    var x = a[0];
+    var y = a[1];
+    var z = a[2];
+    var len2 = x * x + y * y + z * z;
+    if (len2 > 0) {
+      len2 = 1 / Math.sqrt(len2);
+    }
+    out[0] = a[0] * len2;
+    out[1] = a[1] * len2;
+    out[2] = a[2] * len2;
+    return out;
+  }
+  function dot(a, b) {
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  }
+  function cross(out, a, b) {
+    var ax = a[0], ay = a[1], az = a[2];
+    var bx = b[0], by = b[1], bz = b[2];
+    out[0] = ay * bz - az * by;
+    out[1] = az * bx - ax * bz;
+    out[2] = ax * by - ay * bx;
+    return out;
+  }
+  function lerp(out, a, b, t) {
+    var ax = a[0];
+    var ay = a[1];
+    var az = a[2];
+    out[0] = ax + t * (b[0] - ax);
+    out[1] = ay + t * (b[1] - ay);
+    out[2] = az + t * (b[2] - az);
+    return out;
+  }
+  function hermite(out, a, b, c, d, t) {
+    var factorTimes2 = t * t;
+    var factor1 = factorTimes2 * (2 * t - 3) + 1;
+    var factor2 = factorTimes2 * (t - 2) + t;
+    var factor3 = factorTimes2 * (t - 1);
+    var factor4 = factorTimes2 * (3 - 2 * t);
+    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+    return out;
+  }
+  function bezier(out, a, b, c, d, t) {
+    var inverseFactor = 1 - t;
+    var inverseFactorTimesTwo = inverseFactor * inverseFactor;
+    var factorTimes2 = t * t;
+    var factor1 = inverseFactorTimesTwo * inverseFactor;
+    var factor2 = 3 * t * inverseFactorTimesTwo;
+    var factor3 = 3 * factorTimes2 * inverseFactor;
+    var factor4 = factorTimes2 * t;
+    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+    return out;
+  }
+  function random(out, scale3) {
+    scale3 = scale3 || 1;
+    var r = RANDOM() * 2 * Math.PI;
+    var z = RANDOM() * 2 - 1;
+    var zScale = Math.sqrt(1 - z * z) * scale3;
+    out[0] = Math.cos(r) * zScale;
+    out[1] = Math.sin(r) * zScale;
+    out[2] = z * scale3;
+    return out;
+  }
+  function transformMat4(out, a, m) {
+    var x = a[0], y = a[1], z = a[2];
+    var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+    w = w || 1;
+    out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
+    out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
+    out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+    return out;
+  }
+  function transformMat3(out, a, m) {
+    var x = a[0], y = a[1], z = a[2];
+    out[0] = x * m[0] + y * m[3] + z * m[6];
+    out[1] = x * m[1] + y * m[4] + z * m[7];
+    out[2] = x * m[2] + y * m[5] + z * m[8];
+    return out;
+  }
+  function transformQuat(out, a, q) {
+    var qx = q[0], qy = q[1], qz = q[2], qw = q[3];
+    var x = a[0], y = a[1], z = a[2];
+    var uvx = qy * z - qz * y, uvy = qz * x - qx * z, uvz = qx * y - qy * x;
+    var uuvx = qy * uvz - qz * uvy, uuvy = qz * uvx - qx * uvz, uuvz = qx * uvy - qy * uvx;
+    var w2 = qw * 2;
+    uvx *= w2;
+    uvy *= w2;
+    uvz *= w2;
+    uuvx *= 2;
+    uuvy *= 2;
+    uuvz *= 2;
+    out[0] = x + uvx + uuvx;
+    out[1] = y + uvy + uuvy;
+    out[2] = z + uvz + uuvz;
+    return out;
+  }
+  function rotateX2(out, a, b, rad) {
+    var p = [], r = [];
+    p[0] = a[0] - b[0];
+    p[1] = a[1] - b[1];
+    p[2] = a[2] - b[2];
+    r[0] = p[0];
+    r[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
+    r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad);
+    out[0] = r[0] + b[0];
+    out[1] = r[1] + b[1];
+    out[2] = r[2] + b[2];
+    return out;
+  }
+  function rotateY2(out, a, b, rad) {
+    var p = [], r = [];
+    p[0] = a[0] - b[0];
+    p[1] = a[1] - b[1];
+    p[2] = a[2] - b[2];
+    r[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
+    r[1] = p[1];
+    r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad);
+    out[0] = r[0] + b[0];
+    out[1] = r[1] + b[1];
+    out[2] = r[2] + b[2];
+    return out;
+  }
+  function rotateZ2(out, a, b, rad) {
+    var p = [], r = [];
+    p[0] = a[0] - b[0];
+    p[1] = a[1] - b[1];
+    p[2] = a[2] - b[2];
+    r[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
+    r[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
+    r[2] = p[2];
+    out[0] = r[0] + b[0];
+    out[1] = r[1] + b[1];
+    out[2] = r[2] + b[2];
+    return out;
+  }
+  function angle(a, b) {
+    var ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2], mag1 = Math.sqrt(ax * ax + ay * ay + az * az), mag2 = Math.sqrt(bx * bx + by * by + bz * bz), mag = mag1 * mag2, cosine = mag && dot(a, b) / mag;
+    return Math.acos(Math.min(Math.max(cosine, -1), 1));
+  }
+  function zero(out) {
+    out[0] = 0;
+    out[1] = 0;
+    out[2] = 0;
+    return out;
+  }
+  function str2(a) {
+    return "vec3(" + a[0] + ", " + a[1] + ", " + a[2] + ")";
+  }
+  function exactEquals2(a, b) {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+  }
+  function equals2(a, b) {
+    var a0 = a[0], a1 = a[1], a2 = a[2];
+    var b0 = b[0], b1 = b[1], b2 = b[2];
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2));
+  }
+  var sub2 = subtract2;
+  var mul2 = multiply2;
+  var div = divide;
+  var dist = distance;
+  var sqrDist = squaredDistance;
+  var len = length;
+  var sqrLen = squaredLength;
+  var forEach = function() {
+    var vec = create2();
+    return function(a, stride, offset, count, fn, arg) {
+      var i, l;
+      if (!stride) {
+        stride = 3;
+      }
+      if (!offset) {
+        offset = 0;
+      }
+      if (count) {
+        l = Math.min(count * stride + offset, a.length);
+      } else {
+        l = a.length;
+      }
+      for (i = offset; i < l; i += stride) {
+        vec[0] = a[i];
+        vec[1] = a[i + 1];
+        vec[2] = a[i + 2];
+        fn(vec, vec, arg);
+        a[i] = vec[0];
+        a[i + 1] = vec[1];
+        a[i + 2] = vec[2];
+      }
+      return a;
+    };
+  }();
 
   // dev/hw3/shader.ts
   var createProgram = (gl, vsSource, fsSource) => {
@@ -1416,11 +1801,11 @@ void main(void) {
     let bin = null;
     let offset = 12;
     for (let i = 0; offset < glbBytes.length; i++) {
-      const len = glbBytes.slice(offset, offset + 4).reduce((prev, curr, idx) => {
+      const len2 = glbBytes.slice(offset, offset + 4).reduce((prev, curr, idx) => {
         return prev + curr * 256 ** idx;
       }, 0);
       const type = String.fromCharCode(...glbBytes.slice(offset + 4, offset + 8));
-      const data = glbBytes.slice(offset + 8, offset + 8 + len);
+      const data = glbBytes.slice(offset + 8, offset + 8 + len2);
       switch (type) {
         case "BIN\0": {
           bin = data;
@@ -1434,7 +1819,7 @@ void main(void) {
           console.error(`chunk type : ${type} is not defined`);
         }
       }
-      offset += 8 + len;
+      offset += 8 + len2;
     }
     let imgs = [];
     const images = doc.images || [];
@@ -1548,9 +1933,10 @@ void main(void) {
         return animUnit.output[idx - 1]?.[j] * a + animUnit.output[idx]?.[j] * b;
       });
       if (nodes[animUnit.node] == void 0) {
-        nodes[animUnit.node] = {};
+        nodes[animUnit.node] = {[animUnit.path]: vec};
+      } else {
+        nodes[animUnit.node][animUnit.path] = vec;
       }
-      nodes[animUnit.node][animUnit.path] = vec;
     });
     return nodes;
   };
@@ -1568,9 +1954,39 @@ void main(void) {
   importFromArrayBuffer(Fox_default).then(({doc, bin, imgs}) => {
     console.log({doc, bin, imgs});
     const canvas = document.createElement("canvas");
+    canvas.style.position = "absolute";
+    canvas.style.zIndex = "0";
     canvas.width = 600;
     canvas.height = 400;
     document.body.append(canvas);
+    const bone_canvas = document.createElement("canvas");
+    bone_canvas.style.position = "absolute";
+    bone_canvas.style.zIndex = "1";
+    const ctx = bone_canvas.getContext("2d");
+    bone_canvas.width = 600;
+    bone_canvas.height = 400;
+    document.body.append(bone_canvas);
+    let down = false;
+    let rotationX = 0;
+    let rotationY = 0;
+    let mouseX = 0;
+    let mouseY = 0;
+    bone_canvas.onmousedown = (e) => {
+      down = true;
+      mouseX = e.x;
+      mouseY = e.y;
+    };
+    bone_canvas.onmousemove = (e) => {
+      if (down) {
+        rotationY += Math.PI * (e.x - mouseX) / 360;
+        rotationX += Math.PI * (e.y - mouseY) / 360;
+      }
+      mouseX = e.x;
+      mouseY = e.y;
+    };
+    bone_canvas.onmouseup = () => {
+      down = false;
+    };
     const gl = canvas.getContext("webgl2", {preserveDrawingBuffer: true});
     gl.clearColor(0, 0, 0, 1);
     gl.clearDepth(1);
@@ -1585,17 +2001,57 @@ void main(void) {
     const zNear = 0.01;
     const zFar = 1e3;
     const projectionMatrix = mat4_exports.perspective(mat4_exports.create(), fieldOfView, aspect, zNear, zFar);
-    let v = mat4_exports.lookAt(mat4_exports.create(), [200, 20, 0], [0, 20, 0], [0, 1, 0]);
-    let mvp = mat4_exports.multiply(mat4_exports.create(), projectionMatrix, v);
+    let v = mat4_exports.lookAt(mat4_exports.create(), [75, 20, 150], [0, 20, 0], [0, 1, 0]);
     const textures = createTexture(gl, doc, imgs);
     const primitive2 = primitive(gl, doc.meshes[0].primitives[0], doc, bin, textures, doc.skins[0].joints.length);
     let nodes = JSON.parse(JSON.stringify(doc.nodes));
     console.log(nodes);
-    const [animStruct, timeMax] = getAnimStruct(doc.animations[1], doc, bin);
-    console.log(animStruct);
-    let t = 0;
+    const [animStruct0, timeMax0] = getAnimStruct(doc.animations[0], doc, bin);
+    const [animStruct1, timeMax1] = getAnimStruct(doc.animations[1], doc, bin);
+    const [animStruct2, timeMax2] = getAnimStruct(doc.animations[2], doc, bin);
+    const animStructs = [animStruct0, animStruct1, animStruct2];
+    const timeMaxs = [timeMax0, timeMax1, timeMax2];
+    let sele_bone_idx = 0;
+    document.onkeydown = (e) => {
+      switch (e.code) {
+        case "KeyS": {
+          sele_bone_idx -= 1;
+          break;
+        }
+        case "KeyW": {
+          sele_bone_idx += 1;
+          break;
+        }
+        case "KeyA": {
+          sele_bone_idx -= 1;
+          break;
+        }
+        case "KeyD": {
+          sele_bone_idx += 1;
+          break;
+        }
+      }
+      if (sele_bone_idx < 0) {
+        sele_bone_idx = doc.skins[0].joints.length + sele_bone_idx;
+      } else {
+        sele_bone_idx %= doc.skins[0].joints.length - 1;
+      }
+    };
+    let t = 0.1;
+    let animIdx = 2;
     const loop = () => {
-      const animNodes = getAnimNodes(animStruct, t);
+      if (rotationY > Math.PI * 2) {
+        rotationY -= Math.PI * 2;
+      }
+      if (rotationX > Math.PI / 2) {
+        rotationX = Math.PI / 2;
+      } else if (rotationX < -Math.PI / 2) {
+        rotationX = -Math.PI / 2;
+      }
+      let v1 = mat4_exports.rotateX(mat4_exports.create(), v, rotationX);
+      let v2 = mat4_exports.rotateY(mat4_exports.create(), v1, rotationY);
+      let mvp = mat4_exports.multiply(mat4_exports.create(), projectionMatrix, v2);
+      const animNodes = getAnimNodes(animStructs[animIdx], t);
       const globalJointTransforms = getAnimGlobalJointTransforms(2, nodes, animNodes, mat4_exports.create(), {});
       const inverseBindMatrices = getInverseBindMats(doc.skins[0], doc, bin);
       let jointMats = doc.skins[0].joints.map((jointIdx, invIdx) => {
@@ -1603,8 +2059,33 @@ void main(void) {
       });
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       primitive2.drawAnim(mvp, jointMats);
+      ctx.clearRect(0, 0, 600, 400);
+      let bones_vec = doc.skins[0].joints.map((jointIdx) => {
+        let mat = mat4_exports.mul(mat4_exports.create(), v2, globalJointTransforms[jointIdx]);
+        let vec = vec3_exports.transformMat4(vec3_exports.create(), vec3_exports.create(), mat);
+        return {id: jointIdx, vec};
+      });
+      bones_vec.sort((a, b) => a.vec[2] - b.vec[2]);
+      let z_max = bones_vec.slice(-1)[0].vec[2];
+      let z_min = bones_vec[0].vec[2];
+      bones_vec.forEach(({id, vec}) => {
+        let z = vec[2];
+        z = (z - z_min) / (z_max - z_min);
+        ctx.fillStyle = `rgb(${Math.round(100 * z / 2) + 155},${Math.round(200 * z)},${Math.round(255 * z)})`;
+        let bone_vec = vec3_exports.transformMat4(vec3_exports.create(), vec, projectionMatrix);
+        ctx.beginPath();
+        ctx.arc(bone_vec[0] * 300 + 300, (1 - bone_vec[1]) * 200, 6, 0, 2 * Math.PI);
+        ctx.fill();
+        if (id == doc.skins[0].joints[sele_bone_idx]) {
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = `rgb(100,255,255)`;
+          ctx.beginPath();
+          ctx.arc(bone_vec[0] * 300 + 300, (1 - bone_vec[1]) * 200, 10, 0, 2 * Math.PI);
+          ctx.stroke();
+        }
+      });
       t += 0.0166;
-      t %= timeMax;
+      t %= timeMaxs[animIdx];
       requestAnimationFrame(loop);
     };
     loop();
