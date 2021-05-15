@@ -2495,7 +2495,7 @@ void main(void) {
     const [animStruct2, timeMax2] = getAnimStruct(doc.animations[2], doc, bin);
     const animStructs = [animStruct0, animStruct1, animStruct2];
     const timeMaxs = [timeMax0, timeMax1, timeMax2];
-    let mode = "x";
+    let mode = "z";
     let sele_bone_idx = 1;
     document.onkeydown = (e) => {
       switch (e.code) {
@@ -2559,7 +2559,7 @@ void main(void) {
     bone_canvas.onmouseup = () => {
       down = false;
     };
-    let animIdx = -1;
+    let animIdx = 0;
     let t = 1e-3;
     bone_canvas.onwheel = (e) => {
       if (e.deltaY < 0) {

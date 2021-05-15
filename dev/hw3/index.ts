@@ -69,7 +69,7 @@ gltf.importFromArrayBuffer(uint8array).then(({ doc, bin, imgs }) => {
 
     const animStructs = [animStruct0, animStruct1, animStruct2]
     const timeMaxs = [timeMax0, timeMax1, timeMax2]
-    let mode = "x"
+    let mode = "z"
     let sele_bone_idx = 1
     document.onkeydown = (e) => {
         switch (e.code) {
@@ -135,7 +135,7 @@ gltf.importFromArrayBuffer(uint8array).then(({ doc, bin, imgs }) => {
         down = false
     }
 
-    let animIdx = -1
+    let animIdx = 0
     let t = 0.001
     bone_canvas.onwheel = (e) => {
         if (e.deltaY < 0) {
