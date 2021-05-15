@@ -16,7 +16,8 @@
 
 ### 執行
 
-用瀏覽器打開 build/hw3/index.html
+用瀏覽器打開 build/hw3/index.html  
+瀏覽器需要支援 webgl2
 
 ### 安裝並打包
 
@@ -24,3 +25,7 @@
 npm i
 npm run build:hw3
 ```
+
+### 模型來源
+
+https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/Fox
