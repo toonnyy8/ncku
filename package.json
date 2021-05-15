@@ -28,7 +28,5 @@
         "gl-matrix": "^3.3.0",
         "vue": "^2.6.12"
     },
-    "devDependencies": {
-        "tailwindcss": "^2.1.2"
-    }
+    "devDependencies": {}
 }

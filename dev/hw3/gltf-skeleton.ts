@@ -5,15 +5,20 @@ import * as glm from "gl-matrix"
 export const getGlobalJointTransforms = (
     idx: number,
     nodes: gltf.Node[],
+    rotations: { [idx: number]: { x: number; y: number; z: number } },
     gMat: glm.mat4,
     jointMats: { [idx: number]: glm.mat4 }
 ) => {
+    let rotation = <glm.ReadonlyQuat>[...(nodes[idx]["rotation"] ?? [0, 0, 0, 0])]
+    rotation = glm.quat.rotateX(glm.quat.create(), rotation, rotations[idx].x)
+    rotation = glm.quat.rotateY(glm.quat.create(), rotation, rotations[idx].y)
+    rotation = glm.quat.rotateZ(glm.quat.create(), rotation, rotations[idx].z)
     jointMats[idx] = glm.mat4.mul(
         glm.mat4.create(),
         gMat,
         glm.mat4.fromRotationTranslationScale(
             glm.mat4.create(),
-            nodes[idx]["rotation"] || [0, 0, 0, 0],
+            rotation,
             nodes[idx]["translation"] || [0, 0, 0],
             nodes[idx]["scale"] || [1, 1, 1]
         )
@@ -23,6 +28,7 @@ export const getGlobalJointTransforms = (
             return getGlobalJointTransforms(
                 child,
                 nodes,
+                rotations,
                 jointMats[idx],
                 Object.assign({}, jointMats)
             )
@@ -134,18 +140,25 @@ export const getAnimNodes = (animStruct: AnimUnit[], time: number) => {
 export const getAnimGlobalJointTransforms = (
     idx: number,
     nodes: gltf.Node[],
+    rotations: { [idx: number]: { x: number; y: number; z: number } },
     animNodes: gltf.Node[],
     gMat: glm.mat4,
     jointMats: { [idx: number]: glm.mat4 }
 ): {
     [idx: number]: glm.mat4
 } => {
+    let rotation = <glm.ReadonlyQuat>[
+        ...(animNodes[idx]?.["rotation"] ?? nodes[idx]["rotation"] ?? [0, 0, 0, 0]),
+    ]
+    rotation = glm.quat.rotateX(glm.quat.create(), rotation, rotations[idx].x)
+    rotation = glm.quat.rotateY(glm.quat.create(), rotation, rotations[idx].y)
+    rotation = glm.quat.rotateZ(glm.quat.create(), rotation, rotations[idx].z)
     jointMats[idx] = glm.mat4.mul(
         glm.mat4.create(),
         gMat,
         glm.mat4.fromRotationTranslationScale(
             glm.mat4.create(),
-            animNodes[idx]?.["rotation"] ?? nodes[idx]["rotation"] ?? [0, 0, 0, 0],
+            rotation,
             animNodes[idx]?.["translation"] ?? nodes[idx]["translation"] ?? [0, 0, 0],
             animNodes[idx]?.["scale"] ?? nodes[idx]["scale"] ?? [1, 1, 1]
         )
@@ -155,6 +168,7 @@ export const getAnimGlobalJointTransforms = (
             return getAnimGlobalJointTransforms(
                 child,
                 nodes,
+                rotations,
                 animNodes,
                 jointMats[idx],
                 Object.assign({}, jointMats)
