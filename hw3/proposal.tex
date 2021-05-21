@@ -26,7 +26,7 @@
 \begin{document}
 \begin{CJK}{UTF8}{bkai}
    %%%%%%%%% TITLE
-   \title{Speech Enhancement}
+   \title{Contrastive Learning for Speech Enhancement}
 
    \author{
       郭品辰\\
@@ -43,35 +43,30 @@
 
    %%%%%%%%% ABSTRACT
    \begin{abstract}
-      當人聽過乾淨的語音之後，即使身處於吵鬧的環境中，依然可以
-      在腦中重建乾淨的聲音
-      The ABSTRACT is to be in fully-justified italicized text, at the top
-      of the left-hand column, below the author and affiliation
-      information. Use the word ``Abstract'' as the title, in 12-point
-      Times, boldface type, centered relative to the column, initially
-      capitalized. The abstract is to be in 10-point, single-spaced type.
-      Leave two blank lines after the Abstract, then begin the main text.
-      Look at previous CVPR abstracts to get a feel for style and length.
+      人類在聽過乾淨的聲音後，便有能力從吵雜的環境中把語音提取出來進而在腦中重建成乾淨的訊號。
+      我認為這是仰賴儲存於記憶中的，人類會將其與隱含在雜音中的語音進行匹配，並藉著用先驗知識中的聲音特徵替換掉噪音來合成乾淨的語音。
+      像是為語音增強的問題提供語言層級的知識這類相似研究已證實能增加模型濾除雜訊的效能(Liao et al., 2019)[1]。然而，即使是使用上了真實的音素資訊，其效果依然有
+      許多改善空間。這可能是由於在訓練時缺乏了噪音特徵與音素特徵之間匹配的約束條件，使得其容易選擇錯誤的特徵編碼。
+      因此，本研究將嘗試使用稀疏字典建語音特徵的編碼簿，並將利用卷積神經網路建構一個特徵分類器來辨識汙染之語音特徵，並使用字典索引作為分類標籤，使噪音特徵能夠用正確的特徵編碼進行替換。
    \end{abstract}
 
    %%%%%%%%% BODY TEXT
    \section{Introduction}
 
-   Please follow the steps outlined below when submitting your manuscript to
-   the IEEE Computer Society Press.  This style guide now has several
-   important modifications (for example, you are no longer warned against the
-   use of sticky tape to attach your artwork to the paper), so all authors
-   should read this new version.
+   許多與日常生活息息相關的任務都是仰賴語音作為資訊傳遞的媒介，像是電話通訊、語音辨識與助聽器等等。
+   然而在現實環境中充滿著各種不可預期的噪音干擾，這嚴重影響了語音訊號技術的效能。
+   因此，將這些雜訊去除的語音增強技術就成了對語音任務很重要前置處理單元。~\cite{Alpher04}
 
+   本次專題將會研究使用對比學習(Contrastive Learning)來抽取語音的特徵
    %-------------------------------------------------------------------------
    \subsection{Language}
 
-   All manuscripts must be in English.
+   All manuscripts must be in English~\cite{Authors14}.
 
    \subsection{Dual submission}
 
    Please refer to the author guidelines on the CVPR 2020 web page for a
-   discussion of the policy on dual submissions.
+   discussion of the policy on dual submissions.~\cite{Alpher04}
 
    \subsection{Paper length}
    Papers, excluding the references section,
@@ -232,7 +227,13 @@
    {\bf Q:} How do I cite my results reported in open challenges?
    {\bf A:} To conform with the double blind review policy, you can report results of other challenge participants together with your results in your paper. For your results, however, you should not identify yourself and should not mention your participation in the challenge. Instead present your results referring to the method proposed in your paper and draw conclusions based on the experimental comparison to other results.\medskip\\
 
-
+   \begin{figure*}
+      \begin{center}
+         \includegraphics[scale=0.35]{img/architecture.png}
+      \end{center}
+      \caption{Example of a short caption, which should be centered.}
+      \label{fig:short}
+   \end{figure*}
 
    \begin{figure}[t]
       \begin{center}
