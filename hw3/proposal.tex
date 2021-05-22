@@ -43,11 +43,7 @@
 
    %%%%%%%%% ABSTRACT
    \begin{abstract}
-      人類在聽過乾淨的聲音後，便有能力從吵雜的環境中把語音提取出來進而在腦中重建成乾淨的訊號。
-      我認為這是仰賴儲存於記憶中的，人類會將其與隱含在雜音中的語音進行匹配，並藉著用先驗知識中的聲音特徵替換掉噪音來合成乾淨的語音。
-      像是為語音增強的問題提供語言層級的知識這類相似研究已證實能增加模型濾除雜訊的效能(Liao et al., 2019)[1]。然而，即使是使用上了真實的音素資訊，其效果依然有
-      許多改善空間。這可能是由於在訓練時缺乏了噪音特徵與音素特徵之間匹配的約束條件，使得其容易選擇錯誤的特徵編碼。
-      因此，本研究將嘗試使用稀疏字典建語音特徵的編碼簿，並將利用卷積神經網路建構一個特徵分類器來辨識汙染之語音特徵，並使用字典索引作為分類標籤，使噪音特徵能夠用正確的特徵編碼進行替換。
+
    \end{abstract}
 
    %%%%%%%%% BODY TEXT
@@ -57,7 +53,13 @@
    然而在現實環境中充滿著各種不可預期的噪音干擾，這嚴重影響了語音訊號技術的效能。
    因此，將這些雜訊去除的語音增強技術就成了對語音任務很重要前置處理單元。~\cite{Alpher04}
 
-   本次專題將會研究使用對比學習(Contrastive Learning)來抽取語音的特徵
+   而語音增強的問題就是不論在何種噪音環境，面對相同的語音，模型都能夠抽取出相同的特徵，
+   進而利用與特徵來重構語音。
+   這部分想法與近年流行自監督方法中的對比學習(Contrastive Learning)不謀而合，
+   比對學習希望相似的樣本，其特徵編碼能越像越好，而不同樣本的特徵編碼則是相距越遠越好。
+
+   我們認為，藉由 CL 的方法來學習語音特徵的潛在編碼，再利用此特徵編碼還原語音，
+   應該會具備比一般深度學習的語音增強方法更高的通用性與泛化能力。
    %-------------------------------------------------------------------------
    \subsection{Language}
 
@@ -289,6 +291,8 @@
 
    %------------------------------------------------------------------------
    \section{System framework}
+   因應實驗環境的硬體限制，本專題將會基於 BYOL 與 SimSiam
+   這兩種在小型 batch size 也有良好成效的對比學習方法進行實驗。
 
    All text must be in a two-column format. The total allowable width of the
    text area is $6\frac78$ inches (17.5 cm) wide by $8\frac78$ inches (22.54
@@ -434,14 +438,17 @@
 
    %------------------------------------------------------------------------
    \section{Expected results}
+   本專題預計將會進行以下幾項實驗：
+   \begin{enumerate}
+      \item 直接對 AutoEncoder 訓練 Speech Enhancement 任務。
+      \item 基於 BYOL 對 Encoder 與 Bottleneck 進行預訓練後凍結參數，然後接上 Decoder 訓練 Speech Enhancement 任務。
+      \item 基於 SimSiam 對 Encoder 與 Bottleneck 進行預訓練後凍結參數，然後接上 Decoder 訓練 Speech Enhancement 任務。
+      \item 將 BYOL 訓練得到的參數作為初始權重後，對 AutoEncoder 訓練 Speech Enhancement 任務。
+      \item 將 SimSiam 訓練得到的參數作為初始權重後，對 AutoEncoder 訓練 Speech Enhancement 任務。
+      \item 基於不同數量的樣本進行上述實驗，以測試各種方法的范化能力。
+   \end{enumerate}
 
-   You must include your signed IEEE copyright release form when you submit
-   your finished paper. We MUST have this form before your paper can be
-   published in the proceedings.
-
-   Please direct any questions to the production editor in charge of these
-   proceedings at the IEEE Computer Society Press:
-   \url{https://www.computer.org/about/contact}.
+   並比較上述模型的性能優劣，並將最好的模型包裝為桌面應用。
 
 
    {\small
