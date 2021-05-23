@@ -49,8 +49,7 @@ Cees~H. Taal, Richard~C. Hendriks, Richard Heusdens, and Jesper Jensen.
 
 \bibitem{SISDR}
 Jonathan~Le Roux, Scott Wisdom, Hakan Erdogan, and John~R. Hershey.
-\newblock Sdr – half-baked or well done?
-\newblock {\em ICASSP 2019 - 2019 IEEE International Conference on Acoustics,
-  Speech and Signal Processing (ICASSP)}, May 2019.
+\newblock {SDR} - half-baked or well done?
+\newblock {\em CoRR}, abs/1811.02508, 2018.
 
 \end{thebibliography}
