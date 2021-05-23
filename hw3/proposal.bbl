@@ -1,12 +1,12 @@
 \begin{thebibliography}{1}
 
-\bibitem{DBLP:journals/corr/abs-2002-05709}
+\bibitem{SimCLR}
 Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey~E. Hinton.
 \newblock A simple framework for contrastive learning of visual
   representations.
 \newblock {\em CoRR}, abs/2002.05709, 2020.
 
-\bibitem{DBLP:journals/corr/abs-2006-07733}
+\bibitem{BYOL}
 Jean{-}Bastien Grill, Florian Strub, Florent Altch{\'{e}}, Corentin Tallec,
   Pierre~H. Richemond, Elena Buchatskaya, Carl Doersch, Bernardo~{\'{A}}vila
   Pires, Zhaohan~Daniel Guo, Mohammad~Gheshlaghi Azar, Bilal Piot, Koray
@@ -15,7 +15,7 @@ Jean{-}Bastien Grill, Florian Strub, Florent Altch{\'{e}}, Corentin Tallec,
   learning.
 \newblock {\em CoRR}, abs/2006.07733, 2020.
 
-\bibitem{DBLP:journals/corr/abs-2011-10566}
+\bibitem{SimSiam}
 Xinlei Chen and Kaiming He.
 \newblock Exploring simple siamese representation learning.
 \newblock {\em CoRR}, abs/2011.10566, 2020.
@@ -27,7 +27,7 @@ Guoning Hu and DeLiang Wang.
 \newblock {\em IEEE Transactions on Audio, Speech, and Language Processing},
   18(8):2067--2079, 2010.
 
-\bibitem{timit}
+\bibitem{TIMIT}
 J.~S. Garofolo, L.~F. Lamel, W.~M. Fisher, J.~G. Fiscus, D.~S. Pallett, and
   N.~L. Dahlgren.
 \newblock Darpa timit acoustic phonetic continuous speech corpus cdrom, 1993.

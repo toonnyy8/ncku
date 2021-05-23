@@ -62,36 +62,18 @@
    應該會具備比一般深度學習的語音增強方法更高的通用性與泛化能力。
    因此，對比學習應用於語音增強任務的可行性將會是本次專題的研究主軸。
 
-   然而，如同 SimCLR~\cite{DBLP:journals/corr/abs-2002-05709} 等等 CL 方法都需要使用到大量的負樣本輔助進行訓練，否則會發生
+   然而，如同 SimCLR~\cite{SimCLR} 等等 CL 方法都需要使用到大量的負樣本輔助進行訓練，否則會發生
    collapsing output 的問題，也就是不論輸入任何東西都只會有相同輸出。
    而大量的負樣本需求導致這些方法必須使用極大的 batch size 才能獲得良好效果，
    像是在 SimCLR 的論文中，實驗所使用的 batch size 就到達了 4096。
 
-   為了因應實驗環境的硬體限制，本專題將會基於 BYOL~\cite{DBLP:journals/corr/abs-2006-07733} 與
-   SimSiam~\cite{DBLP:journals/corr/abs-2011-10566}
+   為了因應實驗環境的硬體限制，本專題將會基於 BYOL~\cite{BYOL} 與
+   SimSiam~\cite{SimSiam}
    這兩種且在小型 batch size 也有良好成效的 CL 方法進行實驗，並與監督式語音增強方法進行比較。
 
-   % \begin{figure*}
-   %    \begin{center}
-   %       \includegraphics[scale=0.35]{img/architecture.png}
-   %    \end{center}
-   %    \caption{Example of a short caption, which should be centered.}
-   %    \label{fig:short}
-   % \end{figure*}
-
-
-
-   % \begin{figure*}
-   %    \begin{center}
-   %       \includegraphics[scale=0.35]{img/architecture.png}
-
-   %    \end{center}
-   %    \caption{Example of a short caption, which should be centered.}
-   %    \label{fig:short}
-   % \end{figure*}
    \begin{figure}[t]
       \begin{center}
-         \includegraphics[width=0.8\linewidth]{img/auto-encoder.png}
+         \includegraphics[width=1\linewidth]{img/auto-encoder.png}
       \end{center}
       \caption{
          語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。
@@ -102,7 +84,7 @@
 
    \begin{figure}[t]
       \begin{center}
-         \includegraphics[width=0.8\linewidth]{img/BYOL.png}
+         \includegraphics[width=1\linewidth]{img/BYOL.png}
       \end{center}
       \caption{
          BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標，
@@ -115,7 +97,7 @@
 
    \begin{figure}[t]
       \begin{center}
-         \includegraphics[width=0.8\linewidth]{img/SimSiam.png}
+         \includegraphics[width=1\linewidth]{img/SimSiam.png}
       \end{center}
       \caption{
          SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$，
@@ -140,7 +122,7 @@
    %------------------------------------------------------------------------
    \section{Expected results}
    本專題使用的噪音資料集是由 20 種不同類型的背景噪音所組成，總共有 100 個音檔的 Nonspeech~\cite{Nonspeech}。
-   而語音資料集則是選用 TIMIT~\cite{timit}，TIMIT 具有 6300 句語音，這些語音包含美國八個地區共 630 人所念出的 10
+   而語音資料集則是選用 TIMIT~\cite{TIMIT}，TIMIT 具有 6300 句語音，這些語音包含美國八個地區共 630 人所念出的 10
    個指定句子。在訓練時的噪聲語音是將 TIMIT 與 Nonspeech 以 -5, 0, 5 這三種 SNR 混合產生的。
 
 
