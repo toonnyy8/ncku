@@ -10,7 +10,8 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build:hw3": "esbuild ./dev/hw3/index.ts --bundle --outfile=./build/hw3/index.js --loader:.glb=binary --sourcemap"
+        "build:hw2": "esbuild ./hw2/dev/index.ts --bundle --outfile=./hw2/build/index.js --jsx-factory=h --jsx-fragment=Fragment --sourcemap",
+        "build:hw3": "esbuild ./hw3/dev/index.ts --bundle --outfile=./hw3/build/index.js --loader:.glb=binary --sourcemap"
     },
     "repository": {
         "type": "git",
