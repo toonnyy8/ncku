@@ -26,13 +26,9 @@
 \begin{document}
 \begin{CJK}{UTF8}{bkai}
    %%%%%%%%% TITLE
-   \title{Contrastive Learning for Speech Enhancement}
+   \title{Decoupling-NeRF: Decompose the scene and renderer in NeRF}
 
    \author{
-      郭品辰\\
-      F14066127\\
-      NCKU SNAME
-      \and
       黃仁鴻\\
       P76094169\\
       NCKU CSIE
@@ -48,82 +44,90 @@
 
    %%%%%%%%% BODY TEXT
    \section{Introduction}
+   於 2020 年提出的神經輻射場(Neural Radiance Field,
+   NeRF)~\cite{mildenhall2020nerf}利用簡單的類神經網路結構來擬和
+   Volume Rendering 的 3D 模型。
+   但 NeRF 的設計相當於是將 Renderer 與 Scene 嵌入於同一個類神經網路中，導致兩者具有高度耦合性而無法拆分。
+   因此每當需要更換場景時，NeRF 就需要重新進行訓練。而不像一般訓練完之後就能套用在不同場景中的深度學習方法。
 
-   許多與日常生活息息相關的任務都是仰賴語音作為資訊傳遞的媒介，像是電話通訊、語音辨識與助聽器等等。
-   然而在現實環境中充滿著各種不可預期的噪音干擾，這嚴重影響了語音訊號技術的效能。
-   因此，將這些雜訊去除的語音增強技術就成了對語音任務很重要的前置處理單元。
+   然而在一般 3D 場景的儲存與展示，都是將 Scene 與 Renderer 拆分開來，並將 Scene
+   作為輸入以取得對應視角的照片。這樣一來，Renderer 的部分就能重複利用於不同的
+   3D 場景上。對應於原本 NeRF 中，訓練所使用的照片便相當於嵌入 NeRF
+   之中的場景，若可以將照片改用於類神經網路的輸入，便等同將 Scene 與 Renderer 解耦合。
 
-   而語音增強的問題就是不論在何種噪音環境，面對相同的語音，模型都能夠抽取出相同的特徵，
-   進而利用與特徵來重構語音。
-   這部分想法與近年流行自監督方法中的對比學習(Contrastive Learning)不謀而合，
-   對比學習希望相似樣本間的特徵編碼能越像越好，而不同樣本的特徵差異則是越大越好。
+   因此，本次專題目標便是訓練出 Scene Encoder 對場景進行編碼照片，並使用 Multi Head Attention~\cite{AttentionIsAllYouNeed}
+   將其重新組建為 View Embedding，最後透過單一 Neural Renderer 生成場景照片。
 
-   我們認為，藉由 CL 的方法來學習語音特徵的潛在編碼，再利用此特徵編碼還原語音，
-   應該會具備比一般深度學習的語音增強方法更高的通用性與泛化能力。
-   因此，對比學習應用於語音增強任務的可行性將會是本次專題的研究主軸。
-
-   然而，如同 SimCLR~\cite{SimCLR} 等等 CL 方法都需要使用到大量的負樣本輔助進行訓練，否則會發生
-   collapsing output 的問題，也就是不論輸入任何東西都只會有相同輸出。
-   而大量的負樣本需求導致這些方法必須使用極大的 batch size 才能獲得良好效果，
-   像是在 SimCLR 的論文中，實驗所使用的 batch size 就到達了 4096。
-
-   為了因應實驗環境的硬體限制，本專題將會基於 BYOL~\cite{BYOL} 與
-   SimSiam~\cite{SimSiam}
-   這兩種且在小型 batch size 也有良好成效的 CL 方法進行實驗，並與監督式語音增強方法進行比較。
 
    \begin{figure}[t]
       \begin{center}
          \includegraphics[width=1\linewidth]{img/auto-encoder.png}
       \end{center}
       \caption{
-         語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。
+         預先訓練 Auto Encoder。
       }
-      \label{fig:long}
-      \label{fig:onecol}
+      \label{fig:auto-encoder}
    \end{figure}
 
    \begin{figure}[t]
       \begin{center}
-         \includegraphics[width=1\linewidth]{img/BYOL.png}
+         \includegraphics[width=1\linewidth]{img/encode-scene.png}
       \end{center}
       \caption{
-         BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標，
-         計算 L2 Loss 後更新 Encoder-PredictNet 的參數，
-         Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。
+         將場景照片透過 Encoder 編碼成 Scene Embedding。
       }
-      \label{fig:long}
-      \label{fig:onecol}
+      \label{fig:encode-scene}
    \end{figure}
+
+   \begin{figure*}
+      \begin{center}
+         \includegraphics[width=1\linewidth]{img/view-embedding.png}
+      \end{center}
+      \caption{
+         將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算
+         Multi Head Attention 來取得 View Embedding。
+      }
+      \label{fig:view-embedding}
+   \end{figure*}
 
    \begin{figure}[t]
       \begin{center}
-         \includegraphics[width=1\linewidth]{img/SimSiam.png}
+         \includegraphics[width=1\linewidth]{img/render-view.png}
       \end{center}
       \caption{
-         SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$，
-         在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$，
-         $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距，
-         以此更新 Encoder-PredictNet 的參數。
+         將 Figures~\ref{fig:view-embedding} 得到的 View Embedding 交由
+         Renderer 進行 Volume Rendering。
       }
-      \label{fig:long}
-      \label{fig:onecol}
+      \label{fig:render-view}
    \end{figure}
    %------------------------------------------------------------------------
    \section{System framework}
-   本專題使用的模型結構如 Figure 1. 所示，是由 Encoder 與 Decoder 兩區塊組合而成，
+   本專題訓練會區分成兩步驟，第一步如同 Figures~\ref{fig:auto-encoder}
+   所示，預訓練用於生成 Scene Embedding 與 Render 的
+   AutoEncoder。Figures~\ref{fig:view-embedding} 則代表第二步驟，訓練重構
+   View Embedding 的 Multi Head Attention Block
+   並再次調整第一步所獲得之 Renderer。
+
+   像是 Figures~\ref{fig:encode-scene} 中所示，先利用 Encoder 將少量圖片轉換成 Scene
+   Embedding。而在 Figures~\ref{fig:view-embedding}，每個 Embedding 皆會依據各自的拍攝角度、位置得到相對應的
+   Scene Position Encoding。再重構 View Embedding 時，便要先將拍攝視角轉換成 View Position
+   Encoding，並配合
+   其中，進入 Multi Head Attention Block 的資訊
+
+   本專題使用的模型結構如 是由 Encoder 與 Decoder 兩區塊組合而成，
    其中負責抽取語音特徵 Encoder 區塊將會使用 BYOL 與 SimSiam 進行預訓練。
    在進行 CL 訓練時，語音 $S$ 會混合 $N_1$ 與 $N_2$ 兩個不同的噪音後，輸入 Encoder
    取出語音的特徵向量，並用 Figure 2. 與 Figure 3. 所述的方法更新其內部權重\footnote{
       在 Figure 2. 與 Figure 3. 中的 X 符號代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
 
-   在使用 CL 預訓練完 Encoder 後，便會將其串接上
+   在使用 CL 預訓練完 Encoder~\ref{fig:view-embedding} 後，便會將其串接上
    Decoder，將乾淨的語音當成目標來進行語音增強任務的學習。更詳細的實驗內容在 Expected results 中。
 
 
    %------------------------------------------------------------------------
    \section{Expected results}
-   本專題使用的噪音資料集是由 20 種不同類型的背景噪音所組成，總共有 100 個音檔的 Nonspeech~\cite{Nonspeech}。
-   而語音資料集則是選用 TIMIT~\cite{TIMIT}，TIMIT 具有 6300 句語音，這些語音包含美國八個地區共 630 人所念出的 10
+   本專題使用的噪音資料集是由 20 種不同類型的背景噪音所組成，總共有 100 個音檔的 Nonspeech~\cite{mildenhall2020nerf}。
+   而語音資料集則是選用 TIMIT~\cite{mildenhall2020nerf}，TIMIT 具有 6300 句語音，這些語音包含美國八個地區共 630 人所念出的 10
    個指定句子。在訓練時的噪聲語音是將 TIMIT 與 Nonspeech 以 -5, 0, 5 這三種 SNR 混合產生的。
 
 
@@ -143,11 +147,11 @@
       \item 基於不同數量的樣本進行上述實驗，以測試各種方法的泛化能力。
    \end{enumerate}
 
-   最終將比較上述不同方法所訓練得到模型的 PESQ\cite{PESQ}、STOI\cite{STOI} 與 SISDR\cite{SISDR}。
+   最終將比較上述不同方法所訓練得到模型的 PESQ\cite{mildenhall2020nerf}、STOI\cite{mildenhall2020nerf} 與 SISDR\cite{mildenhall2020nerf}。
 
 
    {\small
-   \bibliographystyle{unsrt}
+   \bibliographystyle{ieee_fullname}
    \bibliography{egbib}
    }
 \end{CJK}

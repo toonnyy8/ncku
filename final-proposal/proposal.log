@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.5.18)  24 MAY 2021 00:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.5.18)  27 MAY 2021 00:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/proposal.tex
-(c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/proposal.tex
+**c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex
+(c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex
 LaTeX2e <2020-10-01> patch level 4
 L3 programming layer <2021-02-18> (d:/texlive/2021/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2020/04/10 v1.4m Standard LaTeX document class
@@ -22,9 +22,9 @@ File: size10.clo 2020/04/10 v1.4m Standard LaTeX file (size option)
 \abovecaptionskip=\skip47
 \belowcaptionskip=\skip48
 \bibindent=\dimen138
-) (c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/cvpr.sty (c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/eso-pic.sty
+) (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/cvpr.sty (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/eso-pic.sty
 Package: eso-pic 2002/11/16 v1.1b eso-pic (RN)
- (c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/cvpr_eso.sty
+ (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/cvpr_eso.sty
 
 LaTeX Warning: You have requested package `eso-pic',
                but the package provides `everyshi'.
@@ -322,20 +322,7 @@ File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count280
 \l__pdf_internal_box=\box52
-) (c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/proposal.aux
-
-LaTeX Warning: Label `fig:long' multiply defined.
-
-
-LaTeX Warning: Label `fig:onecol' multiply defined.
-
-
-LaTeX Warning: Label `fig:long' multiply defined.
-
-
-LaTeX Warning: Label `fig:onecol' multiply defined.
-
-)
+) (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.aux)
 \openout1 = `proposal.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
@@ -465,64 +452,76 @@ File: UTF8.enc 2015/04/18 4.8.4
 ) (d:/texlive/2021/texmf-dist/tex/latex/cjk/texinput/UTF8/UTF8.chr
 File: UTF8.chr 2015/04/18 4.8.4
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 43.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 39.
  (d:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 43.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 39.
  (d:/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for C70+bkai on input line 43.
+LaTeX Font Info:    Trying to load font information for C70+bkai on input line 39.
  (d:/texlive/2021/texmf-dist/tex/latex/cjk/texinput/UTF8/c70bkai.fd
 File: c70bkai.fd 2015/04/18 4.8.4
 ) (d:/texlive/2021/texmf-dist/tex/latex/cjk/texinput/UTF8/c70bkai.fdx
 File: c70bkai.fdx 2015/04/18 4.8.4
 )
-<img/auto-encoder.png, id=7, 882.1758pt x 453.3738pt>
+<img/auto-encoder.png, id=6, 755.9442pt x 743.4174pt>
 File: img/auto-encoder.png Graphic file (type png)
 <use img/auto-encoder.png>
-Package pdftex.def Info: img/auto-encoder.png  used on input line 76.
-(pdftex.def)             Requested size: 237.13594pt x 121.86604pt.
-<img/BYOL.png, id=9, 924.0924pt x 606.5862pt>
-File: img/BYOL.png Graphic file (type png)
-<use img/BYOL.png>
-Package pdftex.def Info: img/BYOL.png  used on input line 87.
-(pdftex.def)             Requested size: 237.13594pt x 155.65392pt.
-<img/SimSiam.png, id=10, 888.921pt x 732.8178pt>
-File: img/SimSiam.png Graphic file (type png)
-<use img/SimSiam.png>
-Package pdftex.def Info: img/SimSiam.png  used on input line 100.
-(pdftex.def)             Requested size: 237.13594pt x 195.49289pt.
+Package pdftex.def Info: img/auto-encoder.png  used on input line 64.
+(pdftex.def)             Requested size: 237.13594pt x 233.20216pt.
+<img/encode-scene.png, id=8, 1305.1962pt x 783.4068pt>
+File: img/encode-scene.png Graphic file (type png)
+<use img/encode-scene.png>
+Package pdftex.def Info: img/encode-scene.png  used on input line 74.
+(pdftex.def)             Requested size: 237.13594pt x 142.33401pt.
+<img/view-embedding.png, id=9, 1264.725pt x 822.9144pt>
+File: img/view-embedding.png Graphic file (type png)
+<use img/view-embedding.png>
+Package pdftex.def Info: img/view-embedding.png  used on input line 84.
+(pdftex.def)             Requested size: 496.85625pt x 323.28342pt.
+<img/render-view.png, id=10, 768.9528pt x 564.6696pt>
+File: img/render-view.png Graphic file (type png)
+<use img/render-view.png>
+Package pdftex.def Info: img/render-view.png  used on input line 95.
+(pdftex.def)             Requested size: 237.13594pt x 174.13245pt.
+
+Underfull \vbox (badness 1888) has occurred while \output is active []
+
  [1{d:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
- <c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/img/auto-encoder.png> <c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/img/BYOL.png>] (c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/proposal.bbl
-Underfull \hbox (badness 1014) in paragraph at lines 24--29
-[]\OT1/ptm/m/n/9 Guoning Hu and DeLiang Wang.  A tan-dem al-go-rithm
+ <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/auto-encoder.png> <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/encode-scene.png
+
+pdfTeX warning: pdflatex.exe (file c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/encode-scene.png): large interlaced PNG might cause out of memory (use non-interlaced PNG to fix this)
+>]
+Underfull \vbox (badness 1314) has occurred while \output is active []
+
+ [2 <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/view-embedding.png
+
+pdfTeX warning: pdflatex.exe (file c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/view-embedding.png): large interlaced PNG might cause out of memory (use non-interlaced PNG to fix this)
+> <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/render-view.png>] (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.bbl
+Underfull \hbox (badness 2608) in paragraph at lines 4--9
+[]\OT1/ptm/m/n/9 Ben Milden-hall, Pratul P. Srini-vasan, Matthew Tan-cik,
  []
 
-) [2 <c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/img/SimSiam.png
+) [3
 
-pdfTeX warning: pdflatex.exe (file c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/img/SimSiam.png): large interlaced PNG might cause out of memory (use non-interlaced PNG to fix this)
->] (c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/proposal.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
- ) 
+] (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.aux) ) 
 Here is how much of TeX's memory you used:
- 10977 strings out of 480901
- 156934 string characters out of 5906224
- 466965 words of memory out of 5000000
- 27908 multiletter control sequences out of 15000+600000
- 467472 words of font info for 219 fonts, out of 8000000 for 9000
+ 10880 strings out of 480901
+ 155674 string characters out of 5906224
+ 460594 words of memory out of 5000000
+ 27824 multiletter control sequences out of 15000+600000
+ 459339 words of font info for 191 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 83i,8n,88p,491b,1123s stack positions out of 5000i,500n,10000p,200000b,80000s
-{d:/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc}<d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu30.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu50.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu51.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu52.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu53.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu54.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu55.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu56.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu57.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu58.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu59.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu60.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu61.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu62.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu63.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu64.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu65.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu66.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu67.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu68.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu69.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu70.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu71.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu72.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu73.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu74.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu75.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu76.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu77.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu78.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu79.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu80.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu81.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu82.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu84.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu85.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu86.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu88.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu89.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu90.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu91.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu95.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu96.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu97.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu98.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiuff.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on c:/Users/Lenovo/Desktop/programs/side-project/ncku/hw3/proposal.pdf (2 pages, 597103 bytes).
+ 83i,8n,88p,363b,1123s stack positions out of 5000i,500n,10000p,200000b,80000s
+{d:/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc}<d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu20.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu30.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu50.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu51.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu52.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu53.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu54.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu55.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu56.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu57.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu58.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu59.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu60.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu61.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu62.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu63.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu64.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu65.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu66.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu67.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu68.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu69.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu70.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu71.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu72.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu73.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu75.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu76.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu78.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu79.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu80.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu81.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu82.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu86.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu88.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu89.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu90.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu91.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu95.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu96.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu97.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu98.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiuff.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.pdf (3 pages, 3492453 bytes).
 PDF statistics:
- 387 PDF objects out of 1000 (max. 8388607)
- 293 compressed objects within 3 object streams
- 25 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 361 PDF objects out of 1000 (max. 8388607)
+ 271 compressed objects within 3 object streams
+ 21 named destinations out of 1000 (max. 500000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

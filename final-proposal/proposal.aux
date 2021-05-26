@@ -16,34 +16,26 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
-\citation{SimCLR}
-\citation{BYOL}
-\citation{SimSiam}
-\citation{Nonspeech}
-\citation{TIMIT}
+\citation{mildenhall2020nerf}
+\citation{AttentionIsAllYouNeed}
+\citation{mildenhall2020nerf}
+\citation{mildenhall2020nerf}
 \@writefile{toc}{\contentsline {section}{\numberline {1}\hskip -1em.\nobreakspace  {}Introduction}{1}{section.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2}\hskip -1em.\nobreakspace  {}System framework}{1}{section.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。 }}{1}{figure.1}\protected@file@percent }
-\newlabel{fig:long}{{1}{1}{語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。}{figure.1}{}}
-\newlabel{fig:onecol}{{1}{1}{語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。}{figure.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces  BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標， 計算 L2 Loss 後更新 Encoder-PredictNet 的參數， Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。 }}{1}{figure.2}\protected@file@percent }
-\newlabel{fig:long}{{2}{1}{BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標， 計算 L2 Loss 後更新 Encoder-PredictNet 的參數， Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。}{figure.2}{}}
-\newlabel{fig:onecol}{{2}{1}{BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標， 計算 L2 Loss 後更新 Encoder-PredictNet 的參數， Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。}{figure.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Expected results}{1}{section.3}\protected@file@percent }
-\citation{PESQ}
-\citation{STOI}
-\citation{SISDR}
-\bibstyle{unsrt}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  預先訓練 Auto Encoder。 }}{1}{figure.1}\protected@file@percent }
+\newlabel{fig:auto-encoder}{{1}{1}{預先訓練 Auto Encoder。}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces  將場景照片透過 Encoder 編碼成 Scene Embedding。 }}{1}{figure.2}\protected@file@percent }
+\newlabel{fig:encode-scene}{{2}{1}{將場景照片透過 Encoder 編碼成 Scene Embedding。}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces  將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算 Multi Head Attention 來取得 View Embedding。 }}{2}{figure.3}\protected@file@percent }
+\newlabel{fig:view-embedding}{{3}{2}{將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算 Multi Head Attention 來取得 View Embedding。}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  將 Figures\nobreakspace  {}\ref  {fig:view-embedding} 得到的 View Embedding 交由 Renderer 進行 Volume Rendering。 }}{2}{figure.4}\protected@file@percent }
+\newlabel{fig:render-view}{{4}{2}{將 Figures~\ref {fig:view-embedding} 得到的 View Embedding 交由 Renderer 進行 Volume Rendering。}{figure.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Expected results}{2}{section.3}\protected@file@percent }
+\citation{mildenhall2020nerf}
+\citation{mildenhall2020nerf}
+\citation{mildenhall2020nerf}
+\bibstyle{ieee_fullname}
 \bibdata{egbib}
-\bibcite{SimCLR}{1}
-\bibcite{BYOL}{2}
-\bibcite{SimSiam}{3}
-\bibcite{Nonspeech}{4}
-\bibcite{TIMIT}{5}
-\bibcite{PESQ}{6}
-\bibcite{STOI}{7}
-\bibcite{SISDR}{8}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces  SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$， 在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$， $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距， 以此更新 Encoder-PredictNet 的參數。 }}{2}{figure.3}\protected@file@percent }
-\newlabel{fig:long}{{3}{2}{SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$， 在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$， $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距， 以此更新 Encoder-PredictNet 的參數。}{figure.3}{}}
-\newlabel{fig:onecol}{{3}{2}{SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$， 在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$， $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距， 以此更新 Encoder-PredictNet 的參數。}{figure.3}{}}
-\gdef \@abspage@last{2}
+\bibcite{mildenhall2020nerf}{1}
+\bibcite{AttentionIsAllYouNeed}{2}
+\gdef \@abspage@last{3}
