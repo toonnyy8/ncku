@@ -47,26 +47,34 @@
    於 2020 年提出的神經輻射場(Neural Radiance Field,
    NeRF)~\cite{mildenhall2020nerf}利用簡單的類神經網路結構來擬和
    Volume Rendering 的 3D 模型。
-   但 NeRF 的設計相當於是將 Renderer 與 Scene 嵌入於同一個類神經網路中，導致兩者具有高度耦合性而無法拆分。
+   但 NeRF 的設計如 Fig.~\ref{fig:NeRF-is-content-coupling}，相當於是將
+   Renderer 與 Scene 嵌入於同一個類神經網路中，導致兩者具有高度耦合性而無法拆分。
    因此每當需要更換場景時，NeRF 就需要重新進行訓練。而不像一般訓練完之後就能套用在不同場景中的深度學習方法。
+
+   \begin{figure}[b]
+      \begin{center}
+         \includegraphics[width=0.8\linewidth]{img/NeRF-is-content-coupling.png}
+      \end{center}
+      \caption{
+         NeRF 的設計使 Scene 與 Renderer 具有高度耦合性，使 Scene 內嵌於模型當中無法分離。
+      }
+      \label{fig:NeRF-is-content-coupling}
+   \end{figure}
 
    然而在一般 3D 場景的儲存與展示，都是將 Scene 與 Renderer 拆分開來，並將 Scene
    作為輸入以取得對應視角的照片。這樣一來，Renderer 的部分就能重複利用於不同的
-   3D 場景上。對應於原本 NeRF 中，訓練所使用的照片便相當於嵌入 NeRF
-   之中的場景，若可以將照片改用於類神經網路的輸入，便等同將 Scene 與 Renderer 解耦合。
-
-   因此，本次專題目標便是訓練出 Scene Encoder 對場景進行編碼照片，並使用 Multi Head Attention~\cite{AttentionIsAllYouNeed}
-   將其重新組建為 View Embedding，最後透過單一 Neural Renderer 生成場景照片。
-
-
+   3D 場景上。對應於原本 NeRF 中，訓練所使用的照片便相當於嵌入在 NeRF
+   內的場景，若可以將照片改用於模型的輸入，便可將 Scene 與 Renderer 解耦合。
    \begin{figure}[t]
       \begin{center}
-         \includegraphics[width=1\linewidth]{img/auto-encoder.png}
+         \includegraphics[width=0.9\linewidth]{img/Decoupling-NeRF.png}
       \end{center}
       \caption{
-         預先訓練 Auto Encoder。
+         本次專題所提出的 Decoupling-NeRF 就是希望讓 Scene
+         資訊與 Rebuild View 獨立出來。當要替換繪製場景時就不需要再經過耗時的訓練，只需要變更輸入的
+         Scene Images 跟 Scene Position Encoding 即可。
       }
-      \label{fig:auto-encoder}
+      \label{fig:Decoupling-NeRF}
    \end{figure}
 
    \begin{figure}[t]
@@ -81,74 +89,78 @@
 
    \begin{figure*}
       \begin{center}
-         \includegraphics[width=1\linewidth]{img/view-embedding.png}
+         \includegraphics[width=1\linewidth]{img/rebuild-view.png}
       \end{center}
       \caption{
          將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算
          Multi Head Attention 來取得 View Embedding。
       }
-      \label{fig:view-embedding}
+      \label{fig:rebuild-view}
    \end{figure*}
 
-   \begin{figure}[t]
+   因此，本次專題研究目標便是提出 Decoupling-NeRF 這個架構，使其可以快速應用在各種場景而不需要重新擬和。
+   Fig.~\ref{fig:Decoupling-NeRF} 是本次專題的架構，將隱含於 NeRF
+   中的 Renderer 與 Rebuild 分開，並利用 Scene Encoder
+   對場景照片進行編碼，在 Rebuild View 使用 Multi Head Attention~\cite{AttentionIsAllYouNeed}
+   將其重新組建為 View Embedding，最後透過單一 Neural Renderer 生成場景照片。
+
+   \begin{figure}[htbp]
       \begin{center}
          \includegraphics[width=1\linewidth]{img/render-view.png}
       \end{center}
       \caption{
-         將 Figures~\ref{fig:view-embedding} 得到的 View Embedding 交由
+         將 Fig.~\ref{fig:rebuild-view} 得到的 View Embedding 交由
          Renderer 進行 Volume Rendering。
       }
       \label{fig:render-view}
    \end{figure}
+
+   \begin{figure}[htbp]
+      \begin{center}
+         \includegraphics[width=1\linewidth]{img/auto-encoder.png}
+      \end{center}
+      \caption{
+         預先訓練 Auto Encoder。
+      }
+      \label{fig:auto-encoder}
+   \end{figure}
    %------------------------------------------------------------------------
    \section{System framework}
-   本專題訓練會區分成兩步驟，第一步如同 Figures~\ref{fig:auto-encoder}
-   所示，預訓練用於生成 Scene Embedding 與 Render 的
-   AutoEncoder。Figures~\ref{fig:view-embedding} 則代表第二步驟，訓練重構
-   View Embedding 的 Multi Head Attention Block
-   並再次調整第一步所獲得之 Renderer。
 
-   像是 Figures~\ref{fig:encode-scene} 中所示，先利用 Encoder 將少量圖片轉換成 Scene
-   Embedding。而在 Figures~\ref{fig:view-embedding}，每個 Embedding 皆會依據各自的拍攝角度、位置得到相對應的
-   Scene Position Encoding。再重構 View Embedding 時，便要先將拍攝視角轉換成 View Position
-   Encoding，並配合
-   其中，進入 Multi Head Attention Block 的資訊
+   在原版的 NeRF 中，會使用目標視角的位置編碼(Position Encoding,
+   PE)作為輸入，以生成該視角會拍攝到場景照片，而 Position Encoding
+   是將相機的位置資訊 Eq.~\ref{eq:position-encoding} 轉換所得:
+   \begin{equation}
+      \begin{aligned}
+         PE(p)=[sin(2^{0}{\pi}{p}),~cos(2^{0}{\pi}{p}),~..., \\
+         sin(2^{L-1}{\pi}{p}),~cos(2^{L-1}{\pi}{p})]
+      \end{aligned}
+      \label{eq:position-encoding}
+   \end{equation}
 
-   本專題使用的模型結構如 是由 Encoder 與 Decoder 兩區塊組合而成，
-   其中負責抽取語音特徵 Encoder 區塊將會使用 BYOL 與 SimSiam 進行預訓練。
-   在進行 CL 訓練時，語音 $S$ 會混合 $N_1$ 與 $N_2$ 兩個不同的噪音後，輸入 Encoder
-   取出語音的特徵向量，並用 Figure 2. 與 Figure 3. 所述的方法更新其內部權重\footnote{
-      在 Figure 2. 與 Figure 3. 中的 X 符號代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
+   本專題架構如 Fig.~\ref{fig:Decoupling-NeRF} 所示，可以分成 Scene Encoder、Rebuild View 與 Renderer
+   三個區塊。在進行照片生成時，先將多張場景照片編碼成 Scene Embedding(Fig.~\ref{fig:encode-scene})，再配合對應的 Scene PE 及生成目標的 View
+   PE，將這三者以 Fig.~\ref{fig:rebuild-view} 的形式建立出
+   View Embedding，最後再交由 Renderer 產生視圖(Fig.~\ref{fig:render-view})。
 
-   在使用 CL 預訓練完 Encoder~\ref{fig:view-embedding} 後，便會將其串接上
-   Decoder，將乾淨的語音當成目標來進行語音增強任務的學習。更詳細的實驗內容在 Expected results 中。
+   在 Fig.~\ref{fig:rebuild-view} 中，利用了 Vaswani et al.~\cite{AttentionIsAllYouNeed} 所提出的
+   Multi Head Attention 來將 Scene Embedding 重新組織成需要的 View Embedding。其計算方法如 Eq.~\ref{eq:multi-head-attention}:
+   \begin{equation}
+      \begin{aligned}
+         MHA(Q, K, V) = Concat(head_{1},...,head_{h})W^{O}      \\
+         head_{i} = Attention(QW^{Q}_{i},KW^{K}_{i},VW^{V}_{i}) \\
+         Attention(Q, K, V ) = softmax(\frac{QK^{T}}{\sqrt{d_{k}}})V
+      \end{aligned}
+      \label{eq:multi-head-attention}
+   \end{equation}
 
+   在訓練階段則可分為兩個步驟，第一步會把架構中的 Scene Encoder 及 Renderer 以 Auto Encoder 的形式進行遇訓練(如
+   Fig.~\ref{fig:auto-encoder})。而步驟二不僅要訓練 Rebuild View，還會讓 Renderer 再次學習。
 
    %------------------------------------------------------------------------
    \section{Expected results}
-   本專題使用的噪音資料集是由 20 種不同類型的背景噪音所組成，總共有 100 個音檔的 Nonspeech~\cite{mildenhall2020nerf}。
-   而語音資料集則是選用 TIMIT~\cite{mildenhall2020nerf}，TIMIT 具有 6300 句語音，這些語音包含美國八個地區共 630 人所念出的 10
-   個指定句子。在訓練時的噪聲語音是將 TIMIT 與 Nonspeech 以 -5, 0, 5 這三種 SNR 混合產生的。
-
-
-   % 本專題分別使用 TIMIT~\cite{timit} 與 Nonspeech~\cite{Nonspeech}
-   % 作為語音和雜訊的資料集，並以 -5, 0, 5 這三種 SNR 混合成的噪聲語音當模型輸入。
-   % Nonspeech 是由 20 種不同類型的背景噪音所組成，總共有 100
-   % 個音檔，而 TIMIT 則為 6300 句語音組成資料集，這些語音包含美國八個地區共 630 人所念出的 10
-   % 個指定句子。
-
-   本專題預計將會進行以下幾項實驗：
-   \begin{enumerate}
-      \item 直接對 AutoEncoder 訓練 Speech Enhancement 任務。
-      \item 基於 BYOL 對 Encoder 與 Bottleneck 進行預訓練後凍結參數，然後接上 Decoder 訓練 Speech Enhancement 任務。
-      \item 基於 SimSiam 對 Encoder 與 Bottleneck 進行預訓練後凍結參數，然後接上 Decoder 訓練 Speech Enhancement 任務。
-      \item 將 BYOL 訓練得到的參數作為初始權重後，對 AutoEncoder 訓練 Speech Enhancement 任務。
-      \item 將 SimSiam 訓練得到的參數作為初始權重後，對 AutoEncoder 訓練 Speech Enhancement 任務。
-      \item 基於不同數量的樣本進行上述實驗，以測試各種方法的泛化能力。
-   \end{enumerate}
-
-   最終將比較上述不同方法所訓練得到模型的 PESQ\cite{mildenhall2020nerf}、STOI\cite{mildenhall2020nerf} 與 SISDR\cite{mildenhall2020nerf}。
-
+   本專題將會使用 NeRF 提供的資料集\footnote{Link https://drive.google.com/drive/folders/128yBriW1IG\_3NJ5Rp7APSTZsJqdJdfc1}進行訓練與測試，其中提供了
+   8 種場景與 8 個物件的多張照片及拍攝視角，並且以區分成訓練、驗證跟測試集。在將模型訓練完成後，會測試不同數量的場景照片對生成能力的影響。並期望能將其製作成網頁應用，以方便在各種行動裝置上使用。
 
    {\small
    \bibliographystyle{ieee_fullname}

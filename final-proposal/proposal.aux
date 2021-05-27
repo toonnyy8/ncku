@@ -18,24 +18,26 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{mildenhall2020nerf}
 \citation{AttentionIsAllYouNeed}
-\citation{mildenhall2020nerf}
-\citation{mildenhall2020nerf}
 \@writefile{toc}{\contentsline {section}{\numberline {1}\hskip -1em.\nobreakspace  {}Introduction}{1}{section.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}\hskip -1em.\nobreakspace  {}System framework}{1}{section.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  預先訓練 Auto Encoder。 }}{1}{figure.1}\protected@file@percent }
-\newlabel{fig:auto-encoder}{{1}{1}{預先訓練 Auto Encoder。}{figure.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces  將場景照片透過 Encoder 編碼成 Scene Embedding。 }}{1}{figure.2}\protected@file@percent }
-\newlabel{fig:encode-scene}{{2}{1}{將場景照片透過 Encoder 編碼成 Scene Embedding。}{figure.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces  將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算 Multi Head Attention 來取得 View Embedding。 }}{2}{figure.3}\protected@file@percent }
-\newlabel{fig:view-embedding}{{3}{2}{將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算 Multi Head Attention 來取得 View Embedding。}{figure.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  將 Figures\nobreakspace  {}\ref  {fig:view-embedding} 得到的 View Embedding 交由 Renderer 進行 Volume Rendering。 }}{2}{figure.4}\protected@file@percent }
-\newlabel{fig:render-view}{{4}{2}{將 Figures~\ref {fig:view-embedding} 得到的 View Embedding 交由 Renderer 進行 Volume Rendering。}{figure.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Expected results}{2}{section.3}\protected@file@percent }
-\citation{mildenhall2020nerf}
-\citation{mildenhall2020nerf}
-\citation{mildenhall2020nerf}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  NeRF 的設計使 Scene 與 Renderer 具有高度耦合性，使 Scene 內嵌於模型當中無法分離。 }}{1}{figure.1}\protected@file@percent }
+\newlabel{fig:NeRF-is-content-coupling}{{1}{1}{NeRF 的設計使 Scene 與 Renderer 具有高度耦合性，使 Scene 內嵌於模型當中無法分離。}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces  本次專題所提出的 Decoupling-NeRF 就是希望讓 Scene 資訊與 Rebuild View 獨立出來。當要替換繪製場景時就不需要再經過耗時的訓練，只需要變更輸入的 Scene Images 跟 Scene Position Encoding 即可。 }}{1}{figure.2}\protected@file@percent }
+\newlabel{fig:Decoupling-NeRF}{{2}{1}{本次專題所提出的 Decoupling-NeRF 就是希望讓 Scene 資訊與 Rebuild View 獨立出來。當要替換繪製場景時就不需要再經過耗時的訓練，只需要變更輸入的 Scene Images 跟 Scene Position Encoding 即可。}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces  將場景照片透過 Encoder 編碼成 Scene Embedding。 }}{1}{figure.3}\protected@file@percent }
+\newlabel{fig:encode-scene}{{3}{1}{將場景照片透過 Encoder 編碼成 Scene Embedding。}{figure.3}{}}
+\citation{AttentionIsAllYouNeed}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算 Multi Head Attention 來取得 View Embedding。 }}{2}{figure.4}\protected@file@percent }
+\newlabel{fig:rebuild-view}{{4}{2}{將目標視角的位置編碼作為 Querys，與 Scene Embedding 及其對應的位置編碼計算 Multi Head Attention 來取得 View Embedding。}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces  將 Fig.\nobreakspace  {}\ref  {fig:rebuild-view} 得到的 View Embedding 交由 Renderer 進行 Volume Rendering。 }}{2}{figure.5}\protected@file@percent }
+\newlabel{fig:render-view}{{5}{2}{將 Fig.~\ref {fig:rebuild-view} 得到的 View Embedding 交由 Renderer 進行 Volume Rendering。}{figure.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}\hskip -1em.\nobreakspace  {}System framework}{2}{section.2}\protected@file@percent }
+\newlabel{eq:position-encoding}{{1}{2}{\hskip -1em.~System framework}{equation.2.1}{}}
 \bibstyle{ieee_fullname}
 \bibdata{egbib}
 \bibcite{mildenhall2020nerf}{1}
 \bibcite{AttentionIsAllYouNeed}{2}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  預先訓練 Auto Encoder。 }}{3}{figure.6}\protected@file@percent }
+\newlabel{fig:auto-encoder}{{6}{3}{預先訓練 Auto Encoder。}{figure.6}{}}
+\newlabel{eq:multi-head-attention}{{2}{3}{\hskip -1em.~System framework}{equation.2.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Expected results}{3}{section.3}\protected@file@percent }
 \gdef \@abspage@last{3}
