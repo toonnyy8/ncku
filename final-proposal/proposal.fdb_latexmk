@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex proposal"] 1622129934 "proposal.aux" "proposal.bbl" "proposal" 1622130931
+["bibtex proposal"] 1622129934 "proposal.aux" "proposal.bbl" "proposal" 1622131455
   "./ieee_fullname.bst" 1552126650 19905 72b73f4cb1c51eaa1a7af8ecad2b6bfb ""
   "egbib.bib" 1622020954 2617 5e958cbfbe350d5686a88902b18bee14 ""
-  "proposal.aux" 1622130801 3864 e07e617edd5742a18c57ff0b021851ec "pdflatex"
+  "proposal.aux" 1622131453 3864 e07e617edd5742a18c57ff0b021851ec "pdflatex"
   (generated)
   "proposal.blg"
   "proposal.bbl"
-["pdflatex"] 1622130797 "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.pdf" "proposal" 1622130931
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.aux" 1622130801 3864 e07e617edd5742a18c57ff0b021851ec ""
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" 1622130930 7229 fc9eecb8eeb93566cc501d5fe2678d22 ""
+["pdflatex"] 1622131449 "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.pdf" "proposal" 1622131455
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.aux" 1622131453 3864 e07e617edd5742a18c57ff0b021851ec ""
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" 1622131447 7231 184afca5eee3c67f2633699402a236f7 ""
   "cvpr.sty" 1566283652 8185 9c85e63bb1830fdefeac27370f229c9e ""
   "cvpr_eso.sty" 1506757308 3878 6aa7c08ff2621006e0603349e40a30a8 ""
   "d:/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc" 1621331440 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -261,12 +261,12 @@
   "img/encode-scene.png" 1622040185 1861367 72b6f4380a8e09d3854662dae4886005 ""
   "img/rebuild-view.png" 1622130172 257895 0f5d53af1163a61af777c451e2d911cb ""
   "img/render-view.png" 1622040475 861257 7e580470625fae588a779dff2f67b02e ""
-  "proposal.aux" 1622130801 3864 e07e617edd5742a18c57ff0b021851ec "pdflatex"
+  "proposal.aux" 1622131453 3864 e07e617edd5742a18c57ff0b021851ec "pdflatex"
   "proposal.bbl" 1622129935 709 9ed7d743a0b0962bc8d05136be96e36b "bibtex proposal"
-  "proposal.tex" 1622130930 7229 fc9eecb8eeb93566cc501d5fe2678d22 ""
+  "proposal.tex" 1622131447 7231 184afca5eee3c67f2633699402a236f7 ""
   (generated)
-  "proposal.aux"
-  "proposal.pdf"
   "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.log"
   "proposal.log"
   "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.pdf"
+  "proposal.aux"
+  "proposal.pdf"
