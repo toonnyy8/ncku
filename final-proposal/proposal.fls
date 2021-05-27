@@ -699,10 +699,11 @@ INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu89.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu91.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu90.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu88.tfm
-INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu5b.tfm
-INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu5f.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu6d.tfm
+INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu5b.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu7f.tfm
+INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu5f.tfm
+INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu53.tfm
 INPUT c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/NeRF-is-content-coupling.png
 INPUT c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/NeRF-is-content-coupling.png
 INPUT c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/NeRF-is-content-coupling.png
@@ -734,7 +735,6 @@ INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu96.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu30.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu95.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu70.tfm
-INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu53.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu61.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu72.tfm
 INPUT c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/Decoupling-NeRF.png
@@ -748,7 +748,6 @@ INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu98.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu62.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu63.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu66.tfm
-INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu8b.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu8c.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu73.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu7a.tfm
@@ -760,6 +759,7 @@ INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu97.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu7d.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu90.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu53.tfm
+INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu8b.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu8f.tfm
 INPUT d:/texlive/2021/texmf-dist/fonts/tfm/arphic/bkaiu/bkaiu8d.tfm
 INPUT c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/img/encode-scene.png

@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex proposal"] 1622128449 "proposal.aux" "proposal.bbl" "proposal" 1622128457
+["bibtex proposal"] 1622129934 "proposal.aux" "proposal.bbl" "proposal" 1622130931
   "./ieee_fullname.bst" 1552126650 19905 72b73f4cb1c51eaa1a7af8ecad2b6bfb ""
   "egbib.bib" 1622020954 2617 5e958cbfbe350d5686a88902b18bee14 ""
-  "proposal.aux" 1622128455 3864 f06b1194b5ab8a92b086eeca9fbf673c "pdflatex"
+  "proposal.aux" 1622130801 3864 e07e617edd5742a18c57ff0b021851ec "pdflatex"
   (generated)
-  "proposal.bbl"
   "proposal.blg"
-["pdflatex"] 1622128450 "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.pdf" "proposal" 1622128457
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.aux" 1622128455 3864 f06b1194b5ab8a92b086eeca9fbf673c ""
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" 1622128442 7184 610c94a383f2d6e0bc92efe013238889 ""
+  "proposal.bbl"
+["pdflatex"] 1622130797 "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.pdf" "proposal" 1622130931
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.aux" 1622130801 3864 e07e617edd5742a18c57ff0b021851ec ""
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.tex" 1622130930 7229 fc9eecb8eeb93566cc501d5fe2678d22 ""
   "cvpr.sty" 1566283652 8185 9c85e63bb1830fdefeac27370f229c9e ""
   "cvpr_eso.sty" 1506757308 3878 6aa7c08ff2621006e0603349e40a30a8 ""
   "d:/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc" 1621331440 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -259,14 +259,14 @@
   "img/NeRF-is-content-coupling.png" 1622099630 107013 d46c5386cace4e57cb0c7177dfca24df ""
   "img/auto-encoder.png" 1622040489 778475 e741398972050c4e420ff8f017b75eb0 ""
   "img/encode-scene.png" 1622040185 1861367 72b6f4380a8e09d3854662dae4886005 ""
-  "img/rebuild-view.png" 1622123511 246117 66a0e4a232acae3cfd732a696ab1de01 ""
+  "img/rebuild-view.png" 1622130172 257895 0f5d53af1163a61af777c451e2d911cb ""
   "img/render-view.png" 1622040475 861257 7e580470625fae588a779dff2f67b02e ""
-  "proposal.aux" 1622128455 3864 f06b1194b5ab8a92b086eeca9fbf673c "pdflatex"
-  "proposal.bbl" 1622128450 709 9ed7d743a0b0962bc8d05136be96e36b "bibtex proposal"
-  "proposal.tex" 1622128442 7184 610c94a383f2d6e0bc92efe013238889 ""
+  "proposal.aux" 1622130801 3864 e07e617edd5742a18c57ff0b021851ec "pdflatex"
+  "proposal.bbl" 1622129935 709 9ed7d743a0b0962bc8d05136be96e36b "bibtex proposal"
+  "proposal.tex" 1622130930 7229 fc9eecb8eeb93566cc501d5fe2678d22 ""
   (generated)
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.log"
   "proposal.aux"
-  "proposal.log"
   "proposal.pdf"
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.log"
+  "proposal.log"
   "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-proposal/proposal.pdf"
