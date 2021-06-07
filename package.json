@@ -1,0 +1,26 @@
+{
+    "dependencies": {
+        "@antv/g2": "^4.1.17"
+    },
+    "devDependencies": {
+        "esbuild": "^0.12.6"
+    },
+    "name": "ncku",
+    "description": "成大課程作業",
+    "version": "1.0.0",
+    "main": "test.js",
+    "scripts": {
+        "build:final-report": "esbuild ./final-project/report/dev/index.ts --bundle --outfile=./final-project/report/build/index.js --jsx-factory=h --jsx-fragment=Fragment --sourcemap --loader:.png=dataurl --loader:.svg=dataurl"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/toonnyy8/ncku.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/toonnyy8/ncku/issues"
+    },
+    "homepage": "https://github.com/toonnyy8/ncku#readme"
+}
