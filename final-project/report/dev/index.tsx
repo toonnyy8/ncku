@@ -7,6 +7,7 @@ import { Title, Outline, Tmpl1 } from "./template"
 import { introductionPages } from "./introduction"
 import { methodPages } from "./method"
 import { experimentPages } from "./experiment"
+import { conclusionPages } from "./conclusion"
 
 import { css } from "./css"
 
@@ -45,6 +46,7 @@ const App = defineComponent(() => {
         ...introductionPages,
         ...methodPages,
         ...experimentPages,
+        ...conclusionPages,
     ]
     const forward = () => {
         if (state.page < pages.length - 1) {

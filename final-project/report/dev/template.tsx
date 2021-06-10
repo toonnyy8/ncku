@@ -120,3 +120,72 @@ export const Tmpl1 = defineComponent((_, { slots }: { slots }) => {
         </>
     )
 })
+
+export const Tmpl2 = defineComponent((_, { slots }: { slots }) => {
+    return () => (
+        <>
+            <DivVC>
+                {() => (
+                    <DivHC>
+                        {{
+                            default: () => (
+                                <>
+                                    <p style={[css.tx.left(), css.pos.abs()]}>
+                                        <span class="text-base">{slots.title1()}</span>
+                                    </p>
+                                    <span class="text-3xl">{slots.title2()}</span>
+                                    <hr />
+                                    <div
+                                        style={[
+                                            css.h.mm(150),
+                                            css.tx.justify(),
+                                            css.m.x(slots.margin?.() ?? 0),
+                                        ]}
+                                    >
+                                        {slots.content()}
+                                    </div>
+                                </>
+                            ),
+                        }}
+                    </DivHC>
+                )}
+            </DivVC>
+        </>
+    )
+})
+
+export const Tmpl3 = defineComponent((_, { slots }: { slots }) => {
+    return () => (
+        <>
+            <DivVC>
+                {() => (
+                    <DivHC>
+                        {{
+                            default: () => (
+                                <>
+                                    <p style={[css.tx.left(), css.pos.abs(), css.w.mm(277)]}>
+                                        <span class="text-base">{slots.title1()}</span>
+                                    </p>
+                                    <p style={[css.tx.right(), css.pos.abs(), css.w.mm(277)]}>
+                                        <span class="text-base">{slots.title2()}</span>
+                                    </p>
+                                    <span class="text-3xl">{slots.title3()}</span>
+                                    <hr />
+                                    <div
+                                        style={[
+                                            css.h.mm(150),
+                                            css.tx.justify(),
+                                            css.m.x(slots.margin?.() ?? 0),
+                                        ]}
+                                    >
+                                        {slots.content()}
+                                    </div>
+                                </>
+                            ),
+                        }}
+                    </DivHC>
+                )}
+            </DivVC>
+        </>
+    )
+})

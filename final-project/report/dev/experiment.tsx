@@ -1,9 +1,10 @@
 import { h, reactive, defineComponent, createApp, Fragment, ref, Ref, onMounted } from "vue"
-import { Tmpl1 } from "./template"
+import { Tmpl1, Tmpl2 } from "./template"
 
 import { css } from "./css"
 import { Chart } from "@antv/g2"
 
+import test from "../history/test.json"
 import byolFew from "../history/BYOL-few.json"
 import byolRound from "../history/BYOL-round.json"
 import byolRound100Step from "../history/BYOL-round-100-Step.json"
@@ -103,6 +104,19 @@ const creatChart = (data) => (elem) => {
     chart.line().position("epoch*sisnr").color("experiment")
     chart.render()
 }
+const round3 = (x) => Math.round(x * 10 ** 3) / 10 ** 3
+const createTr = (data: { Model: string; [key: string]: any }, name: string, labels: string[]) => {
+    return (
+        <tr>
+            <td colspan="2" style={[css.tx.left()]}>
+                {name}
+            </td>
+            {labels.map((label) => (
+                <td>{round3(data[label])}</td>
+            ))}
+        </tr>
+    )
+}
 
 const DataPage = defineComponent((_, { slots }: { slots }) => {
     const chartRef: Ref<HTMLDivElement> = ref(null)
@@ -116,100 +130,398 @@ const DataPage = defineComponent((_, { slots }: { slots }) => {
 export const experimentPages = [
     <Tmpl1>
         {{
-            title: () => "CL vs Normal",
-            content: () => (
-                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...bData, ...ssData, ...nData])}
-                </DataPage>
-            ),
-        }}
-    </Tmpl1>,
-    <Tmpl1>
-        {{
-            title: () => "Few Data",
-            content: () => (
-                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...bfData, ...ssfData, ...nfData])}
-                </DataPage>
-            ),
-        }}
-    </Tmpl1>,
-    <Tmpl1>
-        {{
-            title: () => "SimSiam",
-            content: () => (
-                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...ssrData, ...sspData, ...ssData])}
-                </DataPage>
-            ),
-        }}
-    </Tmpl1>,
-    <Tmpl1>
-        {{
-            title: () => "BYOL",
-            content: () => (
-                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...brData, ...br100sData, ...bData])}
-                </DataPage>
-            ),
-        }}
-    </Tmpl1>,
-    <Tmpl1>
-        {{
-            title: () => "Introduction",
+            title: () => "Experiment",
             content: () => (
                 <div style={[css.p.x(10)]}>
                     <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
                         <tr>
-                            <td rowspan="2" style={[css.tx.left(), css.w.percent(28)]}>
-                                Model
+                            <td style={[css.w.percent(35)]}></td>
+                            <td>Normal</td>
+                            <td>BYOL</td>
+                            <td>SimSiam</td>
+                        </tr>
+                        <tr>
+                            <td>-</td>
+                            <td colspan="1">使用 SE loss</td>
+                            <td colspan="2">使用 Mix loss</td>
+                        </tr>
+                        <tr style={[css.tx.left()]}>
+                            <td>Round</td>
+                            <td colspan="3">
+                                每 50 個 epoch 就更換一次 loss (Mix loss 與 SE loss 交替)
                             </td>
-                            <td colspan="3">Evaluation Metrics</td>
                         </tr>
-                        <tr>
-                            <td style={[css.w.percent(24)]}>RESQ</td>
-                            <td style={[css.w.percent(24)]}>STOI</td>
-                            <td style={[css.w.percent(24)]}>SI-SNR</td>
+                        <tr style={[css.tx.left()]}>
+                            <td>Pretrain</td>
+                            <td colspan="3">前 50 個 epoch 使用 Mix loss，之後都使用 SE loss</td>
                         </tr>
-                        <tr>
-                            <td style={[css.tx.left()]}>Noisy</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr style={[css.tx.left()]}>
+                            <td>Round (100 step)</td>
+                            <td colspan="3">
+                                每 100 個 epoch 就更換一次 loss (Mix loss 與 SE loss 交替)
+                            </td>
                         </tr>
-                        <tr>
-                            <td style={[css.tx.left()]}>Normal</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td style={[css.tx.left()]}>BYOL</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td style={[css.tx.left()]}>BYOL round</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td style={[css.tx.left()]}>SimSiam</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <td style={[css.tx.left()]}>SimSiam round</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr style={[css.tx.left()]}>
+                            <td>Few</td>
+                            <td colspan="3">將 train data 與 test data 交換</td>
                         </tr>
                     </table>
                 </div>
             ),
         }}
     </Tmpl1>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Data",
+            content: () => (
+                <div style={[css.p.x(10)]}>
+                    <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
+                        <tr>
+                            <td style={[]}></td>
+                            <td style={[]}>Train</td>
+                            <td style={[]}>Test</td>
+                        </tr>
+                        <tr>
+                            <td>Speech</td>
+                            <td>TIMIT(4120)</td>
+                            <td>TIMIT(500)</td>
+                        </tr>
+                        <tr>
+                            <td>Noise</td>
+                            <td>Nonspeech(75)</td>
+                            <td>Nonspeech(25)</td>
+                        </tr>
+                        <tr>
+                            <td>SNR(dB)</td>
+                            <td>-10, -5, 0, 5, 10</td>
+                            <td>-7.5, -2.5, 2.5, 7.5</td>
+                        </tr>
+                    </table>
+                </div>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Hyperparameter",
+            content: () => (
+                <div style={[css.p.x(20)]}>
+                    <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
+                        <tr>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">Optimizer:SGD</td>
+                            <td>lr</td>
+                            <td>momentum</td>
+                            <td>weight decay</td>
+                        </tr>
+                        <tr>
+                            <td>0.05</td>
+                            <td>0.9</td>
+                            <td>0.0001</td>
+                        </tr>
+                        <tr>
+                            <td>Batch Size</td>
+                            <td colspan="3">
+                                N<sub>1</sub>+N<sub>2</sub> = 128+128
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BYOL τ</td>
+                            <td colspan="3">0.99</td>
+                        </tr>
+                    </table>
+                </div>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "CL vs Normal",
+            content: () => (
+                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
+                    {creatChart([...bData, ...ssData, ...nData])}
+                </DataPage>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "BYOL",
+            content: () => (
+                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
+                    {creatChart([...brData, ...br100sData, ...bData])}
+                </DataPage>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "SimSiam",
+            content: () => (
+                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
+                    {creatChart([...ssrData, ...sspData, ...ssData])}
+                </DataPage>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Introduction",
+            content: () => (
+                <div style={[css.p.x(10)]}>
+                    <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
+                        <tr>
+                            <td rowspan="2" colspan="2" style={[css.tx.left(), css.w.percent(34)]}>
+                                Model
+                            </td>
+                            <td colspan="3">Evaluation Metrics</td>
+                        </tr>
+                        <tr>
+                            <td style={[css.w.percent(22)]}>PESQ</td>
+                            <td style={[css.w.percent(22)]}>STOI</td>
+                            <td style={[css.w.percent(22)]}>SI-SNR</td>
+                        </tr>
+                        {createTr(
+                            test.find((data) => data.Model == "Noisy"),
+                            "Noisy",
+                            ["PESQ", "STOI", "SI-SNR"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "Normal"),
+                            "Normal",
+                            ["PESQ", "STOI", "SI-SNR"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL"),
+                            "BYOL",
+                            ["PESQ", "STOI", "SI-SNR"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round"),
+                            "BYOL round",
+                            ["PESQ", "STOI", "SI-SNR"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round-100-step"),
+                            "BYOL round(100 s)",
+                            ["PESQ", "STOI", "SI-SNR"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam"),
+                            "SimSiam",
+                            ["PESQ", "STOI", "SI-SNR"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam-round"),
+                            "SimSiam round",
+                            ["PESQ", "STOI", "SI-SNR"]
+                        )}
+                    </table>
+                </div>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Introduction",
+            content: () => (
+                <div style={[css.p.x(10)]}>
+                    <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
+                        <tr>
+                            <td rowspan="2" style={[css.tx.left(), css.w.percent(34 - 16.5)]}>
+                                Model
+                            </td>
+                            <td style={[css.w.percent(16.5)]}>SI-SNR:</td>
+                            <td style={[css.w.percent(16.5)]}>-7.5</td>
+                            <td style={[css.w.percent(16.5)]}>-2.5</td>
+                            <td style={[css.w.percent(16.5)]}>2.5</td>
+                            <td style={[css.w.percent(16.5)]}>7.5</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="4">PESQ</td>
+                        </tr>
+                        {createTr(
+                            test.find((data) => data.Model == "Noisy"),
+                            "Noisy",
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "Normal"),
+                            "Normal",
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL"),
+                            "BYOL",
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round"),
+                            "BYOL round",
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round-100-step"),
+                            "BYOL round(100 s)",
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam"),
+                            "SimSiam",
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam-round"),
+                            "SimSiam round",
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                        )}
+                    </table>
+                </div>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Introduction",
+            content: () => (
+                <div style={[css.p.x(10)]}>
+                    <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
+                        <tr>
+                            <td rowspan="2" style={[css.tx.left(), css.w.percent(34 - 16.5)]}>
+                                Model
+                            </td>
+                            <td style={[css.w.percent(16.5)]}>SI-SNR:</td>
+                            <td style={[css.w.percent(16.5)]}>-7.5</td>
+                            <td style={[css.w.percent(16.5)]}>-2.5</td>
+                            <td style={[css.w.percent(16.5)]}>2.5</td>
+                            <td style={[css.w.percent(16.5)]}>7.5</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="4">STOI</td>
+                        </tr>
+                        {createTr(
+                            test.find((data) => data.Model == "Noisy"),
+                            "Noisy",
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "Normal"),
+                            "Normal",
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL"),
+                            "BYOL",
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round"),
+                            "BYOL round",
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round-100-step"),
+                            "BYOL round(100 s)",
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam"),
+                            "SimSiam",
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam-round"),
+                            "SimSiam round",
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                        )}
+                    </table>
+                </div>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Introduction",
+            content: () => (
+                <div style={[css.p.x(10)]}>
+                    <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
+                        <tr>
+                            <td rowspan="2" style={[css.tx.left(), css.w.percent(34 - 16.5)]}>
+                                Model
+                            </td>
+                            <td style={[css.w.percent(16.5)]}>SI-SNR:</td>
+                            <td style={[css.w.percent(16.5)]}>-7.5</td>
+                            <td style={[css.w.percent(16.5)]}>-2.5</td>
+                            <td style={[css.w.percent(16.5)]}>2.5</td>
+                            <td style={[css.w.percent(16.5)]}>7.5</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="4">SI-SNR</td>
+                        </tr>
+                        {createTr(
+                            test.find((data) => data.Model == "Noisy"),
+                            "Noisy",
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "Normal"),
+                            "Normal",
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL"),
+                            "BYOL",
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round"),
+                            "BYOL round",
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "BYOL-round-100-step"),
+                            "BYOL round(100 s)",
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam"),
+                            "SimSiam",
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                        )}
+                        {createTr(
+                            test.find((data) => data.Model == "SimSiam-round"),
+                            "SimSiam round",
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                        )}
+                    </table>
+                </div>
+            ),
+        }}
+    </Tmpl2>,
+
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Few Data",
+            content: () => (
+                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
+                    {creatChart([...bfData, ...ssfData, ...nfData])}
+                </DataPage>
+            ),
+        }}
+    </Tmpl2>,
 ]
