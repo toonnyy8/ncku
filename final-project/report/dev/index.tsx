@@ -39,7 +39,10 @@ const App = defineComponent(() => {
                         Speech Enhancement
                     </>
                 ),
-                authors: () => ["郭品辰", "黃仁鴻"],
+                authors: () => [
+                    // "郭品辰",
+                    "黃仁鴻",
+                ],
             }}
         </Title>,
         <Outline>{() => [1, 2, 3]}</Outline>,

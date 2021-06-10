@@ -19,70 +19,80 @@ import simsiam from "../history/Simsiam.json"
 const bfData = byolFew.map((data, idx) => ({
     experiment: "BYOL few",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const brData = byolRound.map((data, idx) => ({
     experiment: "BYOL round",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const br100sData = byolRound100Step.map((data, idx) => ({
     experiment: "BYOL round(100 s)",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const bData = byol.map((data, idx) => ({
     experiment: "BYOL",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const nfData = normalFew.map((data, idx) => ({
     experiment: "Normal few",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const nData = normal.map((data, idx) => ({
     experiment: "Normal",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const ssfData = simsiamFew.map((data, idx) => ({
     experiment: "SimSiam few",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const sspData = simsiamPretrain.map((data, idx) => ({
     experiment: "SimSiam pretrain",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const ssrData = simsiamRound.map((data, idx) => ({
     experiment: "SimSiam round",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 const ssData = simsiam.map((data, idx) => ({
     experiment: "SimSiam",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx,
 }))
 
-const creatChart = (data) => (elem) => {
+const creatChart = (data, label: string, max: number, min: number) => (elem) => {
     const chart = new Chart({
         container: elem,
         width: 800,
         height: 600,
     })
-    chart.scale("sisnr", {
-        max: 11,
-        min: -5,
+    chart.scale(label, {
+        max,
+        min,
     })
     chart.scale("epoch", {
         max: 400,
     })
     chart.data(data)
     chart
-        .axis("sisnr", {
+        .axis(label, {
             label: {
                 style: {
                     fontSize: 20,
@@ -101,7 +111,7 @@ const creatChart = (data) => (elem) => {
                 style: { fontSize: 20, fill: "rgb(255, 235, 205)" },
             },
         })
-    chart.line().position("epoch*sisnr").color("experiment")
+    chart.line().position(`epoch*${label}`).color("experiment")
     chart.render()
 }
 const round3 = (x) => Math.round(x * 10 ** 3) / 10 ** 3
@@ -244,7 +254,7 @@ export const experimentPages = [
             title2: () => "CL vs Normal",
             content: () => (
                 <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...bData, ...ssData, ...nData])}
+                    {creatChart([...bData, ...ssData, ...nData], "sisnr", 11, -5)}
                 </DataPage>
             ),
         }}
@@ -255,7 +265,7 @@ export const experimentPages = [
             title2: () => "BYOL",
             content: () => (
                 <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...brData, ...br100sData, ...bData])}
+                    {creatChart([...brData, ...br100sData, ...bData], "sisnr", 11, -5)}
                 </DataPage>
             ),
         }}
@@ -266,7 +276,18 @@ export const experimentPages = [
             title2: () => "SimSiam",
             content: () => (
                 <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...ssrData, ...sspData, ...ssData])}
+                    {creatChart([...ssrData, ...sspData, ...ssData], "sisnr", 11, -5)}
+                </DataPage>
+            ),
+        }}
+    </Tmpl2>,
+    <Tmpl2>
+        {{
+            title1: () => "Experiment",
+            title2: () => "Train Similarity",
+            content: () => (
+                <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
+                    {creatChart([...bData, ...brData, ...ssData, ...ssrData], "similarity", 1, 0)}
                 </DataPage>
             ),
         }}
@@ -519,7 +540,7 @@ export const experimentPages = [
             title2: () => "Few Data",
             content: () => (
                 <DataPage style={[css.p.all(0), css.tx.center(), css.w.percent(100)]}>
-                    {creatChart([...bfData, ...ssfData, ...nfData])}
+                    {creatChart([...bfData, ...ssfData, ...nfData], "sisnr", 11, -5)}
                 </DataPage>
             ),
         }}

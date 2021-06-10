@@ -70402,68 +70402,78 @@ Component that was made reactive: `, type);
   var bfData = BYOL_few_default.map((data, idx) => ({
     experiment: "BYOL few",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var brData = BYOL_round_default.map((data, idx) => ({
     experiment: "BYOL round",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var br100sData = BYOL_round_100_Step_default.map((data, idx) => ({
     experiment: "BYOL round(100 s)",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var bData = BYOL_default2.map((data, idx) => ({
     experiment: "BYOL",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var nfData = Normal_few_default.map((data, idx) => ({
     experiment: "Normal few",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var nData = Normal_default.map((data, idx) => ({
     experiment: "Normal",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var ssfData = Simsiam_few_default.map((data, idx) => ({
     experiment: "SimSiam few",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var sspData = Simsiam_pretrain_default.map((data, idx) => ({
     experiment: "SimSiam pretrain",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var ssrData = Simsiam_round_default.map((data, idx) => ({
     experiment: "SimSiam round",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
   var ssData = Simsiam_default.map((data, idx) => ({
     experiment: "SimSiam",
     sisnr: data["Test SISNR"],
+    similarity: -data["Train CL Loss"],
     epoch: idx
   }));
-  var creatChart = (data) => (elem) => {
+  var creatChart = (data, label, max3, min3) => (elem) => {
     const chart = new chart_default({
       container: elem,
       width: 800,
       height: 600
     });
-    chart.scale("sisnr", {
-      max: 11,
-      min: -5
+    chart.scale(label, {
+      max: max3,
+      min: min3
     });
     chart.scale("epoch", {
       max: 400
     });
     chart.data(data);
-    chart.axis("sisnr", {
+    chart.axis(label, {
       label: {
         style: {
           fontSize: 20
@@ -70480,7 +70490,7 @@ Component that was made reactive: `, type);
         style: { fontSize: 20, fill: "rgb(255, 235, 205)" }
       }
     });
-    chart.line().position("epoch*sisnr").color("experiment");
+    chart.line().position(`epoch*${label}`).color("experiment");
     chart.render();
   };
   var round3 = (x) => Math.round(x * 10 ** 3) / 10 ** 3;
@@ -70570,21 +70580,28 @@ Component that was made reactive: `, type);
       title2: () => "CL vs Normal",
       content: () => /* @__PURE__ */ h(DataPage, {
         style: [css.p.all(0), css.tx.center(), css.w.percent(100)]
-      }, creatChart([...bData, ...ssData, ...nData]))
+      }, creatChart([...bData, ...ssData, ...nData], "sisnr", 11, -5))
     }),
     /* @__PURE__ */ h(Tmpl2, null, {
       title1: () => "Experiment",
       title2: () => "BYOL",
       content: () => /* @__PURE__ */ h(DataPage, {
         style: [css.p.all(0), css.tx.center(), css.w.percent(100)]
-      }, creatChart([...brData, ...br100sData, ...bData]))
+      }, creatChart([...brData, ...br100sData, ...bData], "sisnr", 11, -5))
     }),
     /* @__PURE__ */ h(Tmpl2, null, {
       title1: () => "Experiment",
       title2: () => "SimSiam",
       content: () => /* @__PURE__ */ h(DataPage, {
         style: [css.p.all(0), css.tx.center(), css.w.percent(100)]
-      }, creatChart([...ssrData, ...sspData, ...ssData]))
+      }, creatChart([...ssrData, ...sspData, ...ssData], "sisnr", 11, -5))
+    }),
+    /* @__PURE__ */ h(Tmpl2, null, {
+      title1: () => "Experiment",
+      title2: () => "Train Similarity",
+      content: () => /* @__PURE__ */ h(DataPage, {
+        style: [css.p.all(0), css.tx.center(), css.w.percent(100)]
+      }, creatChart([...bData, ...brData, ...ssData, ...ssrData], "similarity", 1, 0))
     }),
     /* @__PURE__ */ h(Tmpl2, null, {
       title1: () => "Experiment",
@@ -70694,7 +70711,7 @@ Component that was made reactive: `, type);
       title2: () => "Few Data",
       content: () => /* @__PURE__ */ h(DataPage, {
         style: [css.p.all(0), css.tx.center(), css.w.percent(100)]
-      }, creatChart([...bfData, ...ssfData, ...nfData]))
+      }, creatChart([...bfData, ...ssfData, ...nfData], "sisnr", 11, -5))
     })
   ];
 
@@ -70702,7 +70719,22 @@ Component that was made reactive: `, type);
   var conclusionPages = [
     /* @__PURE__ */ h(Tmpl1, null, {
       title: () => "Conclusion",
-      content: () => "asd"
+      content: () => /* @__PURE__ */ h("div", {
+        style: [css.m.x(10)]
+      }, /* @__PURE__ */ h("ul", null, /* @__PURE__ */ h("li", null, "\u5728\u8A13\u7DF4\u524D\u671F\u5229\u7528 CL Loss \u5C0D\u4E2D\u9593\u7279\u5FB5\u9032\u884C\u7D04\u675F\u80FD\u5920\u52A0\u901F\u6A21\u578B\u6536\u6582\u3002"), /* @__PURE__ */ h("li", null, "\u4E2D\u5F8C\u671F\u4F7F\u7528 CL Loss \u6703\u964D\u4F4E\u6A21\u578B\u7684\u6536\u6582\u901F\u5EA6\u8207\u6548\u80FD\u3002"), /* @__PURE__ */ h("li", null, "\u4F7F\u7528 CL Loss \u80FD\u5920\u6291\u5236 Overfitting \u7684\u554F\u984C\u3002"), /* @__PURE__ */ h("li", null, "\u8207 SimSiam \u76F8\u6BD4\uFF0CBYOL \u7684 CL Loss \u9700\u8981\u66F4\u9577\u4E00\u9EDE\u7684\u6642\u9593\u6536\u6582\u3002")))
+    }),
+    /* @__PURE__ */ h(Tmpl1, null, {
+      title: () => "Todo",
+      content: () => /* @__PURE__ */ h("div", {
+        style: [css.m.x(40)]
+      }, /* @__PURE__ */ h("ul", null, /* @__PURE__ */ h("li", null, "\u6E2C\u8A66\u4E0D\u540C\u6BD4\u4F8B\u6DF7\u548C\u7684 Mix Loss \u6548\u679C\u3002"), /* @__PURE__ */ h("li", null, "\u4F7F\u7528\u8907\u6578\u7684\u566A\u97F3\u8DDF\u8A9E\u97F3\u6DF7\u548C\u9032\u884C\u8A13\u7DF4\u3002"), /* @__PURE__ */ h("li", null, "\u7814\u7A76 Mix Loss \u7684\u81EA\u9069\u61C9\u6DF7\u5408\u6B0A\u91CD\u3002"), /* @__PURE__ */ h("li", null, "\u5340\u5206\u566A\u97F3\u7A2E\u985E\u9032\u884C\u8A13\u7DF4\u3002")))
+    }),
+    /* @__PURE__ */ h(Tmpl1, null, {
+      title: () => "Reference",
+      content: () => /* @__PURE__ */ h("div", {
+        class: "text-base",
+        style: [css.m.x(10)]
+      }, /* @__PURE__ */ h("ul", null, /* @__PURE__ */ h("li", null, "Bootstrap your own latent: A new approach to self-supervised learning. CoRR, abs/2006.07733, 2020."), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("li", null, "Exploring simple siamese representation learning. CoRR, abs/2011.10566, 2020.")))
     })
   ];
 
@@ -70726,7 +70758,9 @@ Component that was made reactive: `, type);
         title: () => /* @__PURE__ */ h(Fragment, null, "Contrastive Learning", /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
           class: "text-xl"
         }, " for"), /* @__PURE__ */ h("br", null), "Speech Enhancement"),
-        authors: () => ["\u90ED\u54C1\u8FB0", "\u9EC3\u4EC1\u9D3B"]
+        authors: () => [
+          "\u9EC3\u4EC1\u9D3B"
+        ]
       }),
       /* @__PURE__ */ h(Outline, null, () => [1, 2, 3]),
       ...introductionPages,
