@@ -77,7 +77,7 @@ export const Outline = defineComponent((_, { slots }) => {
                             <>
                                 <span class="text-3xl">Outline</span>
                                 <hr />
-                                <ul style={[css.tx.left(), css.m.l(70)]}>
+                                <ul style={[css.tx.left(), css.m.l(90)]}>
                                     {slots.default().reduce((a, b) => {
                                         return [...a, <li>{b}</li>]
                                     }, [])}
@@ -103,6 +103,7 @@ export const Tmpl1 = defineComponent((_, { slots }: { slots }) => {
                                     <span class="text-3xl">{slots.title()}</span>
                                     <hr />
                                     <div
+                                        class="text-lg"
                                         style={[
                                             css.h.mm(150),
                                             css.tx.justify(),
@@ -136,6 +137,7 @@ export const Tmpl2 = defineComponent((_, { slots }: { slots }) => {
                                     <span class="text-3xl">{slots.title2()}</span>
                                     <hr />
                                     <div
+                                        class="text-lg"
                                         style={[
                                             css.h.mm(150),
                                             css.tx.justify(),
@@ -172,6 +174,7 @@ export const Tmpl3 = defineComponent((_, { slots }: { slots }) => {
                                     <span class="text-3xl">{slots.title3()}</span>
                                     <hr />
                                     <div
+                                        class="text-lg"
                                         style={[
                                             css.h.mm(150),
                                             css.tx.justify(),

@@ -45,7 +45,7 @@ const App = defineComponent(() => {
                 ],
             }}
         </Title>,
-        <Outline>{() => [1, 2, 3]}</Outline>,
+        <Outline>{() => ["Introduction", "Method", "Experiment", "Conclusion"]}</Outline>,
         ...introductionPages,
         ...methodPages,
         ...experimentPages,

@@ -22,7 +22,7 @@ export const conclusionPages = [
         {{
             title: () => "Todo",
             content: () => (
-                <div style={[css.m.x(40)]}>
+                <div style={[css.m.x(50)]}>
                     <ul>
                         <li>測試不同比例混和的 Mix Loss 效果。</li>
                         <li>使用複數的噪音跟語音混和進行訓練。</li>

@@ -7504,7 +7504,7 @@ Component that was made reactive: `, type);
     return () => /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h(DivVC, null, () => /* @__PURE__ */ h(DivHC, null, () => /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h("span", {
       class: "text-3xl"
     }, "Outline"), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("ul", {
-      style: [css.tx.left(), css.m.l(70)]
+      style: [css.tx.left(), css.m.l(90)]
     }, slots.default().reduce((a, b) => {
       return [...a, /* @__PURE__ */ h("li", null, b)];
     }, []))))));
@@ -7514,6 +7514,7 @@ Component that was made reactive: `, type);
       default: () => /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h("span", {
         class: "text-3xl"
       }, slots.title()), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("div", {
+        class: "text-lg",
         style: [
           css.h.mm(150),
           css.tx.justify(),
@@ -7531,6 +7532,7 @@ Component that was made reactive: `, type);
       }, slots.title1())), /* @__PURE__ */ h("span", {
         class: "text-3xl"
       }, slots.title2()), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("div", {
+        class: "text-lg",
         style: [
           css.h.mm(150),
           css.tx.justify(),
@@ -7552,6 +7554,7 @@ Component that was made reactive: `, type);
       }, slots.title2())), /* @__PURE__ */ h("span", {
         class: "text-3xl"
       }, slots.title3()), /* @__PURE__ */ h("hr", null), /* @__PURE__ */ h("div", {
+        class: "text-lg",
         style: [
           css.h.mm(150),
           css.tx.justify(),
@@ -7565,7 +7568,21 @@ Component that was made reactive: `, type);
   var introductionPages = [
     /* @__PURE__ */ h(Tmpl1, null, {
       title: () => "Introduction",
-      content: () => "asd"
+      content: () => /* @__PURE__ */ h("div", {
+        style: [css.m.x(10)]
+      }, "\u65E5\u5E38\u751F\u6D3B\u4E2D\u6709\u8A31\u591A\u4EFB\u52D9\u90FD\u4EF0\u8CF4\u8CF4\u8A9E\u97F3\u4F5C\u70BA\u8CC7\u8A0A\u50B3\u905E\u7684\u5A92\u4ECB\u3002", /* @__PURE__ */ h("br", null), "\u7136\u800C\u5145\u6EFF\u5728\u73FE\u5BE6\u74B0\u5883\u4E2D\u7684\u5404\u7A2E\u566A\u97F3\u5E72\u64FE\u6703\u56B4\u91CD\u5F71\u97FF\u8A9E\u97F3\u4EFB\u52D9\u7684\u6548\u80FD\u3002", /* @__PURE__ */ h("br", null), "\u56E0\u6B64\uFF0C\u5C07\u9019\u4E9B\u96DC\u8A0A\u53BB\u9664\u7684\u8A9E\u97F3\u589E\u5F37\u6280\u8853\u5C31\u6210\u4E86\u91CD\u8981\u7684\u524D\u7F6E\u8655\u7406\u55AE\u5143\u3002")
+    }),
+    /* @__PURE__ */ h(Tmpl1, null, {
+      title: () => "Introduction",
+      content: () => /* @__PURE__ */ h("div", {
+        style: [css.m.x(10)]
+      }, "\u800C\u8A9E\u97F3\u589E\u5F37\u7684\u554F\u984C\u5C31\u662F\u4E0D\u8AD6\u5728\u4F55\u7A2E\u566A\u97F3\u74B0\u5883\uFF0C\u9762\u5C0D\u76F8\u540C\u7684\u8A9E\u97F3\uFF0C\u6A21\u578B\u90FD\u80FD\u5920\u62BD\u53D6\u51FA\u76F8\u540C\u7684\u7279\u5FB5\u4E26\u5C07\u5176\u9084\u539F\u3002", /* @__PURE__ */ h("br", null), "\u9019\u90E8\u5206\u60F3\u6CD5\u8207\u8FD1\u5E74\u6D41\u884C\u81EA\u76E3\u7763\u65B9\u6CD5\u4E2D\u7684\u5C0D\u6BD4\u5B78\u7FD2(Contrastive Learning)\u4E0D\u8B00\u800C\u5408\u3002", /* @__PURE__ */ h("br", null), "\u5C0D\u6BD4\u5B78\u7FD2\u5E0C\u671B\u76F8\u4F3C\u6A23\u672C\u9593\u7684\u7279\u5FB5\u7DE8\u78BC\u80FD\u8D8A\u50CF\u8D8A\u597D\uFF0C\u800C\u8CA0\u6A23\u672C\u7684\u7279\u5FB5\u5DEE\u7570\u5247\u662F\u8D8A\u5927\u8D8A\u597D\u3002")
+    }),
+    /* @__PURE__ */ h(Tmpl1, null, {
+      title: () => "Introduction",
+      content: () => /* @__PURE__ */ h("div", {
+        style: [css.m.x(10)]
+      }, "\u6211\u8A8D\u70BA\uFF0C\u85C9\u7531 CL \u7684\u65B9\u6CD5\u4F86\u5B78\u7FD2\u8A9E\u97F3\u7279\u5FB5\uFF0C\u61C9\u8A72\u6703\u5177\u5099\u6BD4\u4E00\u822C\u6DF1\u5EA6\u5B78\u7FD2\u7684\u8A9E\u97F3\u589E\u5F37\u65B9\u6CD5\u66F4\u9AD8\u7684\u6027\u80FD\u3002", /* @__PURE__ */ h("br", null), "\u7136\u800C\uFF0C\u5728 SE \u554F\u984C\u4E2D\u4E0D\u5BB9\u6613\u8A02\u5B9A frame level \u7684\u8CA0\u6A23\u672C\u3002", /* @__PURE__ */ h("br", null), "\u70BA\u6B64\uFF0C\u672C\u7814\u7A76\u4F7F\u7528\u7121\u9808\u8CA0\u6A23\u672C\u7684 BYOL \u8207 SimSiam \u9019\u5169\u7A2E\u65B9\u6CD5\u4F5C\u70BA\u7814\u7A76\u4E3B\u8EF8\uFF0C\u4E26\u8207\u672A\u4F7F\u7528 CL \u65B9\u6CD5\u7684\u6A21\u578B\u9032\u884C\u6BD4\u8F03\u3002")
     })
   ];
 
@@ -70726,7 +70743,7 @@ Component that was made reactive: `, type);
     /* @__PURE__ */ h(Tmpl1, null, {
       title: () => "Todo",
       content: () => /* @__PURE__ */ h("div", {
-        style: [css.m.x(40)]
+        style: [css.m.x(50)]
       }, /* @__PURE__ */ h("ul", null, /* @__PURE__ */ h("li", null, "\u6E2C\u8A66\u4E0D\u540C\u6BD4\u4F8B\u6DF7\u548C\u7684 Mix Loss \u6548\u679C\u3002"), /* @__PURE__ */ h("li", null, "\u4F7F\u7528\u8907\u6578\u7684\u566A\u97F3\u8DDF\u8A9E\u97F3\u6DF7\u548C\u9032\u884C\u8A13\u7DF4\u3002"), /* @__PURE__ */ h("li", null, "\u7814\u7A76 Mix Loss \u7684\u81EA\u9069\u61C9\u6DF7\u5408\u6B0A\u91CD\u3002"), /* @__PURE__ */ h("li", null, "\u5340\u5206\u566A\u97F3\u7A2E\u985E\u9032\u884C\u8A13\u7DF4\u3002")))
     }),
     /* @__PURE__ */ h(Tmpl1, null, {
@@ -70762,7 +70779,7 @@ Component that was made reactive: `, type);
           "\u9EC3\u4EC1\u9D3B"
         ]
       }),
-      /* @__PURE__ */ h(Outline, null, () => [1, 2, 3]),
+      /* @__PURE__ */ h(Outline, null, () => ["Introduction", "Method", "Experiment", "Conclusion"]),
       ...introductionPages,
       ...methodPages,
       ...experimentPages,
