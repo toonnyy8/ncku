@@ -295,7 +295,7 @@ export const experimentPages = [
     <Tmpl2>
         {{
             title1: () => "Experiment",
-            title2: () => "Introduction",
+            title2: () => "Evaluation Metrics",
             content: () => (
                 <div style={[css.p.x(10)]}>
                     <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
@@ -353,7 +353,7 @@ export const experimentPages = [
     <Tmpl2>
         {{
             title1: () => "Experiment",
-            title2: () => "Introduction",
+            title2: () => "PESQ",
             content: () => (
                 <div style={[css.p.x(10)]}>
                     <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
@@ -361,7 +361,7 @@ export const experimentPages = [
                             <td rowspan="2" style={[css.tx.left(), css.w.percent(34 - 16.5)]}>
                                 Model
                             </td>
-                            <td style={[css.w.percent(16.5)]}>SI-SNR:</td>
+                            <td style={[css.w.percent(16.5)]}>SNR:</td>
                             <td style={[css.w.percent(16.5)]}>-7.5</td>
                             <td style={[css.w.percent(16.5)]}>-2.5</td>
                             <td style={[css.w.percent(16.5)]}>2.5</td>
@@ -414,7 +414,7 @@ export const experimentPages = [
     <Tmpl2>
         {{
             title1: () => "Experiment",
-            title2: () => "Introduction",
+            title2: () => "STOI",
             content: () => (
                 <div style={[css.p.x(10)]}>
                     <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
@@ -422,7 +422,7 @@ export const experimentPages = [
                             <td rowspan="2" style={[css.tx.left(), css.w.percent(34 - 16.5)]}>
                                 Model
                             </td>
-                            <td style={[css.w.percent(16.5)]}>SI-SNR:</td>
+                            <td style={[css.w.percent(16.5)]}>SNR:</td>
                             <td style={[css.w.percent(16.5)]}>-7.5</td>
                             <td style={[css.w.percent(16.5)]}>-2.5</td>
                             <td style={[css.w.percent(16.5)]}>2.5</td>
@@ -475,7 +475,7 @@ export const experimentPages = [
     <Tmpl2>
         {{
             title1: () => "Experiment",
-            title2: () => "Introduction",
+            title2: () => "SI-SNR",
             content: () => (
                 <div style={[css.p.x(10)]}>
                     <table class="text-lg" style={[css.tx.center(), css.w.percent(100)]}>
@@ -483,7 +483,7 @@ export const experimentPages = [
                             <td rowspan="2" style={[css.tx.left(), css.w.percent(34 - 16.5)]}>
                                 Model
                             </td>
-                            <td style={[css.w.percent(16.5)]}>SI-SNR:</td>
+                            <td style={[css.w.percent(16.5)]}>SNR:</td>
                             <td style={[css.w.percent(16.5)]}>-7.5</td>
                             <td style={[css.w.percent(16.5)]}>-2.5</td>
                             <td style={[css.w.percent(16.5)]}>2.5</td>

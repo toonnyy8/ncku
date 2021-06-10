@@ -8,7 +8,7 @@ export const introductionPages = [
             title: () => "Introduction",
             content: () => (
                 <div style={[css.m.x(10)]}>
-                    日常生活中有許多任務都仰賴賴語音作為資訊傳遞的媒介。
+                    日常生活中有許多任務都仰賴語音作為資訊傳遞的媒介。
                     <br />
                     然而充滿在現實環境中的各種噪音干擾會嚴重影響語音任務的效能。
                     <br />
