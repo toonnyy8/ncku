@@ -115,9 +115,14 @@ const creatChart = (data, label: string, max: number, min: number) => (elem) => 
     chart.render()
 }
 const round3 = (x) => Math.round(x * 10 ** 3) / 10 ** 3
-const createTr = (data: { Model: string; [key: string]: any }, name: string, labels: string[]) => {
+const createTr = (
+    data: { Model: string; [key: string]: any },
+    name: string,
+    labels: string[],
+    style?: string[]
+) => {
     return (
-        <tr>
+        <tr style={style}>
             <td colspan="2" style={[css.tx.left()]}>
                 {name}
             </td>
@@ -318,7 +323,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "Normal"),
                             "Normal",
-                            ["PESQ", "STOI", "SI-SNR"]
+                            ["PESQ", "STOI", "SI-SNR"],
+                            [css.tx.color(100, 200, 255, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "BYOL"),
@@ -333,7 +339,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "BYOL-round-100-step"),
                             "BYOL round(100 s)",
-                            ["PESQ", "STOI", "SI-SNR"]
+                            ["PESQ", "STOI", "SI-SNR"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "SimSiam"),
@@ -343,7 +350,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "SimSiam-round"),
                             "SimSiam round",
-                            ["PESQ", "STOI", "SI-SNR"]
+                            ["PESQ", "STOI", "SI-SNR"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                     </table>
                 </div>
@@ -379,7 +387,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "Normal"),
                             "Normal",
-                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"],
+                            [css.tx.color(100, 200, 255, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "BYOL"),
@@ -394,7 +403,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "BYOL-round-100-step"),
                             "BYOL round(100 s)",
-                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "SimSiam"),
@@ -404,7 +414,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "SimSiam-round"),
                             "SimSiam round",
-                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]
+                            ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                     </table>
                 </div>
@@ -440,7 +451,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "Normal"),
                             "Normal",
-                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"],
+                            [css.tx.color(100, 200, 255, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "BYOL"),
@@ -455,7 +467,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "BYOL-round-100-step"),
                             "BYOL round(100 s)",
-                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "SimSiam"),
@@ -465,7 +478,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "SimSiam-round"),
                             "SimSiam round",
-                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]
+                            ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                     </table>
                 </div>
@@ -501,7 +515,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "Normal"),
                             "Normal",
-                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"],
+                            [css.tx.color(100, 200, 255, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "BYOL"),
@@ -516,7 +531,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "BYOL-round-100-step"),
                             "BYOL round(100 s)",
-                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                         {createTr(
                             test.find((data) => data.Model == "SimSiam"),
@@ -526,7 +542,8 @@ export const experimentPages = [
                         {createTr(
                             test.find((data) => data.Model == "SimSiam-round"),
                             "SimSiam round",
-                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]
+                            ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"],
+                            [css.tx.color(100, 255, 150, 255)]
                         )}
                     </table>
                 </div>

@@ -70511,8 +70511,10 @@ Component that was made reactive: `, type);
     chart.render();
   };
   var round3 = (x) => Math.round(x * 10 ** 3) / 10 ** 3;
-  var createTr = (data, name, labels) => {
-    return /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("td", {
+  var createTr = (data, name, labels, style) => {
+    return /* @__PURE__ */ h("tr", {
+      style
+    }, /* @__PURE__ */ h("td", {
       colspan: "2",
       style: [css.tx.left()]
     }, name), labels.map((label) => /* @__PURE__ */ h("td", null, round3(data[label]))));
@@ -70640,7 +70642,7 @@ Component that was made reactive: `, type);
         style: [css.w.percent(22)]
       }, "STOI"), /* @__PURE__ */ h("td", {
         style: [css.w.percent(22)]
-      }, "SI-SNR")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["PESQ", "STOI", "SI-SNR"])))
+      }, "SI-SNR")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["PESQ", "STOI", "SI-SNR"], [css.tx.color(100, 200, 255, 255)]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["PESQ", "STOI", "SI-SNR"], [css.tx.color(100, 255, 150, 255)]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["PESQ", "STOI", "SI-SNR"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["PESQ", "STOI", "SI-SNR"], [css.tx.color(100, 255, 150, 255)])))
     }),
     /* @__PURE__ */ h(Tmpl2, null, {
       title1: () => "Experiment",
@@ -70667,7 +70669,7 @@ Component that was made reactive: `, type);
         colspan: "1"
       }), /* @__PURE__ */ h("td", {
         colspan: "4"
-      }, "PESQ")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"])))
+      }, "PESQ")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"], [css.tx.color(100, 200, 255, 255)]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"], [css.tx.color(100, 255, 150, 255)]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["PESQ:-7.5", "PESQ:-2.5", "PESQ:2.5", "PESQ:7.5"], [css.tx.color(100, 255, 150, 255)])))
     }),
     /* @__PURE__ */ h(Tmpl2, null, {
       title1: () => "Experiment",
@@ -70694,7 +70696,7 @@ Component that was made reactive: `, type);
         colspan: "1"
       }), /* @__PURE__ */ h("td", {
         colspan: "4"
-      }, "STOI")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"])))
+      }, "STOI")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"], [css.tx.color(100, 200, 255, 255)]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"], [css.tx.color(100, 255, 150, 255)]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["STOI:-7.5", "STOI:-2.5", "STOI:2.5", "STOI:7.5"], [css.tx.color(100, 255, 150, 255)])))
     }),
     /* @__PURE__ */ h(Tmpl2, null, {
       title1: () => "Experiment",
@@ -70721,7 +70723,7 @@ Component that was made reactive: `, type);
         colspan: "1"
       }), /* @__PURE__ */ h("td", {
         colspan: "4"
-      }, "SI-SNR")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"])))
+      }, "SI-SNR")), createTr(test_default.find((data) => data.Model == "Noisy"), "Noisy", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "Normal"), "Normal", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"], [css.tx.color(100, 200, 255, 255)]), createTr(test_default.find((data) => data.Model == "BYOL"), "BYOL", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round"), "BYOL round", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "BYOL-round-100-step"), "BYOL round(100 s)", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"], [css.tx.color(100, 255, 150, 255)]), createTr(test_default.find((data) => data.Model == "SimSiam"), "SimSiam", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"]), createTr(test_default.find((data) => data.Model == "SimSiam-round"), "SimSiam round", ["SI-SNR:-7.5", "SI-SNR:-2.5", "SI-SNR:2.5", "SI-SNR:7.5"], [css.tx.color(100, 255, 150, 255)])))
     }),
     /* @__PURE__ */ h(Tmpl2, null, {
       title1: () => "Experiment",
