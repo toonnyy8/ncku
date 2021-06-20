@@ -5,6 +5,7 @@ import arrow_forward from "../icon/arrow_forward_ios-white-18dp.svg"
 import { h, reactive, defineComponent, createApp, Fragment, ref, Ref, onMounted } from "vue"
 import { Title, Outline, Tmpl1 } from "./template"
 import { introductionPages } from "./introduction"
+import { literatureReviewPages } from "./literature-review"
 import { methodPages } from "./method"
 import { experimentPages } from "./experiment"
 import { conclusionPages } from "./conclusion"
@@ -39,14 +40,12 @@ const App = defineComponent(() => {
                         Speech Enhancement
                     </>
                 ),
-                authors: () => [
-                    // "郭品辰",
-                    "黃仁鴻",
-                ],
+                authors: () => ["郭品辰", "黃仁鴻"],
             }}
         </Title>,
         <Outline>{() => ["Introduction", "Method", "Experiment", "Conclusion"]}</Outline>,
         ...introductionPages,
+        ...literatureReviewPages,
         ...methodPages,
         ...experimentPages,
         ...conclusionPages,

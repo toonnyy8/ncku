@@ -2074,8 +2074,8 @@
     }
     return new RefImpl(rawValue, shallow);
   }
-  function unref(ref6) {
-    return isRef(ref6) ? ref6.value : ref6;
+  function unref(ref7) {
+    return isRef(ref7) ? ref7.value : ref7;
   }
   var shallowUnwrapHandlers = {
     get: (target, key, receiver) => unref(Reflect.get(target, key, receiver)),
@@ -4553,7 +4553,7 @@ Please upgrade vue-loader/vite/rollup-plugin-vue or other relevant dependency th
   }
   var uid2 = 0;
   function createAppAPI(render, hydrate) {
-    return function createApp7(rootComponent, rootProps = null) {
+    return function createApp8(rootComponent, rootProps = null) {
       if (rootProps != null && !isObject(rootProps)) {
         warn(`root props passed to app.mount() must be an object.`);
         rootProps = null;
@@ -4744,7 +4744,7 @@ If you want to remount the same app, move your app creation logic into a factory
     }
     const refValue = vnode.shapeFlag & 4 ? vnode.component.exposed || vnode.component.proxy : vnode.el;
     const value = isUnmount ? null : refValue;
-    const { i: owner, r: ref6 } = rawRef;
+    const { i: owner, r: ref7 } = rawRef;
     if (!owner) {
       warn(`Missing ref owner context. ref cannot be used on hoisted vnodes. A vnode with ref must be created inside the render function.`);
       return;
@@ -4752,7 +4752,7 @@ If you want to remount the same app, move your app creation logic into a factory
     const oldRef = oldRawRef && oldRawRef.r;
     const refs = owner.refs === EMPTY_OBJ ? owner.refs = {} : owner.refs;
     const setupState = owner.setupState;
-    if (oldRef != null && oldRef !== ref6) {
+    if (oldRef != null && oldRef !== ref7) {
       if (isString(oldRef)) {
         refs[oldRef] = null;
         if (hasOwn(setupState, oldRef)) {
@@ -4762,13 +4762,13 @@ If you want to remount the same app, move your app creation logic into a factory
         oldRef.value = null;
       }
     }
-    if (isString(ref6)) {
+    if (isString(ref7)) {
       const doSet = () => {
         {
-          refs[ref6] = value;
+          refs[ref7] = value;
         }
-        if (hasOwn(setupState, ref6)) {
-          setupState[ref6] = value;
+        if (hasOwn(setupState, ref7)) {
+          setupState[ref7] = value;
         }
       };
       if (value) {
@@ -4777,9 +4777,9 @@ If you want to remount the same app, move your app creation logic into a factory
       } else {
         doSet();
       }
-    } else if (isRef(ref6)) {
+    } else if (isRef(ref7)) {
       const doSet = () => {
-        ref6.value = value;
+        ref7.value = value;
       };
       if (value) {
         doSet.id = -1;
@@ -4787,8 +4787,8 @@ If you want to remount the same app, move your app creation logic into a factory
       } else {
         doSet();
       }
-    } else if (isFunction(ref6)) {
-      callWithErrorHandling(ref6, owner, 12, [value, refs]);
+    } else if (isFunction(ref7)) {
+      callWithErrorHandling(ref7, owner, 12, [value, refs]);
     } else if (true) {
       warn("Invalid template ref type:", value, `(${typeof value})`);
     }
@@ -4816,7 +4816,7 @@ If you want to remount the same app, move your app creation logic into a factory
         optimized = false;
         n2.dynamicChildren = null;
       }
-      const { type, ref: ref6, shapeFlag } = n2;
+      const { type, ref: ref7, shapeFlag } = n2;
       switch (type) {
         case Text:
           processText(n1, n2, container, anchor);
@@ -4847,8 +4847,8 @@ If you want to remount the same app, move your app creation logic into a factory
             warn("Invalid VNode type:", type, `(${typeof type})`);
           }
       }
-      if (ref6 != null && parentComponent) {
-        setRef(ref6, n1 && n1.ref, parentSuspense, n2 || n1, !n2);
+      if (ref7 != null && parentComponent) {
+        setRef(ref7, n1 && n1.ref, parentSuspense, n2 || n1, !n2);
       }
     };
     const processText = (n1, n2, container, anchor) => {
@@ -5533,9 +5533,9 @@ If you want to remount the same app, move your app creation logic into a factory
       }
     };
     const unmount = (vnode, parentComponent, parentSuspense, doRemove = false, optimized = false) => {
-      const { type, props, ref: ref6, children, dynamicChildren, shapeFlag, patchFlag, dirs } = vnode;
-      if (ref6 != null) {
-        setRef(ref6, null, parentSuspense, vnode, true);
+      const { type, props, ref: ref7, children, dynamicChildren, shapeFlag, patchFlag, dirs } = vnode;
+      if (ref7 != null) {
+        setRef(ref7, null, parentSuspense, vnode, true);
       }
       if (shapeFlag & 256) {
         parentComponent.ctx.deactivate(vnode);
@@ -5786,8 +5786,8 @@ If you want to remount the same app, move your app creation logic into a factory
   };
   var InternalObjectKey = `__vInternal`;
   var normalizeKey = ({ key }) => key != null ? key : null;
-  var normalizeRef = ({ ref: ref6 }) => {
-    return ref6 != null ? isString(ref6) || isRef(ref6) || isFunction(ref6) ? { i: currentRenderingInstance, r: ref6 } : ref6 : null;
+  var normalizeRef = ({ ref: ref7 }) => {
+    return ref7 != null ? isString(ref7) || isRef(ref7) || isFunction(ref7) ? { i: currentRenderingInstance, r: ref7 } : ref7 : null;
   };
   var createVNode = true ? createVNodeWithArgsTransform : _createVNode;
   function _createVNode(type, props = null, children = null, patchFlag = 0, dynamicProps = null, isBlockNode = false) {
@@ -5868,7 +5868,7 @@ Component that was made reactive: `, type);
     return vnode;
   }
   function cloneVNode(vnode, extraProps, mergeRef = false) {
-    const { props, ref: ref6, patchFlag, children } = vnode;
+    const { props, ref: ref7, patchFlag, children } = vnode;
     const mergedProps = extraProps ? mergeProps(props || {}, extraProps) : props;
     const cloned = {
       __v_isVNode: true,
@@ -5876,7 +5876,7 @@ Component that was made reactive: `, type);
       type: vnode.type,
       props: mergedProps,
       key: mergedProps && normalizeKey(mergedProps),
-      ref: extraProps && extraProps.ref ? mergeRef && ref6 ? isArray(ref6) ? ref6.concat(normalizeRef(extraProps)) : [ref6, normalizeRef(extraProps)] : normalizeRef(extraProps) : ref6,
+      ref: extraProps && extraProps.ref ? mergeRef && ref7 ? isArray(ref7) ? ref7.concat(normalizeRef(extraProps)) : [ref7, normalizeRef(extraProps)] : normalizeRef(extraProps) : ref7,
       scopeId: vnode.scopeId,
       slotScopeIds: vnode.slotScopeIds,
       children: patchFlag === -1 && isArray(children) ? children.map(deepCloneVNode) : children,
@@ -7583,6 +7583,24 @@ Component that was made reactive: `, type);
       content: () => /* @__PURE__ */ h("div", {
         style: [css.m.x(10)]
       }, "\u6211\u8A8D\u70BA\uFF0C\u85C9\u7531 CL \u7684\u65B9\u6CD5\u4F86\u5B78\u7FD2\u8A9E\u97F3\u7279\u5FB5\uFF0C\u61C9\u8A72\u6703\u5177\u5099\u6BD4\u4E00\u822C\u6DF1\u5EA6\u5B78\u7FD2\u7684\u8A9E\u97F3\u589E\u5F37\u65B9\u6CD5\u66F4\u9AD8\u7684\u6027\u80FD\u3002", /* @__PURE__ */ h("br", null), "\u7136\u800C\uFF0C\u5728 SE \u554F\u984C\u4E2D\u4E0D\u5BB9\u6613\u8A02\u5B9A frame level \u7684\u8CA0\u6A23\u672C\u3002", /* @__PURE__ */ h("br", null), "\u70BA\u6B64\uFF0C\u672C\u7814\u7A76\u4F7F\u7528\u7121\u9808\u8CA0\u6A23\u672C\u7684 BYOL \u8207 SimSiam \u9019\u5169\u7A2E\u65B9\u6CD5\u4F5C\u70BA\u7814\u7A76\u4E3B\u8EF8\uFF0C\u4E26\u8207\u672A\u4F7F\u7528 CL \u65B9\u6CD5\u7684\u6A21\u578B\u9032\u884C\u6BD4\u8F03\u3002")
+    })
+  ];
+
+  // final-project/report/dev/literature-review.tsx
+  var literatureReviewPages = [
+    /* @__PURE__ */ h(Tmpl2, null, {
+      title1: () => "Introduction",
+      title2: () => "CL Methods Comparison",
+      content: () => /* @__PURE__ */ h("div", {
+        style: [css.p.x(10)]
+      }, /* @__PURE__ */ h("table", {
+        class: "text-lg",
+        style: [css.tx.center(), css.w.percent(100)]
+      }, /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("td", null, "method"), /* @__PURE__ */ h("td", null, "batch size"), /* @__PURE__ */ h("td", null, "negative", /* @__PURE__ */ h("br", null), "pairs"), /* @__PURE__ */ h("td", null, "momentum", /* @__PURE__ */ h("br", null), "encoder")), /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("td", null, "SimCLR"), /* @__PURE__ */ h("td", null, "4096"), /* @__PURE__ */ h("td", null, "Y"), /* @__PURE__ */ h("td", null)), /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("td", null, "MoCo v2"), /* @__PURE__ */ h("td", null, "256"), /* @__PURE__ */ h("td", null, "Y"), /* @__PURE__ */ h("td", null, "Y")), /* @__PURE__ */ h("tr", {
+        style: [css.tx.color(100, 255, 150, 255)]
+      }, /* @__PURE__ */ h("td", null, "BYOL"), /* @__PURE__ */ h("td", null, /* @__PURE__ */ h("b", null, "256"), "~4096"), /* @__PURE__ */ h("td", null), /* @__PURE__ */ h("td", null, "Y")), /* @__PURE__ */ h("tr", null, /* @__PURE__ */ h("td", null, "SwAV"), /* @__PURE__ */ h("td", null, "4096"), /* @__PURE__ */ h("td", null), /* @__PURE__ */ h("td", null)), /* @__PURE__ */ h("tr", {
+        style: [css.tx.color(100, 255, 150, 255)]
+      }, /* @__PURE__ */ h("td", null, "SimSiam"), /* @__PURE__ */ h("td", null, /* @__PURE__ */ h("b", null, "256")), /* @__PURE__ */ h("td", null), /* @__PURE__ */ h("td", null))))
     })
   ];
 
@@ -70777,12 +70795,11 @@ Component that was made reactive: `, type);
         title: () => /* @__PURE__ */ h(Fragment, null, "Contrastive Learning", /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", {
           class: "text-xl"
         }, " for"), /* @__PURE__ */ h("br", null), "Speech Enhancement"),
-        authors: () => [
-          "\u9EC3\u4EC1\u9D3B"
-        ]
+        authors: () => ["\u90ED\u54C1\u8FB0", "\u9EC3\u4EC1\u9D3B"]
       }),
       /* @__PURE__ */ h(Outline, null, () => ["Introduction", "Method", "Experiment", "Conclusion"]),
       ...introductionPages,
+      ...literatureReviewPages,
       ...methodPages,
       ...experimentPages,
       ...conclusionPages
