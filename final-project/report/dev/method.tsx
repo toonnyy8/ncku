@@ -101,7 +101,7 @@ export const methodPages = [
     <Tmpl2>
         {{
             title1: () => "Method",
-            title2: () => "Loss",
+            title2: () => "Mix Loss",
             content: () => (
                 <div style={[css.tx.center()]}>
                     <img src={loss_url} style={[css.w.percent(75)]} />

@@ -36,7 +36,7 @@ export const introductionPages = [
             title: () => "Introduction",
             content: () => (
                 <div style={[css.m.x(10)]}>
-                    我認為，藉由 CL
+                    我們認為，藉由 CL
                     的方法來學習語音特徵，應該會具備比一般深度學習的語音增強方法更高的性能。
                     <br />
                     然而，在 SE 問題中不容易訂定 frame level 的負樣本。
