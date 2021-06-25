@@ -155,9 +155,24 @@
    張照片轉換為場景編碼，Volume Rendering 所用到的深度採樣數則是 16~64，會在累計 8 個 batch 的梯度後才進行權重的更新。Positional Encoding 的
    $L_{embed}=12$，Multihead Attention 有 32 個 head，每個 head 維度為 32d，在 Encoder 與 Renderer 分別具有 8 倍的 downsample/upsample。
 
-
    Fig.~\ref{fig:train_results} 與 Fig.~\ref{fig:test_results}
    分別是訓練物件與測試物件的重構結果。可以發現，在訓練時沒看過的物件是無法正確還原的，其生成結果都會帶有訓練物件的特徵。
+
+   %------------------------------------------------------------------------
+   \section{Conclusion}
+   目前只有在訓練時看過的物件才能成功重建，而沒有看過的物件在重建後會被扭曲成看過的物件。推測原因有可能是在
+   Multihead Attention 計算時，類神經網路將位置資訊混進輸出中。導致模型退化成 NeRF + Object Condition，使其缺乏泛化能力。
+
+   為了解決這個問題，未來會研究在中間層的特徵編碼進行約束，使得 Multihead Attention 的輸出結果與目標影像通過 AutoEncoder
+   所產生的編碼相近，這部分的約束可以參考 Contrastive Learning 的相關研究，但是若要達成此作法，就必須在特徵編髮的階段就進行類似
+   Volume Rendering 的計算，好將不同深度的特徵編碼進行合成。
+
+   {\small
+   \bibliographystyle{ieee_fullname}
+   \bibliography{egbib}
+   }
+
+
    \begin{figure}
       \begin{center}
          \includegraphics[width=1\linewidth]{img/experiment/train_0.png}
@@ -185,19 +200,5 @@
       }
       \label{fig:test_results}
    \end{figure}
-
-   %------------------------------------------------------------------------
-   \section{Conclusion}
-   目前只有在訓練時看過的物件才能成功重建，而沒有看過的物件在重建後會被扭曲成看過的物件。推測原因有可能是在
-   Multihead Attention 計算時，類神經網路將位置資訊混進輸出中。導致模型退化成 NeRF + Object Condition，使其缺乏泛化能力。
-
-   為了解決這個問題，未來會研究在中間層的特徵編碼進行約束，使得 Multihead Attention 的輸出結果與目標影像通過 AutoEncoder
-   所產生的編碼相近，這部分的約束可以參考 Contrastive Learning 的相關研究，但是若要達成此作法，就必須在特徵編髮的階段就進行類似
-   Volume Rendering 的計算，好將不同深度的特徵編碼進行合成。
-
-   {\small
-   \bibliographystyle{ieee_fullname}
-   \bibliography{egbib}
-   }
 \end{CJK}
 \end{document}
