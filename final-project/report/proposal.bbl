@@ -15,4 +15,10 @@ Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
   Information Processing Systems}, NIPS'17, page 6000–6010, Red Hook, NY,
   USA, 2017. Curran Associates Inc.
 
+\bibitem{SSIM}
+Zhou Wang, A.C. Bovik, H.R. Sheikh, and E.P. Simoncelli.
+\newblock Image quality assessment: from error visibility to structural
+  similarity.
+\newblock {\em IEEE Transactions on Image Processing}, 13(4):600--612, 2004.
+
 \end{thebibliography}

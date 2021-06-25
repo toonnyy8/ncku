@@ -79,7 +79,9 @@ export const experimentPages = [
                         </tr>
                         <tr>
                             <td>Batch Size</td>
-                            <td colspan="2">32</td>
+                            <td colspan="2">
+                                4x8 (基本 batch size 為 4，但會累計 8 個 batch 才更新一次權重)
+                            </td>
                         </tr>
                         <tr>
                             <td>

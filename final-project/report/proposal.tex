@@ -114,18 +114,8 @@
       }
       \label{fig:render-view}
    \end{figure}
-
-   \begin{figure}[htbp]
-      \begin{center}
-         \includegraphics[width=1\linewidth]{img/auto-encoder.png}
-      \end{center}
-      \caption{
-         預先訓練 Auto Encoder。
-      }
-      \label{fig:auto-encoder}
-   \end{figure}
    %------------------------------------------------------------------------
-   \section{System framework}
+   \section{Method}
 
    在原版的 NeRF 中，會使用目標視角的位置編碼(Position Encoding,
    PE)作為輸入，以生成該視角會拍攝到場景照片，而 Position Encoding
@@ -139,8 +129,8 @@
    \end{equation}
 
    本專題架構如 Fig.~\ref{fig:Decoupling-NeRF} 所示，可以分成 Scene Encoder、Rebuild View 與 Renderer
-   三個區塊。在進行照片生成時，先將多張場景照片編碼成 Scene Embedding(Fig.~\ref{fig:encode-scene})，再配合對應的 Scene PE 及生成目標的 View
-   PE，將這三者以 Fig.~\ref{fig:rebuild-view} 的形式建立出
+   三個區塊。在進行照片生成時，先將多張場景照片編碼成 Scene Embedding(Fig.~\ref{fig:encode-scene})，Scene Image 對應的 Scene PE 及生成目標的 View
+   PE 也會通過各自的 Encoder 轉換為 Values、Keys 及 Querys，將這三者以 Fig.~\ref{fig:rebuild-view} 的形式建立出
    View Embedding，最後再交由 Renderer 產生視圖(Fig.~\ref{fig:render-view})。
 
    在 Fig.~\ref{fig:rebuild-view} 中，利用了 Vaswani et al.~\cite{AttentionIsAllYouNeed} 所提出的
@@ -154,25 +144,60 @@
       \label{eq:multi-head-attention}
    \end{equation}
 
-   在訓練階段則可分為兩個步驟，第一步會把架構中的 Scene Encoder 及 Renderer 以 Auto Encoder 的形式進行預訓練(如
-   Fig.~\ref{fig:auto-encoder})。而步驟二不僅要訓練 Rebuild View，還會讓 Renderer 再次學習。
+   在訓練時使用 SSIM\cite{SSIM} 作為損失函數來計算生成結果與實際影像的誤差。
 
-   %------------------------------------------------------------------------
-   \section{Method}
    %------------------------------------------------------------------------
    \section{Experiments}
-   本專題將會使用 NeRF 提供的資料集\footnote{Link \href{https://drive.google.com/drive/folders/128yBriW1IG_3NJ5Rp7APSTZsJqdJdfc1}{https://drive.google.com/drive/folders/128yBriW1IG\_3NJ5Rp7APSTZsJqdJdfc1}}進行訓練與測試，其中提供了
-   8 種場景與 8 個物件的多張照片及拍攝視角，並已區分成訓練、驗證跟測試集。
+   本專題會使用 NeRF 提供的 nerf\_synthetic 資料集\footnote{Link \href{https://drive.google.com/drive/folders/128yBriW1IG_3NJ5Rp7APSTZsJqdJdfc1}{https://drive.google.com/drive/folders/128yBriW1IG\_3NJ5Rp7APSTZsJqdJdfc1}}進行訓練與測試，nerf\_synthetic 提供了
+   8 個物件的多張照片及拍攝時的姿態矩陣，將其中的 chair, drums, ficus, hotdog, lego, materials 訓練物件，mic, ship 則當成測試物件。為了加快訓練速度並減少記憶體使用量，將 800x800 pixels 的原圖縮小為 64x64 pixels。
 
-   在將模型訓練完成後，會測試不同數量的場景照片對模型生成能力所造成的影響。期望能將其製作成網頁應用，在計算能力有限的行動裝置下也能使用。
+   訓練使用的優化器是 Adamax，learning rate 是預設的 0.002，batch size 為 4，每個 batch 會隨機挑選 4~16
+   張照片轉換為場景編碼，Volume Rendering 所用到的深度採樣數則是 16~64，會在累計 8 個 batch 的梯度後才進行權重的更新。Positional Encoding 的
+   $L_{embed}=12$，Multihead Attention 有 32 個 head，每個 head 維度為 32d，在 Encoder 與 Renderer 分別具有 8 倍的 downsample/upsample。
+
+
+   Fig.~\ref{fig:train_results} 與 Fig.~\ref{fig:test_results}
+   分別是訓練物件與測試物件的重構結果。可以發現，在訓練時沒看過的物件是無法正確還原的，其生成結果都會帶有訓練物件的特徵。
+   \begin{figure}
+      \begin{center}
+         \includegraphics[width=1\linewidth]{img/experiment/train_0.png}
+         \includegraphics[width=1\linewidth]{img/experiment/train_1.png}
+         \includegraphics[width=1\linewidth]{img/experiment/train_2.png}
+         \includegraphics[width=1\linewidth]{img/experiment/train_3.png}
+         \includegraphics[width=1\linewidth]{img/experiment/train_4.png}
+      \end{center}
+      \caption{
+         左邊是訓練物件的還原結果，右邊是真實影像。
+      }
+      \label{fig:train_results}
+   \end{figure}
+
+   \begin{figure}
+      \begin{center}
+         \includegraphics[width=1\linewidth]{img/experiment/test_0.png}
+         \includegraphics[width=1\linewidth]{img/experiment/test_1.png}
+         \includegraphics[width=1\linewidth]{img/experiment/test_2.png}
+         \includegraphics[width=1\linewidth]{img/experiment/test_3.png}
+         \includegraphics[width=1\linewidth]{img/experiment/test_4.png}
+      \end{center}
+      \caption{
+         左邊是測試物件的還原結果，右邊是真實影像。
+      }
+      \label{fig:test_results}
+   \end{figure}
 
    %------------------------------------------------------------------------
    \section{Conclusion}
+   目前只有在訓練時看過的物件才能成功重建，而沒有看過的物件在重建後會被扭曲成看過的物件。推測原因有可能是在
+   Multihead Attention 計算時，類神經網路將位置資訊混進輸出中。導致模型退化成 NeRF + Object Condition，使其缺乏泛化能力。
 
+   為了解決這個問題，未來會研究在中間層的特徵編碼進行約束，使得 Multihead Attention 的輸出結果與目標影像通過 AutoEncoder
+   所產生的編碼相近，這部分的約束可以參考 Contrastive Learning 的相關研究，但是若要達成此作法，就必須在特徵編髮的階段就進行類似
+   Volume Rendering 的計算，好將不同深度的特徵編碼進行合成。
 
-    {\small
-     \bibliographystyle{ieee_fullname}
-     \bibliography{egbib}
-    }
+   {\small
+   \bibliographystyle{ieee_fullname}
+   \bibliography{egbib}
+   }
 \end{CJK}
 \end{document}
