@@ -1,0 +1,2002 @@
+[
+    {
+        "Train SISNR": -10.981,
+        "Test SISNR": -4.001,
+        "Train CL Loss": -0.541
+    },
+    {
+        "Train SISNR": -4.297,
+        "Test SISNR": -1.573,
+        "Train CL Loss": -0.562
+    },
+    {
+        "Train SISNR": -2.585,
+        "Test SISNR": -0.298,
+        "Train CL Loss": -0.577
+    },
+    {
+        "Train SISNR": -1.653,
+        "Test SISNR": 0.345,
+        "Train CL Loss": -0.598
+    },
+    {
+        "Train SISNR": -1.089,
+        "Test SISNR": 1.007,
+        "Train CL Loss": -0.62
+    },
+    {
+        "Train SISNR": -0.516,
+        "Test SISNR": 1.103,
+        "Train CL Loss": -0.647
+    },
+    {
+        "Train SISNR": -0.292,
+        "Test SISNR": 1.507,
+        "Train CL Loss": -0.659
+    },
+    {
+        "Train SISNR": 0.054,
+        "Test SISNR": 1.754,
+        "Train CL Loss": -0.685
+    },
+    {
+        "Train SISNR": 0.236,
+        "Test SISNR": 2.015,
+        "Train CL Loss": -0.704
+    },
+    {
+        "Train SISNR": 0.47,
+        "Test SISNR": 2.163,
+        "Train CL Loss": -0.72
+    },
+    {
+        "Train SISNR": 0.786,
+        "Test SISNR": 2.512,
+        "Train CL Loss": -0.741
+    },
+    {
+        "Train SISNR": 0.978,
+        "Test SISNR": 2.403,
+        "Train CL Loss": -0.757
+    },
+    {
+        "Train SISNR": 1.126,
+        "Test SISNR": 2.392,
+        "Train CL Loss": -0.771
+    },
+    {
+        "Train SISNR": 1.338,
+        "Test SISNR": 2.641,
+        "Train CL Loss": -0.787
+    },
+    {
+        "Train SISNR": 1.406,
+        "Test SISNR": 3.016,
+        "Train CL Loss": -0.797
+    },
+    {
+        "Train SISNR": 1.66,
+        "Test SISNR": 2.868,
+        "Train CL Loss": -0.815
+    },
+    {
+        "Train SISNR": 1.829,
+        "Test SISNR": 3.229,
+        "Train CL Loss": -0.825
+    },
+    {
+        "Train SISNR": 1.961,
+        "Test SISNR": 3.454,
+        "Train CL Loss": -0.837
+    },
+    {
+        "Train SISNR": 2.199,
+        "Test SISNR": 3.506,
+        "Train CL Loss": -0.848
+    },
+    {
+        "Train SISNR": 2.297,
+        "Test SISNR": 3.693,
+        "Train CL Loss": -0.856
+    },
+    {
+        "Train SISNR": 2.453,
+        "Test SISNR": 3.801,
+        "Train CL Loss": -0.869
+    },
+    {
+        "Train SISNR": 2.621,
+        "Test SISNR": 3.999,
+        "Train CL Loss": -0.879
+    },
+    {
+        "Train SISNR": 2.773,
+        "Test SISNR": 4.047,
+        "Train CL Loss": -0.885
+    },
+    {
+        "Train SISNR": 2.936,
+        "Test SISNR": 4.19,
+        "Train CL Loss": -0.893
+    },
+    {
+        "Train SISNR": 3.079,
+        "Test SISNR": 4.25,
+        "Train CL Loss": -0.901
+    },
+    {
+        "Train SISNR": 3.21,
+        "Test SISNR": 4.483,
+        "Train CL Loss": -0.907
+    },
+    {
+        "Train SISNR": 3.309,
+        "Test SISNR": 4.509,
+        "Train CL Loss": -0.91
+    },
+    {
+        "Train SISNR": 3.38,
+        "Test SISNR": 4.685,
+        "Train CL Loss": -0.914
+    },
+    {
+        "Train SISNR": 3.58,
+        "Test SISNR": 4.691,
+        "Train CL Loss": -0.919
+    },
+    {
+        "Train SISNR": 3.552,
+        "Test SISNR": 4.798,
+        "Train CL Loss": -0.922
+    },
+    {
+        "Train SISNR": 3.681,
+        "Test SISNR": 4.914,
+        "Train CL Loss": -0.925
+    },
+    {
+        "Train SISNR": 3.795,
+        "Test SISNR": 4.953,
+        "Train CL Loss": -0.93
+    },
+    {
+        "Train SISNR": 3.936,
+        "Test SISNR": 5.064,
+        "Train CL Loss": -0.932
+    },
+    {
+        "Train SISNR": 4.054,
+        "Test SISNR": 5.094,
+        "Train CL Loss": -0.935
+    },
+    {
+        "Train SISNR": 4.06,
+        "Test SISNR": 5.193,
+        "Train CL Loss": -0.936
+    },
+    {
+        "Train SISNR": 4.134,
+        "Test SISNR": 5.178,
+        "Train CL Loss": -0.938
+    },
+    {
+        "Train SISNR": 4.294,
+        "Test SISNR": 5.422,
+        "Train CL Loss": -0.941
+    },
+    {
+        "Train SISNR": 4.319,
+        "Test SISNR": 5.32,
+        "Train CL Loss": -0.942
+    },
+    {
+        "Train SISNR": 4.334,
+        "Test SISNR": 5.565,
+        "Train CL Loss": -0.943
+    },
+    {
+        "Train SISNR": 4.475,
+        "Test SISNR": 5.544,
+        "Train CL Loss": -0.945
+    },
+    {
+        "Train SISNR": 4.517,
+        "Test SISNR": 5.649,
+        "Train CL Loss": -0.946
+    },
+    {
+        "Train SISNR": 4.468,
+        "Test SISNR": 5.591,
+        "Train CL Loss": -0.947
+    },
+    {
+        "Train SISNR": 4.514,
+        "Test SISNR": 5.644,
+        "Train CL Loss": -0.948
+    },
+    {
+        "Train SISNR": 4.532,
+        "Test SISNR": 5.808,
+        "Train CL Loss": -0.949
+    },
+    {
+        "Train SISNR": 4.664,
+        "Test SISNR": 5.597,
+        "Train CL Loss": -0.95
+    },
+    {
+        "Train SISNR": 4.765,
+        "Test SISNR": 5.818,
+        "Train CL Loss": -0.952
+    },
+    {
+        "Train SISNR": 4.832,
+        "Test SISNR": 5.976,
+        "Train CL Loss": -0.953
+    },
+    {
+        "Train SISNR": 4.736,
+        "Test SISNR": 5.938,
+        "Train CL Loss": -0.953
+    },
+    {
+        "Train SISNR": 4.896,
+        "Test SISNR": 5.894,
+        "Train CL Loss": -0.954
+    },
+    {
+        "Train SISNR": 4.926,
+        "Test SISNR": 5.729,
+        "Train CL Loss": -0.955
+    },
+    {
+        "Train SISNR": 4.895,
+        "Test SISNR": 5.909,
+        "Train CL Loss": -0.956
+    },
+    {
+        "Train SISNR": 5.093,
+        "Test SISNR": 5.838,
+        "Train CL Loss": -0.957
+    },
+    {
+        "Train SISNR": 4.988,
+        "Test SISNR": 6.03,
+        "Train CL Loss": -0.957
+    },
+    {
+        "Train SISNR": 5.075,
+        "Test SISNR": 6.051,
+        "Train CL Loss": -0.957
+    },
+    {
+        "Train SISNR": 5.205,
+        "Test SISNR": 6.153,
+        "Train CL Loss": -0.958
+    },
+    {
+        "Train SISNR": 5.172,
+        "Test SISNR": 6.068,
+        "Train CL Loss": -0.958
+    },
+    {
+        "Train SISNR": 5.185,
+        "Test SISNR": 6.141,
+        "Train CL Loss": -0.96
+    },
+    {
+        "Train SISNR": 5.198,
+        "Test SISNR": 6.128,
+        "Train CL Loss": -0.96
+    },
+    {
+        "Train SISNR": 5.176,
+        "Test SISNR": 6.204,
+        "Train CL Loss": -0.959
+    },
+    {
+        "Train SISNR": 5.279,
+        "Test SISNR": 6.231,
+        "Train CL Loss": -0.96
+    },
+    {
+        "Train SISNR": 5.252,
+        "Test SISNR": 6.253,
+        "Train CL Loss": -0.961
+    },
+    {
+        "Train SISNR": 5.387,
+        "Test SISNR": 6.22,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 5.31,
+        "Test SISNR": 6.228,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 5.4,
+        "Test SISNR": 6.372,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 5.483,
+        "Test SISNR": 6.28,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 5.482,
+        "Test SISNR": 6.541,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 5.589,
+        "Test SISNR": 6.419,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 5.476,
+        "Test SISNR": 6.345,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 5.552,
+        "Test SISNR": 6.371,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 5.573,
+        "Test SISNR": 6.418,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 5.622,
+        "Test SISNR": 6.254,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 5.601,
+        "Test SISNR": 6.489,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 5.577,
+        "Test SISNR": 6.552,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 5.801,
+        "Test SISNR": 6.538,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 5.646,
+        "Test SISNR": 6.565,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 5.742,
+        "Test SISNR": 6.466,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 5.766,
+        "Test SISNR": 6.526,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 5.736,
+        "Test SISNR": 6.579,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 5.821,
+        "Test SISNR": 6.597,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 5.715,
+        "Test SISNR": 6.675,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 5.762,
+        "Test SISNR": 6.704,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 5.904,
+        "Test SISNR": 6.731,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 5.833,
+        "Test SISNR": 6.421,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 5.901,
+        "Test SISNR": 6.446,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 5.91,
+        "Test SISNR": 6.693,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 5.923,
+        "Test SISNR": 6.646,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 5.89,
+        "Test SISNR": 6.676,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 5.985,
+        "Test SISNR": 6.602,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 5.91,
+        "Test SISNR": 6.74,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 5.935,
+        "Test SISNR": 6.812,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 6.05,
+        "Test SISNR": 6.767,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 6.057,
+        "Test SISNR": 6.827,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 6.073,
+        "Test SISNR": 6.605,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 6.019,
+        "Test SISNR": 6.664,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 6.153,
+        "Test SISNR": 6.695,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 6.12,
+        "Test SISNR": 6.844,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 6.084,
+        "Test SISNR": 6.756,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 6.118,
+        "Test SISNR": 6.7,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 6.077,
+        "Test SISNR": 6.856,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 6.222,
+        "Test SISNR": 6.572,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 6.113,
+        "Test SISNR": 6.678,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.09,
+        "Test SISNR": 6.94,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 6.201,
+        "Test SISNR": 6.86,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 6.286,
+        "Test SISNR": 6.976,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.21,
+        "Test SISNR": 6.829,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.313,
+        "Test SISNR": 6.708,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.299,
+        "Test SISNR": 6.777,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.337,
+        "Test SISNR": 6.937,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.237,
+        "Test SISNR": 6.971,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.384,
+        "Test SISNR": 6.913,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.203,
+        "Test SISNR": 6.883,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.247,
+        "Test SISNR": 6.764,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.345,
+        "Test SISNR": 6.855,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 6.403,
+        "Test SISNR": 6.756,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.381,
+        "Test SISNR": 6.948,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.376,
+        "Test SISNR": 6.854,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.498,
+        "Test SISNR": 6.944,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.555,
+        "Test SISNR": 6.965,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.344,
+        "Test SISNR": 6.882,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.401,
+        "Test SISNR": 7.097,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.511,
+        "Test SISNR": 7.052,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.537,
+        "Test SISNR": 6.9,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.575,
+        "Test SISNR": 7.065,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.482,
+        "Test SISNR": 6.973,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 6.458,
+        "Test SISNR": 7.048,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.506,
+        "Test SISNR": 7.012,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.566,
+        "Test SISNR": 7.051,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.65,
+        "Test SISNR": 6.929,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.687,
+        "Test SISNR": 6.732,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.574,
+        "Test SISNR": 6.959,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.743,
+        "Test SISNR": 6.883,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.741,
+        "Test SISNR": 6.829,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.736,
+        "Test SISNR": 7.124,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.605,
+        "Test SISNR": 6.969,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.651,
+        "Test SISNR": 7.066,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.736,
+        "Test SISNR": 6.976,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.692,
+        "Test SISNR": 6.949,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.742,
+        "Test SISNR": 6.914,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.721,
+        "Test SISNR": 6.989,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.649,
+        "Test SISNR": 7.099,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.792,
+        "Test SISNR": 7.023,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.819,
+        "Test SISNR": 6.816,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.769,
+        "Test SISNR": 6.977,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.867,
+        "Test SISNR": 7.191,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.868,
+        "Test SISNR": 7.099,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 6.75,
+        "Test SISNR": 6.978,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.936,
+        "Test SISNR": 7.031,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.916,
+        "Test SISNR": 7.024,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.902,
+        "Test SISNR": 7.034,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.968,
+        "Test SISNR": 7.138,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.922,
+        "Test SISNR": 7.026,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 7.015,
+        "Test SISNR": 7.034,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.929,
+        "Test SISNR": 7.238,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 6.924,
+        "Test SISNR": 7.037,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 7.053,
+        "Test SISNR": 7.047,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 7.057,
+        "Test SISNR": 6.854,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 7.058,
+        "Test SISNR": 7.045,
+        "Train CL Loss": -0.975
+    },
+    {
+        "Train SISNR": 7.04,
+        "Test SISNR": 6.941,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.018,
+        "Test SISNR": 7.318,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.054,
+        "Test SISNR": 6.918,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.173,
+        "Test SISNR": 7.076,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.115,
+        "Test SISNR": 7.171,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.247,
+        "Test SISNR": 7.349,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.079,
+        "Test SISNR": 7.26,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 7.292,
+        "Test SISNR": 7.369,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.265,
+        "Test SISNR": 7.328,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.303,
+        "Test SISNR": 7.364,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.211,
+        "Test SISNR": 7.096,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.268,
+        "Test SISNR": 7.094,
+        "Train CL Loss": -0.974
+    },
+    {
+        "Train SISNR": 7.222,
+        "Test SISNR": 7.27,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 7.18,
+        "Test SISNR": 7.277,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.181,
+        "Test SISNR": 7.272,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.356,
+        "Test SISNR": 7.476,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.386,
+        "Test SISNR": 7.296,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 7.31,
+        "Test SISNR": 7.238,
+        "Train CL Loss": -0.973
+    },
+    {
+        "Train SISNR": 7.418,
+        "Test SISNR": 7.47,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.405,
+        "Test SISNR": 7.543,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.43,
+        "Test SISNR": 7.378,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.44,
+        "Test SISNR": 7.358,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.337,
+        "Test SISNR": 7.314,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.461,
+        "Test SISNR": 7.289,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.607,
+        "Test SISNR": 7.384,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.511,
+        "Test SISNR": 7.43,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.492,
+        "Test SISNR": 7.558,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.637,
+        "Test SISNR": 7.288,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.645,
+        "Test SISNR": 7.603,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.612,
+        "Test SISNR": 7.492,
+        "Train CL Loss": -0.972
+    },
+    {
+        "Train SISNR": 7.591,
+        "Test SISNR": 7.529,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.698,
+        "Test SISNR": 7.446,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.603,
+        "Test SISNR": 7.485,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.765,
+        "Test SISNR": 7.416,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.694,
+        "Test SISNR": 7.697,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.748,
+        "Test SISNR": 7.337,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.737,
+        "Test SISNR": 7.571,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.759,
+        "Test SISNR": 7.448,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.771,
+        "Test SISNR": 7.741,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.791,
+        "Test SISNR": 7.627,
+        "Train CL Loss": -0.971
+    },
+    {
+        "Train SISNR": 7.703,
+        "Test SISNR": 7.502,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.818,
+        "Test SISNR": 7.598,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.796,
+        "Test SISNR": 7.589,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.849,
+        "Test SISNR": 7.662,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.904,
+        "Test SISNR": 7.708,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.992,
+        "Test SISNR": 7.817,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.902,
+        "Test SISNR": 7.859,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.924,
+        "Test SISNR": 7.844,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.006,
+        "Test SISNR": 7.766,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 7.902,
+        "Test SISNR": 7.786,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.087,
+        "Test SISNR": 7.632,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 7.979,
+        "Test SISNR": 7.661,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 8.058,
+        "Test SISNR": 7.789,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.007,
+        "Test SISNR": 7.949,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 7.978,
+        "Test SISNR": 7.777,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 7.902,
+        "Test SISNR": 7.646,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 8.052,
+        "Test SISNR": 7.973,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 8.051,
+        "Test SISNR": 7.89,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.117,
+        "Test SISNR": 7.912,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 8.05,
+        "Test SISNR": 7.727,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.13,
+        "Test SISNR": 8.17,
+        "Train CL Loss": -0.97
+    },
+    {
+        "Train SISNR": 8.075,
+        "Test SISNR": 7.733,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.105,
+        "Test SISNR": 7.923,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.051,
+        "Test SISNR": 7.726,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.196,
+        "Test SISNR": 8.05,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.133,
+        "Test SISNR": 8.047,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.121,
+        "Test SISNR": 7.974,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.252,
+        "Test SISNR": 8.25,
+        "Train CL Loss": -0.969
+    },
+    {
+        "Train SISNR": 8.135,
+        "Test SISNR": 7.842,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.244,
+        "Test SISNR": 7.898,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.161,
+        "Test SISNR": 7.948,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.283,
+        "Test SISNR": 8.101,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.251,
+        "Test SISNR": 8.011,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.213,
+        "Test SISNR": 7.965,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.222,
+        "Test SISNR": 7.943,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.248,
+        "Test SISNR": 7.868,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.318,
+        "Test SISNR": 7.996,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.345,
+        "Test SISNR": 8.204,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.46,
+        "Test SISNR": 7.932,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.361,
+        "Test SISNR": 8.008,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.356,
+        "Test SISNR": 8.026,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.347,
+        "Test SISNR": 7.815,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.349,
+        "Test SISNR": 8.171,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.324,
+        "Test SISNR": 8.068,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.363,
+        "Test SISNR": 8.211,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.401,
+        "Test SISNR": 8.104,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.374,
+        "Test SISNR": 8.168,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.411,
+        "Test SISNR": 8.055,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.388,
+        "Test SISNR": 8.095,
+        "Train CL Loss": -0.968
+    },
+    {
+        "Train SISNR": 8.392,
+        "Test SISNR": 8.113,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.433,
+        "Test SISNR": 8.048,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.492,
+        "Test SISNR": 7.999,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.5,
+        "Test SISNR": 8.302,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.527,
+        "Test SISNR": 8.129,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.498,
+        "Test SISNR": 8.188,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.581,
+        "Test SISNR": 8.181,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.55,
+        "Test SISNR": 8.17,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.529,
+        "Test SISNR": 8.234,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.521,
+        "Test SISNR": 8.385,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.555,
+        "Test SISNR": 8.324,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.558,
+        "Test SISNR": 8.16,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.567,
+        "Test SISNR": 8.188,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.531,
+        "Test SISNR": 8.215,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.577,
+        "Test SISNR": 7.862,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.597,
+        "Test SISNR": 8.139,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.573,
+        "Test SISNR": 8.14,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.563,
+        "Test SISNR": 8.23,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.647,
+        "Test SISNR": 8.133,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.624,
+        "Test SISNR": 8.375,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.664,
+        "Test SISNR": 8.267,
+        "Train CL Loss": -0.967
+    },
+    {
+        "Train SISNR": 8.692,
+        "Test SISNR": 8.308,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.602,
+        "Test SISNR": 8.101,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.689,
+        "Test SISNR": 8.359,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.633,
+        "Test SISNR": 8.439,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.755,
+        "Test SISNR": 8.392,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.685,
+        "Test SISNR": 8.107,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.769,
+        "Test SISNR": 8.385,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.813,
+        "Test SISNR": 8.211,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.636,
+        "Test SISNR": 8.234,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.828,
+        "Test SISNR": 8.317,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.766,
+        "Test SISNR": 8.134,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.752,
+        "Test SISNR": 8.176,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.814,
+        "Test SISNR": 8.153,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.776,
+        "Test SISNR": 8.21,
+        "Train CL Loss": -0.966
+    },
+    {
+        "Train SISNR": 8.683,
+        "Test SISNR": 8.378,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.876,
+        "Test SISNR": 7.866,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.756,
+        "Test SISNR": 8.27,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.874,
+        "Test SISNR": 8.161,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.901,
+        "Test SISNR": 8.403,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.83,
+        "Test SISNR": 8.192,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.846,
+        "Test SISNR": 8.293,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.848,
+        "Test SISNR": 8.199,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.924,
+        "Test SISNR": 8.492,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.989,
+        "Test SISNR": 8.327,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.874,
+        "Test SISNR": 8.354,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.848,
+        "Test SISNR": 8.472,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.878,
+        "Test SISNR": 8.383,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.833,
+        "Test SISNR": 8.455,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.919,
+        "Test SISNR": 8.419,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.858,
+        "Test SISNR": 8.327,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.818,
+        "Test SISNR": 8.607,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.02,
+        "Test SISNR": 8.143,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.966,
+        "Test SISNR": 8.375,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.915,
+        "Test SISNR": 8.308,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.042,
+        "Test SISNR": 8.457,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.974,
+        "Test SISNR": 8.41,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.009,
+        "Test SISNR": 8.191,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 8.947,
+        "Test SISNR": 8.546,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.05,
+        "Test SISNR": 8.394,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 8.993,
+        "Test SISNR": 8.647,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.052,
+        "Test SISNR": 8.551,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 8.962,
+        "Test SISNR": 8.246,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.046,
+        "Test SISNR": 8.102,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.099,
+        "Test SISNR": 8.433,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.148,
+        "Test SISNR": 8.478,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.088,
+        "Test SISNR": 8.269,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.079,
+        "Test SISNR": 8.431,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.141,
+        "Test SISNR": 8.506,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.134,
+        "Test SISNR": 8.255,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.069,
+        "Test SISNR": 8.443,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.089,
+        "Test SISNR": 8.498,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.148,
+        "Test SISNR": 8.517,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.113,
+        "Test SISNR": 8.322,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.212,
+        "Test SISNR": 8.506,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.078,
+        "Test SISNR": 8.495,
+        "Train CL Loss": -0.965
+    },
+    {
+        "Train SISNR": 9.042,
+        "Test SISNR": 8.498,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.205,
+        "Test SISNR": 8.41,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.166,
+        "Test SISNR": 8.348,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.157,
+        "Test SISNR": 8.698,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.101,
+        "Test SISNR": 8.364,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.141,
+        "Test SISNR": 8.435,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.222,
+        "Test SISNR": 8.408,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.197,
+        "Test SISNR": 8.817,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.295,
+        "Test SISNR": 8.834,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.186,
+        "Test SISNR": 8.218,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.283,
+        "Test SISNR": 8.602,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.246,
+        "Test SISNR": 8.677,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.164,
+        "Test SISNR": 8.525,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.244,
+        "Test SISNR": 8.708,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.274,
+        "Test SISNR": 8.618,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.285,
+        "Test SISNR": 8.614,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.263,
+        "Test SISNR": 8.482,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.291,
+        "Test SISNR": 8.48,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.273,
+        "Test SISNR": 8.731,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.46,
+        "Test SISNR": 8.499,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.372,
+        "Test SISNR": 8.633,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.353,
+        "Test SISNR": 8.497,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.421,
+        "Test SISNR": 8.676,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.395,
+        "Test SISNR": 8.326,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.418,
+        "Test SISNR": 8.791,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.365,
+        "Test SISNR": 8.758,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.384,
+        "Test SISNR": 8.55,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.387,
+        "Test SISNR": 8.64,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.388,
+        "Test SISNR": 8.8,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.395,
+        "Test SISNR": 8.422,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.415,
+        "Test SISNR": 8.699,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.431,
+        "Test SISNR": 8.63,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.367,
+        "Test SISNR": 8.654,
+        "Train CL Loss": -0.964
+    },
+    {
+        "Train SISNR": 9.444,
+        "Test SISNR": 8.57,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.387,
+        "Test SISNR": 8.586,
+        "Train CL Loss": -0.961
+    },
+    {
+        "Train SISNR": 9.399,
+        "Test SISNR": 8.878,
+        "Train CL Loss": -0.961
+    },
+    {
+        "Train SISNR": 9.396,
+        "Test SISNR": 8.427,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.423,
+        "Test SISNR": 8.372,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.456,
+        "Test SISNR": 8.557,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.471,
+        "Test SISNR": 8.684,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.335,
+        "Test SISNR": 8.727,
+        "Train CL Loss": -0.961
+    },
+    {
+        "Train SISNR": 9.462,
+        "Test SISNR": 8.872,
+        "Train CL Loss": -0.961
+    },
+    {
+        "Train SISNR": 9.416,
+        "Test SISNR": 8.638,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.419,
+        "Test SISNR": 8.94,
+        "Train CL Loss": -0.961
+    },
+    {
+        "Train SISNR": 9.665,
+        "Test SISNR": 8.743,
+        "Train CL Loss": -0.963
+    },
+    {
+        "Train SISNR": 9.553,
+        "Test SISNR": 8.514,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.543,
+        "Test SISNR": 8.581,
+        "Train CL Loss": -0.962
+    },
+    {
+        "Train SISNR": 9.529202848672867,
+        "Test SISNR": 8.785043199857077,
+        "Train CL Loss": -0.9618534240871668
+    },
+    {
+        "Train SISNR": 9.572159677743912,
+        "Test SISNR": 8.549949876467387,
+        "Train CL Loss": -0.9627702180296183
+    },
+    {
+        "Train SISNR": 9.630064398050308,
+        "Test SISNR": 8.652335747083027,
+        "Train CL Loss": -0.961913151666522
+    },
+    {
+        "Train SISNR": 9.519271165132523,
+        "Test SISNR": 8.746148347854614,
+        "Train CL Loss": -0.9623584151268005
+    },
+    {
+        "Train SISNR": 9.534073948860168,
+        "Test SISNR": 8.763212807973225,
+        "Train CL Loss": -0.9618993662297726
+    },
+    {
+        "Train SISNR": 9.525667816400528,
+        "Test SISNR": 8.871040765444437,
+        "Train CL Loss": -0.9621756430715322
+    },
+    {
+        "Train SISNR": 9.56944453716278,
+        "Test SISNR": 8.799538858731587,
+        "Train CL Loss": -0.9628779422491789
+    },
+    {
+        "Train SISNR": 9.512001425027847,
+        "Test SISNR": 8.653146974245708,
+        "Train CL Loss": -0.9625421166419983
+    },
+    {
+        "Train SISNR": 9.555556625127792,
+        "Test SISNR": 8.7635187069575,
+        "Train CL Loss": -0.9627331420779228
+    },
+    {
+        "Train SISNR": 9.589462786912918,
+        "Test SISNR": 8.807101877530416,
+        "Train CL Loss": -0.9626211617141962
+    },
+    {
+        "Train SISNR": 9.687830746173859,
+        "Test SISNR": 8.63599017461141,
+        "Train CL Loss": -0.962485684081912
+    },
+    {
+        "Train SISNR": 9.681970328092575,
+        "Test SISNR": 8.775867358843486,
+        "Train CL Loss": -0.962440786883235
+    },
+    {
+        "Train SISNR": 9.677590101957321,
+        "Test SISNR": 8.6050728003184,
+        "Train CL Loss": -0.9627989232540131
+    },
+    {
+        "Train SISNR": 9.628443509340286,
+        "Test SISNR": 8.641841697692872,
+        "Train CL Loss": -0.961724953725934
+    },
+    {
+        "Train SISNR": 9.697174847126007,
+        "Test SISNR": 8.821602519353231,
+        "Train CL Loss": -0.9613331723958254
+    },
+    {
+        "Train SISNR": 9.684951931238174,
+        "Test SISNR": 8.645906106630962,
+        "Train CL Loss": -0.962375745177269
+    },
+    {
+        "Train SISNR": 9.677520960569382,
+        "Test SISNR": 9.01887242794037,
+        "Train CL Loss": -0.9604996554553509
+    },
+    {
+        "Train SISNR": 9.692433536052704,
+        "Test SISNR": 9.02376434803009,
+        "Train CL Loss": -0.9622881356626749
+    },
+    {
+        "Train SISNR": 9.696430683135986,
+        "Test SISNR": 8.645355304082235,
+        "Train CL Loss": -0.9620074220001698
+    },
+    {
+        "Train SISNR": 9.701427221298218,
+        "Test SISNR": 8.775746655464172,
+        "Train CL Loss": -0.9618315454572439
+    },
+    {
+        "Train SISNR": 9.661522328853607,
+        "Test SISNR": 8.537176553408305,
+        "Train CL Loss": -0.9608611781150103
+    },
+    {
+        "Train SISNR": 9.628446102142334,
+        "Test SISNR": 8.779711318016052,
+        "Train CL Loss": -0.9607295226305723
+    },
+    {
+        "Train SISNR": 9.666745364665985,
+        "Test SISNR": 8.569595328966777,
+        "Train CL Loss": -0.960375003516674
+    },
+    {
+        "Train SISNR": 9.641058444976807,
+        "Test SISNR": 8.864138587315876,
+        "Train CL Loss": -0.9620496705174446
+    },
+    {
+        "Train SISNR": 9.70636636018753,
+        "Test SISNR": 8.831848684946696,
+        "Train CL Loss": -0.9620840568095446
+    },
+    {
+        "Train SISNR": 9.798106640577316,
+        "Test SISNR": 8.593030738830567,
+        "Train CL Loss": -0.9626754391938448
+    },
+    {
+        "Train SISNR": 9.70963591337204,
+        "Test SISNR": 8.590858229001363,
+        "Train CL Loss": -0.9622979182749987
+    },
+    {
+        "Train SISNR": 9.80659830570221,
+        "Test SISNR": 8.730751752853394,
+        "Train CL Loss": -0.960786322131753
+    },
+    {
+        "Train SISNR": 9.778366774320602,
+        "Test SISNR": 8.7327099720637,
+        "Train CL Loss": -0.961293226107955
+    },
+    {
+        "Train SISNR": 9.793720185756683,
+        "Test SISNR": 8.491073385874431,
+        "Train CL Loss": -0.9619337804615498
+    },
+    {
+        "Train SISNR": 9.724200129508972,
+        "Test SISNR": 8.95763738155365,
+        "Train CL Loss": -0.9623945634812117
+    }
+]

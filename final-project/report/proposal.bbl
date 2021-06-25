@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}\itemsep=-1pt
+
+\bibitem{mildenhall2020nerf}
+Ben Mildenhall, Pratul~P. Srinivasan, Matthew Tancik, Jonathan~T. Barron, Ravi
+  Ramamoorthi, and Ren Ng.
+\newblock Nerf: Representing scenes as neural radiance fields for view
+  synthesis.
+\newblock In {\em ECCV}, 2020.
+
+\bibitem{AttentionIsAllYouNeed}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N. Gomez, undefinedukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need.
+\newblock In {\em Proceedings of the 31st International Conference on Neural
+  Information Processing Systems}, NIPS'17, page 6000–6010, Red Hook, NY,
+  USA, 2017. Curran Associates Inc.
+
+\end{thebibliography}
