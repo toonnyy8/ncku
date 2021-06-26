@@ -143,7 +143,8 @@
       \end{aligned}
       \label{eq:multi-head-attention}
    \end{equation}
-
+   利用 Multi Head Attention 來重組 View Embedding 可以避免讓類神經網路直接取得位置資訊，以避免其直接將
+   Positional Encoding 映射成 3D 模型，藉此讓模型網路強制學習從場景編碼生成目標景象的方法。
    在訓練時使用 SSIM\cite{SSIM} 作為損失函數來計算生成結果與實際影像的誤差。
 
    %------------------------------------------------------------------------
