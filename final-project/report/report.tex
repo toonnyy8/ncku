@@ -151,8 +151,8 @@
    本專題會使用 NeRF 提供的 nerf\_synthetic 資料集\footnote{Link \href{https://drive.google.com/drive/folders/128yBriW1IG_3NJ5Rp7APSTZsJqdJdfc1}{https://drive.google.com/drive/folders/128yBriW1IG\_3NJ5Rp7APSTZsJqdJdfc1}}進行訓練與測試，nerf\_synthetic 提供了
    8 個物件的多張照片及拍攝時的姿態矩陣，將其中的 chair, drums, ficus, hotdog, lego, materials 訓練物件，mic, ship 則當成測試物件。為了加快訓練速度並減少記憶體使用量，將 800x800 pixels 的原圖縮小為 64x64 pixels。
 
-   在訓練時使用 SSIM\cite{SSIM} 作為損失函數來計算生成結果與實際影像的誤差。優化器為 Adamax，learning rate 是預設的 0.002，batch size 為 4，每個 batch 會隨機挑選 4~16
-   張照片轉換為場景編碼，Volume Rendering 所用到的深度採樣數則是 16~64，會在累計 8 個 batch 的梯度後才進行權重的更新。Positional Encoding 的
+   在訓練時使用 SSIM\cite{SSIM} 作為損失函數來計算生成結果與實際影像的誤差。優化器為 Adamax，learning rate 是預設的 0.002，batch size 為 4，每個 batch 會隨機挑選 4 到 16
+   張照片轉換為場景編碼，Volume Rendering 所用到的深度採樣數則是 16 至 64 隨機設定，會在累計 8 個 batch 的梯度後才進行權重的更新。Positional Encoding 的
    $L_{embed}=12$，Multihead Attention 有 32 個 head，每個 head 維度為 32d，在 Encoder 與 Renderer 分別具有 8 倍的 downsample/upsample。
 
    Fig.~\ref{fig:train_results} 與 Fig.~\ref{fig:test_results}

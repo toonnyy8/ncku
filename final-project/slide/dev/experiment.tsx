@@ -51,7 +51,7 @@ export const experimentPages = [
                         </tr>
                         <tr>
                             <td>Size</td>
-                            <td style={[css.tx.left()]}>resize to 64x64 pixel</td>
+                            <td style={[css.tx.left()]}>resize to 64x64 pixels</td>
                         </tr>
                     </table>
                 </div>
