@@ -1,0 +1,55 @@
+\begin{thebibliography}{1}
+
+\bibitem{SimCLR}
+Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey~E. Hinton.
+\newblock A simple framework for contrastive learning of visual
+  representations.
+\newblock {\em CoRR}, abs/2002.05709, 2020.
+
+\bibitem{BYOL}
+Jean{-}Bastien Grill, Florian Strub, Florent Altch{\'{e}}, Corentin Tallec,
+  Pierre~H. Richemond, Elena Buchatskaya, Carl Doersch, Bernardo~{\'{A}}vila
+  Pires, Zhaohan~Daniel Guo, Mohammad~Gheshlaghi Azar, Bilal Piot, Koray
+  Kavukcuoglu, R{\'{e}}mi Munos, and Michal Valko.
+\newblock Bootstrap your own latent: {A} new approach to self-supervised
+  learning.
+\newblock {\em CoRR}, abs/2006.07733, 2020.
+
+\bibitem{SimSiam}
+Xinlei Chen and Kaiming He.
+\newblock Exploring simple siamese representation learning.
+\newblock {\em CoRR}, abs/2011.10566, 2020.
+
+\bibitem{Nonspeech}
+Guoning Hu and DeLiang Wang.
+\newblock A tandem algorithm for pitch estimation and voiced speech
+  segregation.
+\newblock {\em IEEE Transactions on Audio, Speech, and Language Processing},
+  18(8):2067--2079, 2010.
+
+\bibitem{TIMIT}
+J.~S. Garofolo, L.~F. Lamel, W.~M. Fisher, J.~G. Fiscus, D.~S. Pallett, and
+  N.~L. Dahlgren.
+\newblock Darpa timit acoustic phonetic continuous speech corpus cdrom, 1993.
+
+\bibitem{PESQ}
+A.W. Rix, J.G. Beerends, M.P. Hollier, and A.P. Hekstra.
+\newblock Perceptual evaluation of speech quality (pesq)-a new method for
+  speech quality assessment of telephone networks and codecs.
+\newblock In {\em 2001 IEEE International Conference on Acoustics, Speech, and
+  Signal Processing. Proceedings (Cat. No.01CH37221)}, volume~2, pages 749--752
+  vol.2, 2001.
+
+\bibitem{STOI}
+Cees~H. Taal, Richard~C. Hendriks, Richard Heusdens, and Jesper Jensen.
+\newblock A short-time objective intelligibility measure for time-frequency
+  weighted noisy speech.
+\newblock In {\em 2010 IEEE International Conference on Acoustics, Speech and
+  Signal Processing}, pages 4214--4217, 2010.
+
+\bibitem{SISDR}
+Jonathan~Le Roux, Scott Wisdom, Hakan Erdogan, and John~R. Hershey.
+\newblock {SDR} - half-baked or well done?
+\newblock {\em CoRR}, abs/1811.02508, 2018.
+
+\end{thebibliography}

@@ -11,7 +11,7 @@
     "version": "1.0.0",
     "main": "test.js",
     "scripts": {
-        "build:final-report": "esbuild ./final-project/report/dev/index.tsx --bundle --outfile=./final-project/report/build/index.js --jsx-factory=h --jsx-fragment=Fragment --sourcemap --loader:.png=dataurl --loader:.svg=dataurl"
+        "build:final-slide": "esbuild ./final-project/slide/dev/index.tsx --bundle --outfile=./final-project/slide/build/index.js --jsx-factory=h --jsx-fragment=Fragment --sourcemap --loader:.png=dataurl --loader:.svg=dataurl"
     },
     "repository": {
         "type": "git",
