@@ -9,6 +9,8 @@
 \usepackage[margin=0.5in]{geometry}
 \usepackage{pgfplots}
 \usepackage{csvsimple}
+\usepackage{xcolor}
+\usepackage{multirow}
 \pgfplotsset{width=10cm, compat=1.9}
 \usepackage[encapsulated]{CJK} 
 
@@ -19,9 +21,11 @@
 % run, let it finish, and you should be clear).
 \usepackage[breaklinks=true,bookmarks=false]{hyperref}
 
-\cvprfinalcopy % *** Uncomment this line for the final submission
+% *** Uncomment this line for the final submission
+\cvprfinalcopy{}
 
-\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+% *** Enter the CVPR Paper ID here
+\def\cvprPaperID{****}
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
 
 % Pages are numbered in submission mode, and unnumbered in camera-ready
@@ -32,25 +36,16 @@
    %%%%%%%%% TITLE
    \title{Contrastive Learning for Speech Enhancement}
 
-   \author{
-      郭品辰\\
+   \author{郭品辰\\
       F14066127\\
       NCKU SNAME
       \and
       黃仁鴻\\
       P76094169\\
-      NCKU CSIE
-   }
+      NCKU CSIE}
 
    \maketitle
-   %\thispagestyle{empty}
 
-   %%%%%%%%% ABSTRACT
-   % \begin{abstract}
-
-   % \end{abstract}
-
-   %%%%%%%%% BODY TEXT
    \section{Introduction}
 
    許多與日常生活息息相關的任務都是仰賴語音作為資訊傳遞的媒介，像是電話通訊、語音辨識與助聽器等等。
@@ -59,7 +54,7 @@
 
    而語音增強的問題就是不論在何種噪音環境，面對相同的語音，模型都能夠抽取出相同的特徵，
    進而利用與特徵來重構語音。
-   這部分想法與近年流行自監督方法中的對比學習(Contrastive Learning)不謀而合，
+   這部分想法與近年流行自監督方法中的對比學習 (Contrastive Learning) 不謀而合，
    對比學習希望相似樣本間的特徵編碼能越像越好，而不同樣本的特徵差異則是越大越好。
 
    我們認為，藉由 CL 的方法來學習語音特徵的潛在編碼，再利用此特徵編碼還原語音，
@@ -79,38 +74,26 @@
       \begin{center}
          \includegraphics[width=1\linewidth]{img/auto-encoder.png}
       \end{center}
-      \caption{
-         語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。
-      }
-      \label{fig:long}
-      \label{fig:onecol}
+      \caption{語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。\label{fig:auto-encode}}
    \end{figure}
 
    \begin{figure}[t]
       \begin{center}
          \includegraphics[width=1\linewidth]{img/BYOL.png}
       \end{center}
-      \caption{
-         BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標，
+      \caption{BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標，
          計算 L2 Loss 後更新 Encoder-PredictNet 的參數，
-         Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。
-      }
-      \label{fig:long}
-      \label{fig:onecol}
+         Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。\label{fig:BYOL}}
    \end{figure}
 
    \begin{figure}[t]
       \begin{center}
          \includegraphics[width=1\linewidth]{img/SimSiam.png}
       \end{center}
-      \caption{
-         SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$，
+      \caption{SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$，
          在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$，
          $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距，
-         以此更新 Encoder-PredictNet 的參數。
-      }
-      \label{fig:long}
-      \label{fig:onecol}
+         以此更新 Encoder-PredictNet 的參數。\label{fig:SimSiam}}
    \end{figure}
    %------------------------------------------------------------------------
    \section{Related works}
@@ -119,8 +102,8 @@
    本專題使用的模型結構如 Figure 1. 所示，是由 Encoder 與 Decoder 兩區塊組合而成，
    其中負責抽取語音特徵 Encoder 區塊將會使用 BYOL 與 SimSiam 進行預訓練。
    在進行 CL 訓練時，語音 $S$ 會混合 $N_1$ 與 $N_2$ 兩個不同的噪音後，輸入 Encoder
-   取出語音的特徵向量，並用 Figure 2. 與 Figure 3. 所述的方法更新其內部權重\footnote{
-      在 Figure 2. 與 Figure 3. 中的 X 符號代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
+   取出語音的特徵向量，並用 Figure 2. 與 Figure 3. 所述的方法更新其內部權重\footnote{在
+      Figure 2. 與 Figure 3. 中的 X 符號代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
 
    在使用 CL 預訓練完 Encoder 後，便會將其串接上
    Decoder，將乾淨的語音當成目標來進行語音增強任務的學習。更詳細的實驗內容在 Expected results 中。
@@ -130,56 +113,274 @@
    \section{Experiments}
    本專題使用的噪音資料集是由 20 種不同類型的背景噪音所組成，總共有 100 個音檔的 Nonspeech~\cite{Nonspeech}。
    而語音資料集則是選用 TIMIT~\cite{TIMIT}，TIMIT 具有 6300 句語音，這些語音包含美國八個地區共 630 人所念出的 10
-   個指定句子。在訓練時的噪聲語音是將 TIMIT 與 Nonspeech 以 -5, 0, 5 這三種 SNR 混合產生的。
+   個指定句子。
+
+   在訓練時的噪聲語音是將 4120 句 TIMIT 語音與 75 個 Nonspeech 雜訊以 -10, -5, 0, 5, 10 這三種 SNR
+   混合產生的，其取樣頻率為 16K Hz，擷取時間約為 1s (16384 個樣本點)。測試則分別使用 500 與 25 個語音及噪音以 -7.5,
+   -2.5, 2.5, 7.5 SNR 進行混合，並擷取約 2s (32768 個樣本點) 進行測試並計算其 PESQ\cite{PESQ}、STOI\cite{STOI} 及 SISDR\cite{SISDR}
+   作為效能評估指標。
+
+   實驗中訓練的模型分別為使用 BYOL、SimSiam 以及未使用 CL 的 Normal 這三類，在 Fig.\ref{chart:CL-vs-Normal}
+   中展示 CL 方法與 Normal 的收斂差異，BYOL 與 SimSiam 在初期就以極快的速度提升效能。
+
+   % \begin{table}
+   %    \caption{各模型的評估結果}
+   %    \begin{center}
+   %       \begin{tabular}{ c c c c c c c c c c c c c c c c }
+   %          \multirow{2}{4em}{Model} & avg                          & -7.5                         & -2.5                           & 2.5   & \multicolumn{1}{ c |} {7.5} & avg   & -7.5  & -2.5  & 2.5   & \multicolumn{1}{ c |} {7.5} & avg   & -7.5   & -2.5   & 2.5    & \multicolumn{1}{ c |} {7.5} \\
+   %          \cline{2-16}
+   %                                   & \multicolumn{5}{ c |} {PESQ} & \multicolumn{5}{ c |} {STOI} & \multicolumn{5}{ c |} {SI-SDR}                                                                                                                                                                      \\
+   %          \hline
+   %          Noisy                    & 1.813                        & 1.337                        & 1.644                          & 1.971 & 2.3                         & 0.764 & 0.643 & 0.728 & 0.809 & 0.878                       & 0.001 & -7.497 & -2.498 & 2.503  & 7.498                       \\
+   %          \hline
+   %          Normal                   & 2.273                        & 1.826                        & 2.138                          & 2.438 & 2.688                       & 0.814 & 0.702 & 0.793 & 0.859 & 0.904                       & 7.146 & 2.611  & 6.065  & 8.972  & 10.935                      \\
+   %          \hline
+   %          BYOL                     & 2.392                        & 1.875                        & 2.253                          & 2.59  & 2.851                       & 0.844 & 0.734 & 0.826 & 0.889 & 0.928                       & 9.174 & 3.677  & 7.785  & 11.281 & 13.951                      \\
+   %          \hline
+   %          BYOL round               & 2.461                        & 1.904                        & 2.3                            & 2.671 & 2.97                        & 0.858 & 0.746 & 0.841 & 0.904 & 0.942                       & 9.378 & 3.396  & 7.772  & 11.615 & 14.728                      \\
+   %          \hline
+   %          BYOL round(100 s)        & 2.474                        & 1.913                        & 2.308                          & 2.683 & 2.991                       & 0.861 & 0.75  & 0.844 & 0.906 & 0.944                       & 9.526 & 3.457  & 7.859  & 11.784 & 15.004                      \\
+   %          \hline
+   %          SimSiam                  & 2.374                        & 1.873                        & 2.24                           & 2.563 & 2.82                        & 0.84  & 0.729 & 0.822 & 0.885 & 0.926                       & 8.884 & 3.544  & 7.508  & 10.913 & 13.572                      \\
+   %          \hline
+   %          SimSiam round            & 2.472                        & 1.937                        & 2.317                          & 2.672 & 2.962                       & 0.861 & 0.753 & 0.845 & 0.905 & 0.942                       & 9.529 & 3.583  & 7.935  & 11.751 & 14.847                      \\
+   %          \hline
+   %       \end{tabular}
+   %    \end{center}
+   % \end{table}
+
+   \begin{table}
+      \caption{各模型的對噪聲語音進行去噪後的平均評估結果\label{table:Metrics}}
+      \begin{center}
+         \begin{tabular}{ l c c c  }
+            \multirow{2}{4em}{Model} & \multicolumn{3}{ c } {Evaluation Metrics}                  \\
+            \cline{2-4}
+                                     & PESQ                                      & STOI  & SI-SNR \\
+            \hline
+            Noisy                    & 1.813                                     & 0.764 & 0.001  \\
+            \hline
+            Normal                   & 2.273                                     & 0.814 & 7.146  \\
+            \hline
+            BYOL                     & 2.392                                     & 0.844 & 9.174  \\
+            \hline
+            BYOL round               & 2.461                                     & 0.858 & 9.378  \\
+            \hline
+            BYOL round(100 s)        & 2.474                                     & 0.861 & 9.526  \\
+            \hline
+            SimSiam                  & 2.374                                     & 0.84  & 8.884  \\
+            \hline
+            SimSiam round            & 2.472                                     & 0.861 & 9.529  \\
+            \hline
+         \end{tabular}
+      \end{center}
+   \end{table}
+
+   \begin{table}
+      \caption{各模型的對混和不同 SNR 雜訊進行去噪後的 PESQ 評估結果\label{table:PESQ}}
+      \begin{center}
+         \begin{tabular}{ l c c c c  }
+            \multirow{2}{4em}{Model} & -7.5                        & -2.5  & 2.5   & 7.5   \\
+            \cline{2-5}
+                                     & \multicolumn{4}{ c } {PESQ}                         \\
+            \hline
+            Noisy                    & 1.337                       & 1.644 & 1.971 & 2.3   \\
+            \hline
+            Normal                   & 1.826                       & 2.138 & 2.438 & 2.688 \\
+            \hline
+            BYOL                     & 1.875                       & 2.253 & 2.59  & 2.851 \\
+            \hline
+            BYOL round               & 1.904                       & 2.3   & 2.671 & 2.97  \\
+            \hline
+            BYOL round(100 s)        & 1.913                       & 2.308 & 2.683 & 2.991 \\
+            \hline
+            SimSiam                  & 1.873                       & 2.24  & 2.563 & 2.82  \\
+            \hline
+            SimSiam round            & 1.937                       & 2.317 & 2.672 & 2.962 \\
+            \hline
+         \end{tabular}
+      \end{center}
+   \end{table}
 
 
-   % 本專題分別使用 TIMIT~\cite{timit} 與 Nonspeech~\cite{Nonspeech}
-   % 作為語音和雜訊的資料集，並以 -5, 0, 5 這三種 SNR 混合成的噪聲語音當模型輸入。
-   % Nonspeech 是由 20 種不同類型的背景噪音所組成，總共有 100
-   % 個音檔，而 TIMIT 則為 6300 句語音組成資料集，這些語音包含美國八個地區共 630 人所念出的 10
-   % 個指定句子。
+   \begin{table}
+      \caption{各模型的對混和不同 SNR 雜訊進行去噪後的 STOI 評估結果\label{table:STOI}}
+      \begin{center}
+         \begin{tabular}{ l c c c  c}
+            \multirow{2}{4em}{Model} & -7.5                        & -2.5  & 2.5   & 7.5   \\
+            \cline{2-5}
+                                     & \multicolumn{4}{ c } {STOI}                         \\
+            \hline
+            Noisy                    & 0.643                       & 0.728 & 0.809 & 0.878 \\
+            \hline
+            Normal                   & 0.702                       & 0.793 & 0.859 & 0.904 \\
+            \hline
+            BYOL                     & 0.734                       & 0.826 & 0.889 & 0.928 \\
+            \hline
+            BYOL round               & 0.746                       & 0.841 & 0.904 & 0.942 \\
+            \hline
+            BYOL round(100 s)        & 0.75                        & 0.844 & 0.906 & 0.944 \\
+            \hline
+            SimSiam                  & 0.729                       & 0.822 & 0.885 & 0.926 \\
+            \hline
+            SimSiam round            & 0.753                       & 0.845 & 0.905 & 0.942 \\
+            \hline
+         \end{tabular}
+      \end{center}
+   \end{table}
 
-   本專題預計將會進行以下幾項實驗：
-   \begin{enumerate}
-      \item 直接對 AutoEncoder 訓練 Speech Enhancement 任務。
-      \item 基於 BYOL 對 Encoder 與 Bottleneck 進行預訓練後凍結參數，然後接上 Decoder 訓練 Speech Enhancement 任務。
-      \item 基於 SimSiam 對 Encoder 與 Bottleneck 進行預訓練後凍結參數，然後接上 Decoder 訓練 Speech Enhancement 任務。
-      \item 將 BYOL 訓練得到的參數作為初始權重後，對 AutoEncoder 訓練 Speech Enhancement 任務。
-      \item 將 SimSiam 訓練得到的參數作為初始權重後，對 AutoEncoder 訓練 Speech Enhancement 任務。
-      \item 基於不同數量的樣本進行上述實驗，以測試各種方法的泛化能力。
-   \end{enumerate}
+   \begin{table}
+      \caption{各模型的對混和不同 SNR 雜訊進行去噪後的 SI-SDR 評估結果\label{table:SI-SDR}}
+      \begin{center}
+         \begin{tabular}{ l c c c c }
+            \multirow{2}{4em}{Model} & -7.5                          & -2.5   & 2.5    & 7.5    \\
+            \cline{2-5}
+                                     & \multicolumn{4}{ c } {SI-SDR}                            \\
+            \hline
+            Noisy                    & -7.497                        & -2.498 & 2.503  & 7.498  \\
+            \hline
+            Normal                   & 2.611                         & 6.065  & 8.972  & 10.935 \\
+            \hline
+            BYOL                     & 3.677                         & 7.785  & 11.281 & 13.951 \\
+            \hline
+            BYOL round               & 3.396                         & 7.772  & 11.615 & 14.728 \\
+            \hline
+            BYOL round(100 s)        & 3.457                         & 7.859  & 11.784 & 15.004 \\
+            \hline
+            SimSiam                  & 3.544                         & 7.508  & 10.913 & 13.572 \\
+            \hline
+            SimSiam round            & 3.583                         & 7.935  & 11.751 & 14.847 \\
+            \hline
+         \end{tabular}
+      \end{center}
+   \end{table}
 
-   最終將比較上述不同方法所訓練得到模型的 PESQ\cite{PESQ}、STOI\cite{STOI} 與 SISDR\cite{SISDR}。
+
+   \begin{figure}
+      \begin{center}
+         \begin{tikzpicture}
+            \begin{axis}[
+                  xlabel={epoch},
+                  ylabel={Test SI-SNR},
+                  ymin=0, ymax=10,
+                  legend pos=south east,
+                  mark=none,
+                  ymajorgrids=true,
+                  grid style=dashed,
+                  legend entries={BYOL,SimSiam,Normal},
+                  height = 6cm,
+                  width = 9cm,
+                  cycle list name=exotic,
+               ]
+               \addlegendimage{no markers, teal, line width=1pt}
+               \addlegendimage{no markers, magenta, line width=1pt}
+               \addlegendimage{no markers, cyan, line width=1pt}
+               \addplot[mark=none, line width=0.5pt, color=teal] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/BYOL/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=magenta] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/SimSiam/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=cyan] table [x=epoch, y=Test SISNR, col sep=comma ] {../experiment/Normal/history.csv};
+            \end{axis}
+         \end{tikzpicture}
+      \end{center}
+      \caption{使用 BYOL、SimSiam 的模型與未使用 Contrastive Learning 方法的 Normal
+         進行比較。可以發現 Contrastive Learning 在前期可以快速的提升模型的效能。\label{chart:CL-vs-Normal}}
+   \end{figure}
+
+   \begin{figure*}
+      \begin{center}
+
+         \begin{tikzpicture}
+            \begin{axis}[
+                  xlabel={epoch},
+                  ylabel={Test SI-SNR},
+                  ymin=0, ymax=10,
+                  legend pos=south east,
+                  mark=none,
+                  ymajorgrids=true,
+                  grid style=dashed,
+                  legend entries={SimSiam,SimSiam round,SimSiam pretrain},
+                  height = 6cm,
+                  width = 9cm,
+                  cycle list name=exotic,
+               ]
+               \addlegendimage{no markers, teal, line width=1pt}
+               \addlegendimage{no markers, magenta, line width=1pt}
+               \addlegendimage{no markers, cyan, line width=1pt}
+               \addplot[mark=none, line width=0.5pt, color=teal] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/SimSiam/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=magenta] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/SimSiam-round/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=cyan] table [x=epoch, y=Test SISNR, col sep=comma ] {../experiment/SimSiam-pretrain/history.csv};
+            \end{axis}
+         \end{tikzpicture}
+         \begin{tikzpicture}
+            \begin{axis}[
+                  xlabel={epoch},
+                  ylabel={Test SI-SNR},
+                  ymin=0, ymax=10,
+                  legend pos=south east,
+                  mark=none,
+                  ymajorgrids=true,
+                  grid style=dashed,
+                  legend entries={BYOL,BYOL round,BYOL round (100 step)},
+                  height = 6cm,
+                  width = 9cm,
+                  cycle list name=exotic,
+               ]
+               \addlegendimage{no markers, teal, line width=1pt}
+               \addlegendimage{no markers, magenta, line width=1pt}
+               \addlegendimage{no markers, cyan, line width=1pt}
+               \addplot[mark=none, line width=0.5pt, color=teal] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/BYOL/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=magenta] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/BYOL-round/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=cyan] table [x=epoch, y=Test SISNR, col sep=comma ] {../experiment/BYOL-round-100-step/history.csv};
+            \end{axis}
+         \end{tikzpicture}
+      \end{center}
+      \caption{BYOL 與 SimSiam 的實驗結果。若在中後期減少 CL Loss 的約束力，反而能使模型效能提升更加迅速。但也可從
+         SimSiam pretrain 的實驗也觀察到，若完全移除 CL Loss 會導致模型發生 overfitting。\label{chart:BYOL-SimSiam}}
+   \end{figure*}
 
 
-   \begin{tikzpicture}
-      \begin{axis}
-         \addplot table [x=epoch, y=Test SISNR, col sep=comma, mark=none] {history.csv};
-         \addplot table [y=Train SISNR, col sep=comma, mark=none] {../experiment/Normal/history.csv};
-      \end{axis}
-   \end{tikzpicture}
-   % \begin{tikzpicture}
-   %    \begin{axis}[
-   %          enlargelimits=false,
-   %       ]
-   %       % \addplot+[
-   %       %    only marks,
-   %       %    scatter,
-   %       %    mark=halfcircle*,
-   %       %    mark size=2.9pt]
-   %       % table[meta=TrainSISNR]
-   %       %    {history.csv};
-   %       \addplot[red, mark=x] table [y={disppos}]{pistonkinetics.dat}
-   %    \end{axis}
-   % \end{tikzpicture}
+   \begin{figure}
+      \begin{center}
+         \begin{tikzpicture}
+            \begin{axis}[
+                  xlabel={epoch},
+                  ylabel={Test SI-SNR},
+                  ymin=0, ymax=6,
+                  legend pos=south east,
+                  mark=none,
+                  ymajorgrids=true,
+                  grid style=dashed,
+                  legend entries={BYOL few,SimSiam few,Normal few},
+                  height = 6cm,
+                  width = 9cm,
+                  cycle list name=exotic,
+               ]
+               \addlegendimage{no markers, teal, line width=1pt}
+               \addlegendimage{no markers, magenta, line width=1pt}
+               \addlegendimage{no markers, cyan, line width=1pt}
+               \addplot[mark=none, line width=0.5pt, color=teal] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/BYOL-few/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=magenta] table [x=epoch, y=Test SISNR, col sep=comma] {../experiment/SimSiam-few/history.csv};
+               \addplot[mark=none, line width=0.5pt, color=cyan] table [x=epoch, y=Test SISNR, col sep=comma ] {../experiment/Normal-few/history.csv};
+            \end{axis}
+         \end{tikzpicture}
+      \end{center}
+      \caption{改為使用測試集進行訓練、訓練集進行測試。即使是在只有少量資料的情況，Contrastive Learning
+         依然比只使用 Speech Enhancement Loss 的方法具有更高的效能。\label{chart:few-data}}
+   \end{figure}
+
 
    %------------------------------------------------------------------------
    \section{Conclusion}
+   本次將 Contrastive Learning 運用於 Speech Enhancement 的研究結果可發現，前期使用 CL Loss
+   對中間的隱藏特徵進行高強度的約束，能提升模型的收斂速度。然而若在中後期繼續讓 CL Loss
+   維持較高的權重反而會阻礙模型提升效能。但這並不代表 CL Loss 就完全不重要，相反的，保持一定程度的
+   CL 約束能有效避免 Overfitting 的發生。
 
+   未來將使用兩種以上的雜訊與語音進行混和，以驗證在更加複雜的資料擴增下使用 Contrastive
+   Learning，能否讓 Speech Enhancement 的效能有更大幅度的提升。並研究具有自適應性的
+   CL Loss 與 SE Loss 權重調整方法，好減少人工調整超參數的麻煩。
 
-    {\small
-     \bibliographystyle{unsrt}
-     \bibliography{egbib}
-    }
+   {\small
+   \bibliographystyle{ieee_fullname}
+   \bibliography{egbib}
+   }
 \end{CJK}
 \end{document}
