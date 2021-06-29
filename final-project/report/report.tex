@@ -423,54 +423,102 @@
 
    \appendix
    \section{Model}
-   \begin{table}
-      \caption{Encoder 結構\label{table:Encoder}}
+   本次實驗使用的模型結構如 Table.\ref{table:Model} 所示，總參數量約為 26M，在 Encoder 前三層左邊會通過使用 Maxpool 的
+   Down Sample Block (如 Table.\ref{table:DSB})，並將其結果與右邊的 Patch Conv 串聯後向下輸入至 Table.\ref{table:Main-Block} 的 Main Block
+   進行計算。在 Main Block 中使用了兩層的 Skip Connection 結構來避免梯度消失的問題。
+
+   \begin{table}[t]
+      \caption{實驗模型結構\label{table:Model}}
       \begin{center}
-         \begin{tabular}{ c c }
+         \begin{tabular}{ | c | c c | }
             \hline
-            DSB(1, 32)   & Rearrange(bz 1 (L 64) $\rightarrow$ bz 64 L) \\
+            \multirow{9}{0.2cm}{\rotatebox{90}{Encoder}}   & \multicolumn{1}{c|}{DSB(1, 32)}                                   & Rearrange(bz 1 (L 64) $\rightarrow$ bz 64 L) \\
+            \cline{2-3}
+                                                           & \multicolumn{1}{c|}{DSB(32, 64)}                                  & \multirow{2}{3cm}{Conv1d(64, 128, 3)}        \\
+            \cline{2-2}
+                                                           & \multicolumn{1}{c|}{DSB(64, 128)}                                 &                                              \\
+            \cline{2-3}
+                                                           & \multicolumn{2}{c|}{Concat()}                                                                                    \\
+            \cline{2-3}
+                                                           & \multicolumn{2}{c|}{Conv1d(256, 128, 1)}                                                                         \\
+            \cline{2-3}
+                                                           & \multicolumn{2}{c|}{Main Block(128, 256, 9, 16, 8)}                                                              \\
+            \cline{2-3}
+                                                           & \multicolumn{2}{c|}{Main Block(128, 256, 9, 16, 8)}                                                              \\
+            \cline{2-3}
+                                                           & \multicolumn{2}{c|}{Main Block(128, 256, 9, 16, 8)}                                                              \\
+            \cline{2-3}
+                                                           & \multicolumn{2}{c|}{Main Block(128, 256, 9, 16, 8)}                                                              \\
             \hline
-            DSB(32, 64)  & \multirow{2}{3cm}{Conv1d(64, 128, 3)}        \\
-            \cline{1-1}
-            DSB(64, 128) &                                              \\
+            \multirow{6}{0.2cm}{\rotatebox{90}{Predictor}} &                                                                   &                                              \\
+                                                           & \multicolumn{2}{c|}{Main Block(128, 256, 9, 16, 8)}                                                              \\
+                                                           &                                                                   &                                              \\
+            \cline{2-3}
+                                                           &                                                                   &                                              \\
+                                                           & \multicolumn{2}{c|}{Main Block(128, 256, 9, 16, 8)}                                                              \\
+                                                           &                                                                   &                                              \\
             \hline
-            \multicolumn{2}{c}{Concat()}                                \\
-            \hline
-            \multicolumn{2}{c}{Conv1d(256, 128, 1)}                     \\
-            \hline
-            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
-            \hline
-            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
-            \hline
-            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
-            \hline
-            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
+            \multirow{4}{0.2cm}{\rotatebox{90}{Decoder}}   &                                                                   &                                              \\
+                                                           & \multicolumn{2}{c|}{Conv1d(128, 64, 3)}                                                                          \\
+                                                           &                                                                   &                                              \\
+            \cline{2-3}
+                                                           & \multicolumn{2}{c|}{Rearrange(bz 64 L $\rightarrow$ bz 1 (L 64))}                                                \\
             \hline
          \end{tabular}
       \end{center}
    \end{table}
 
-   \begin{table}
-      \caption{Predictor 結構\label{table:Predictor}}
+   \begin{table}[t]
+      \caption{Down Sample Block (DSB) 結構\label{table:DSB}}
       \begin{center}
-         \begin{tabular}{ c c }
+         \begin{tabular}{ | c | c | }
             \hline
-            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)} \\
-            \hline
-            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)} \\
+            \multirow{6}{0.2cm}{\rotatebox{90}{DSB($C_i$, $C_o$, $g$)}} &                                    \\
+                                                                        & Conv1d($C_i$, $C_o$, 5, group=$g$) \\
+                                                                        &                                    \\
+            \cline{2-2}
+                                                                        & GELU                               \\
+            \cline{2-2}
+                                                                        & Maxpool1d(4, 4)                    \\
+            \cline{2-2}
+                                                                        & BatchNorm1d()                      \\
             \hline
          \end{tabular}
       \end{center}
    \end{table}
 
-   \begin{table}
-      \caption{Decoder 結構\label{table:Decoder}}
+   \begin{table}[t]
+      \caption{Main Block 結構\label{table:Main-Block}}
       \begin{center}
-         \begin{tabular}{ c c }
+         \begin{tabular}{ | c c c c }
             \hline
-            \multicolumn{2}{c}{Conv1d(128, 256, 9, 16, 8)}     \\
-            \hline
-            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)} \\
+            \multirow{14}{0.2cm}{\rotatebox{90}{Main Block($C_i$, $N$, $k$, $d$, $g$)}} & \multicolumn{2}{|c|}{BatchNorm1d()}                              & \multicolumn{1}{c|}{\multirow{13}{0.2cm}{\rotatebox{90}{Skip Connect}}}                         \\
+            \cline{2-3}
+                                                                                        & \multicolumn{2}{|c|}{Conv1d($C_i$, $N*2$, 5)}                    & \multicolumn{1}{c|}{}                                                                           \\
+            \cline{2-3}
+                                                                                        & \multicolumn{2}{|c|}{GLEU()}                                     & \multicolumn{1}{c|}{}                                                                           \\
+            \cline{2-3}
+                                                                                        & \multicolumn{2}{|c|}{Chunk(2)}                                   & \multicolumn{1}{c|}{}                                                                           \\
+            \cline{2-3}
+                                                                                        & \multicolumn{1}{|c|}{BatchNorm1d()}                              & \multicolumn{1}{c|}{\multirow{5}{0.2cm}{\rotatebox{90}{Skip Connect}}}  & \multicolumn{1}{c|}{} \\
+            \cline{2-2}
+                                                                                        & \multicolumn{1}{|c|}{Conv1d($N$, $N$, $d*2-1$, group=$g$)}       & \multicolumn{1}{c|}{}                                                   & \multicolumn{1}{c|}{} \\
+            \cline{2-2}
+                                                                                        & \multicolumn{1}{|c|}{GLEU()}                                     & \multicolumn{1}{c|}{}                                                   & \multicolumn{1}{c|}{} \\
+            \cline{2-2}
+                                                                                        & \multicolumn{1}{|c|}{Conv1d($N$, $N$, $k$, dila=$d$, group=$g$)} & \multicolumn{1}{c|}{}                                                   & \multicolumn{1}{c|}{} \\
+            \cline{2-2}
+                                                                                        & \multicolumn{1}{|c|}{GLEU()}                                     & \multicolumn{1}{c|}{}                                                   & \multicolumn{1}{c|}{} \\
+            \cline{2-3}
+                                                                                        & \multicolumn{2}{|c|}{Add}                                        & \multicolumn{1}{c|}{}                                                                           \\
+            \cline{2-3}
+                                                                                        & \multicolumn{2}{|c|}{BatchNorm1d()}                              & \multicolumn{1}{c|}{}                                                                           \\
+            \cline{2-3}
+                                                                                        & \multicolumn{2}{|c|}{Conv1d($N$, $C_i$, 5)}                      & \multicolumn{1}{c|}{}                                                                           \\
+            \cline{2-3}
+                                                                                        & \multicolumn{2}{|c|}{GLEU()}                                     & \multicolumn{1}{c|}{}                                                                           \\
+            \cline{2-4}
+                                                                                        & \multicolumn{3}{|c|}{Add}                                                                                                                                          \\
             \hline
          \end{tabular}
       \end{center}
