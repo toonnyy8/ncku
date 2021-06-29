@@ -55,61 +55,8 @@
    (Contrastive Learning) 不謀而合，對比學習希望相似樣本間的特徵編碼能越像越好，而不同樣本的特徵差異則是越大越好。
 
    我們認為，藉由 CL 的方法來學習語音特徵的潛在編碼，再利用此特徵編碼還原語音，應該會具備比一般深度學習的語音增強方法更高的通用性與泛化能力。因此，本次專題研究的主軸便是將對比學習應用於語音增強任務的可行性。
-   \begin{figure}[t]
-      \begin{center}
-         \includegraphics[width=1\linewidth]{img/auto-encoder.png}
-      \end{center}
-      \caption{語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。\label{fig:auto-encode}}
-   \end{figure}
-
-   \begin{figure}[t]
-      \begin{center}
-         \includegraphics[width=1\linewidth]{img/BYOL.png}
-      \end{center}
-      \caption{BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標，
-         計算 L2 Loss 後更新 Encoder-PredictNet 的參數，
-         Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。\label{fig:BYOL}}
-   \end{figure}
-
-   \begin{figure}[t]
-      \begin{center}
-         \includegraphics[width=1\linewidth]{img/SimSiam.png}
-      \end{center}
-      \caption{SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$，
-         在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$，
-         $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距，
-         以此更新 Encoder-PredictNet 的參數。\label{fig:SimSiam}}
-   \end{figure}
    %------------------------------------------------------------------------
    \section{Related works}
-   Table.\ref{table:CL-methods} 對幾種常見的 Contrastive Learning 方法進行比較。包含 SimCLR~\cite{SimCLR} 在內的多數
-   CL 方法都需要使用到大量的負樣本輔助進行訓練，否則會發生 collapsing output
-   的問題，也就是不論輸入任何東西都只會有相同輸出。而大量的負樣本需求導致這些方法必須使用極大的 batch size 才能獲得良好效果，例如在
-   SimCLR 的論文中，實驗所使用的 batch size 就到達了 4096。此外，Speech Enhancement 問題本身亦並不容易訂定 Frame Level
-   的負樣本。為了因應硬體資源與 SE 任務的限制，本次研究使用 BYOL\cite{BYOL} 與 SimSiam\cite{SimSiam} 這兩項不需要極大 Batch Size，同時也不需負樣本的 Contrastive Learning 架構。
-
-   \subsection{BYOL}
-   BYOL 的架構流程如 Fig.\ref{fig:BYOL}，模型主要可區分成 Encoder、Encoder$^{'}$ 與 Predictor
-   這三大區塊，參數最佳化的目標即為 Predictor 輸出的特徵向量 p 與 Encoder$^{'}$ 輸出的特徵向量 z$^{'}$
-   相似度越高越好：
-   \begin{equation}
-      Loss_{CL} = -\frac{Sim(p_1, sg(z^{'}_2))+Sim(p_2, sg(z^{'}_1))}{2}
-      \label{eq:BYOL-Loss}
-   \end{equation}
-   Eq.\ref{eq:BYOL-Loss} 中的 sg 代表 stop gradient，因此在反傳遞過後，只有 Encoder 與 Predictor 會依靠梯度對參數進行更新，而 Encoder$^{'}$ 則是以 Momentum 的方式更新自身權重：
-   \begin{equation}
-      \theta_{E^{'}}=\tau\theta_{E^{'}}+(1-\tau)\theta_{E}
-      \label{eq:Momentum}
-   \end{equation}
-   Eq.\ref{eq:Momentum} 中的 $\theta_{E^{'}}$ 與 $\theta_{E}$ 分別表示 Encoder$^{'}$ 與 Encoder 的參數。
-
-   \subsection{SimSiam}
-   SimSiam 與 BYOL 最大的差異是移除了 Momentum Encoder，除此之外的流程如 Fig.\ref{fig:SimSiam} 所示皆與 BYOL 相同：
-   \begin{equation}
-      Loss_{CL} = -\frac{Sim(p_1, sg(z_2))+Sim(p_2, sg(z_1))}{2}
-      \label{eq:SimSiam-Loss}
-   \end{equation}
-
    \begin{table}
       \caption{Contrastive Learning 方法比較。\label{table:CL-methods}}
       \begin{center}
@@ -129,18 +76,87 @@
          \end{tabular}
       \end{center}
    \end{table}
+   Table.\ref{table:CL-methods} 對幾種常見的 Contrastive Learning 方法進行比較。包含 SimCLR~\cite{SimCLR} 在內的多數
+   CL 方法都需要使用到大量的負樣本輔助進行訓練，否則會發生 collapsing output
+   的問題，也就是不論輸入任何東西都只會有相同輸出。而大量的負樣本需求導致這些方法必須使用極大的 batch size 才能獲得良好效果，例如在
+   SimCLR 的論文中，實驗所使用的 batch size 就到達了 4096。此外，Speech Enhancement 問題本身亦並不容易訂定 Frame Level
+   的負樣本。為了因應硬體資源與 SE 任務的限制，本次研究使用 BYOL\cite{BYOL} 與 SimSiam\cite{SimSiam} 這兩項不需要極大 Batch Size，同時也不需負樣本的
+   Contrastive Learning 架構，其架構如 Fig.\ref{fig:BYOL} 與 Fig.\ref{fig:SimSiam} 所示\footnote{在
+      Fig.\ref{fig:BYOL} 與 Fig.\ref{fig:SimSiam} 中的 $\sim$ 代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
+
+   \subsection{BYOL}
+   \begin{figure}
+      \begin{center}
+         \includegraphics[width=1\linewidth]{img/BYOL.png}
+      \end{center}
+      \caption{BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標，
+         計算 L2 Loss 後更新 Encoder-PredictNet 的參數，
+         Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。\label{fig:BYOL}}
+   \end{figure}
+
+   BYOL 的架構流程如 Fig.\ref{fig:BYOL}，模型主要可區分成 Encoder、Encoder$^{'}$ 與 Predictor
+   這三大區塊，參數最佳化的目標即為 Predictor 輸出的特徵向量 p 與 Encoder$^{'}$ 輸出的特徵向量 z$^{'}$
+   相似度越高越好：
+   \begin{equation}
+      Loss_{CL} = -\frac{Sim(p_1, sg(z^{'}_2))+Sim(p_2, sg(z^{'}_1))}{2}
+      \label{eq:BYOL-Loss}
+   \end{equation}
+   Eq.\ref{eq:BYOL-Loss} 中的 sg 代表 stop gradient，因此在反傳遞過後，只有 Encoder 與 Predictor 會依靠梯度對參數進行更新，而 Encoder$^{'}$ 則是以 Momentum 的方式更新自身權重：
+   \begin{equation}
+      \theta_{E^{'}}=\tau\theta_{E^{'}}+(1-\tau)\theta_{E}
+      \label{eq:Momentum}
+   \end{equation}
+   Eq.\ref{eq:Momentum} 中的 $\theta_{E^{'}}$ 與 $\theta_{E}$ 分別表示 Encoder$^{'}$ 與 Encoder 的參數。
+
+   \subsection{SimSiam}
+   \begin{figure}
+      \begin{center}
+         \includegraphics[width=1\linewidth]{img/SimSiam.png}
+      \end{center}
+      \caption{SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$，
+         在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$，
+         $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距，
+         以此更新 Encoder-PredictNet 的參數。\label{fig:SimSiam}}
+   \end{figure}
+
+   SimSiam 與 BYOL 最大的差異是移除了 Momentum Encoder，除此之外的流程如 Fig.\ref{fig:SimSiam} 所示皆與 BYOL 相同：
+   \begin{equation}
+      Loss_{CL} = -\frac{Sim(p_1, sg(z_2))+Sim(p_2, sg(z_1))}{2}
+      \label{eq:SimSiam-Loss}
+   \end{equation}
 
    %------------------------------------------------------------------------
    \section{Method}
-   本專題使用的模型結構如 Figure 1. 所示，是由 Encoder 與 Decoder 兩區塊組合而成，
-   其中負責抽取語音特徵 Encoder 區塊將會使用 BYOL 與 SimSiam 進行預訓練。
-   在進行 CL 訓練時，語音 $S$ 會混合 $N_1$ 與 $N_2$ 兩個不同的噪音後，輸入 Encoder
-   取出語音的特徵向量，並用 Figure 2. 與 Figure 3. 所述的方法更新其內部權重\footnote{在
-      Figure 2. 與 Figure 3. 中的 X 符號代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
+   本專題使用的模型結構如 Fig.\ref{fig:auto-encode} 所示，是由一組 Autoencoder
+   構成的模型，並使用 SI-SDR\cite{SISDR} 作為 Speech Enhancement 任務的損失函數：
+   \begin{equation}
+      \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+      Loss_{SE}=10log_{10}(
+      \frac{
+         \norm{\frac{\hat{s}^{T}s}{\norm{s}^{2}}s}^{2}
+      }{
+         \norm{\frac{\hat{s}^{T}s}{\norm{s}^{2}}s-\hat{s}}^{2}
+      }
+      )
+      \label{eq:SI-SDR}
+   \end{equation}
+   在 Eq.\ref{eq:SI-SDR} 中的 $s$ 與 $\hat{s}$ 分別表示乾淨語音與去噪後的語音。
 
-   在使用 CL 預訓練完 Encoder 後，便會將其串接上
-   Decoder，將乾淨的語音當成目標來進行語音增強任務的學習。更詳細的實驗內容在 Expected results 中。
+   配合 Contrastive Learning 進行訓練時，語音 $S$ 會混合 $N_1$ 與 $N_2$ 兩個不同的噪音，在代入 Autoencoder
+   中得到 $z$、$p$ 以及 $\hat{s}$ 後計算 $Loss_{CL}$ 與 $Loss_{SE}$，最後在權重相加作為本次研究的損失函數：
+   \begin{equation}
+      \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+      Loss_{Mix}=Loss_{CL}+0.1Loss_{SE}
+      \label{eq:Mix-Loss}
+   \end{equation}
 
+
+   \begin{figure}[t]
+      \begin{center}
+         \includegraphics[width=1\linewidth]{img/auto-encoder.png}
+      \end{center}
+      \caption{語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。\label{fig:auto-encode}}
+   \end{figure}
 
    %------------------------------------------------------------------------
    \section{Experiments}
@@ -153,8 +169,11 @@
    -2.5, 2.5, 7.5 SNR 進行混合，並擷取約 2s (32768 個樣本點) 進行測試並計算其 PESQ\cite{PESQ}、STOI\cite{STOI} 及 SISDR\cite{SISDR}
    作為效能評估指標。
 
+   使用 SGD 作為優化器，learning rate、SGD momentum 與 weight decay 分別設為 0.05、0.9 與 0.0001，使用的
+   Batch Size 是 256，BYOL 的超參數 $\tau$ 設定是 0.99。
+
    實驗中訓練了使用 BYOL、SimSiam 以及未使用 CL 的 Normal 這大三類模型，並依據訓練過程中的 Loss
-   切換方式，可區分為從頭到尾皆使用 Mix Loss 的基本模型，每 50 個 epoch 就在 Mix 與 SE Loss 之間切換的
+   切換方式，可區分為從頭到尾皆使用 Mix Loss 的基本模型、每 50 個 epoch 就在 Mix 與 SE Loss 之間切換的
    Round，與只有初期 50 個 epoch 使用 Mix Loss 後都使用 SE Loss 的 Pretrain。
 
    在 Fig.\ref{chart:CL-vs-Normal} 中比較 CL 方法的基本模型與 Normal 的收斂差異，BYOL 與 SimSiam
@@ -282,7 +301,7 @@
 
 
    \begin{table}
-      \caption{各模型的對噪聲語音進行去噪後的平均評估結果\label{table:Metrics}}
+      \caption{各模型對噪聲語音進行去噪後的平均評估結果\label{table:Metrics}}
       \begin{center}
          \begin{tabular}{ l c c c  }
             \multirow{2}{4em}{Model}   & \multicolumn{3}{ c } {Evaluation Metrics}                                   \\
@@ -308,7 +327,7 @@
    \end{table}
 
    \begin{table}
-      \caption{各模型的對混和不同 SNR 雜訊進行去噪後的 PESQ 評估結果\label{table:PESQ}}
+      \caption{各模型針對混和不同 SNR 雜訊進行去噪後的 PESQ 評估結果\label{table:PESQ}}
       \begin{center}
          \begin{tabular}{ l c c c c  }
             \multirow{2}{4em}{Model}   & -7.5                        & -2.5           & 2.5            & 7.5            \\
@@ -335,7 +354,7 @@
 
 
    \begin{table}
-      \caption{各模型的對混和不同 SNR 雜訊進行去噪後的 STOI 評估結果\label{table:STOI}}
+      \caption{各模型針對混和不同 SNR 雜訊進行去噪後的 STOI 評估結果\label{table:STOI}}
       \begin{center}
          \begin{tabular}{ l c c c  c}
             \multirow{2}{4em}{Model}   & -7.5                        & -2.5           & 2.5            & 7.5            \\
@@ -361,7 +380,7 @@
    \end{table}
 
    \begin{table}
-      \caption{各模型的對混和不同 SNR 雜訊進行去噪後的 SI-SDR 評估結果\label{table:SI-SDR}}
+      \caption{各模型針對混和不同 SNR 雜訊進行去噪後的 SI-SDR 評估結果\label{table:SI-SDR}}
       \begin{center}
          \begin{tabular}{ l c c c c }
             \multirow{2}{4em}{Model}   & -7.5                          & -2.5           & 2.5             & 7.5             \\
@@ -394,11 +413,68 @@
 
    未來將使用兩種以上的雜訊與語音進行混和，以驗證在更加複雜的資料擴增下使用 Contrastive
    Learning，能否讓 Speech Enhancement 的效能有更大幅度的提升。並研究具有自適應性的
-   CL Loss 與 SE Loss 權重調整方法，好減少人工調整超參數的麻煩。
+   CL Loss 與 SE Loss 權重調整方法，以減少人工調整超參數的必要性。
 
    {\small
-   \bibliographystyle{ieee_fullname}
+   \bibliographystyle{unsrt}
    \bibliography{egbib}
    }
+   \newpage
+
+   \appendix
+   \section{Model}
+   \begin{table}
+      \caption{Encoder 結構\label{table:Encoder}}
+      \begin{center}
+         \begin{tabular}{ c c }
+            \hline
+            DSB(1, 32)   & Rearrange(bz 1 (L 64) $\rightarrow$ bz 64 L) \\
+            \hline
+            DSB(32, 64)  & \multirow{2}{3cm}{Conv1d(64, 128, 3)}        \\
+            \cline{1-1}
+            DSB(64, 128) &                                              \\
+            \hline
+            \multicolumn{2}{c}{Concat()}                                \\
+            \hline
+            \multicolumn{2}{c}{Conv1d(256, 128, 1)}                     \\
+            \hline
+            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
+            \hline
+            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
+            \hline
+            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
+            \hline
+            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)}          \\
+            \hline
+         \end{tabular}
+      \end{center}
+   \end{table}
+
+   \begin{table}
+      \caption{Predictor 結構\label{table:Predictor}}
+      \begin{center}
+         \begin{tabular}{ c c }
+            \hline
+            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)} \\
+            \hline
+            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)} \\
+            \hline
+         \end{tabular}
+      \end{center}
+   \end{table}
+
+   \begin{table}
+      \caption{Decoder 結構\label{table:Decoder}}
+      \begin{center}
+         \begin{tabular}{ c c }
+            \hline
+            \multicolumn{2}{c}{Conv1d(128, 256, 9, 16, 8)}     \\
+            \hline
+            \multicolumn{2}{c}{Main Block(128, 256, 9, 16, 8)} \\
+            \hline
+         \end{tabular}
+      \end{center}
+   \end{table}
+
 \end{CJK}
 \end{document}

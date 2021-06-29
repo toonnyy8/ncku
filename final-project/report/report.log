@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.5.18)  29 JUN 2021 23:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.5.18)  30 JUN 2021 01:53
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -777,40 +777,37 @@ File: c70bkai.fd 2015/04/18 4.8.4
 ) (d:/texlive/2021/texmf-dist/tex/latex/cjk/texinput/UTF8/c70bkai.fdx
 File: c70bkai.fdx 2015/04/18 4.8.4
 )
-<img/auto-encoder.png, id=7, 882.1758pt x 453.3738pt>
-File: img/auto-encoder.png Graphic file (type png)
-<use img/auto-encoder.png>
-Package pdftex.def Info: img/auto-encoder.png  used on input line 60.
-(pdftex.def)             Requested size: 259.72032pt x 133.4743pt.
-<img/BYOL.png, id=9, 924.0924pt x 606.5862pt>
-File: img/BYOL.png Graphic file (type png)
-<use img/BYOL.png>
-Package pdftex.def Info: img/BYOL.png  used on input line 67.
-(pdftex.def)             Requested size: 259.72032pt x 170.48161pt.
-<img/SimSiam.png, id=10, 888.921pt x 732.8178pt>
-File: img/SimSiam.png Graphic file (type png)
-<use img/SimSiam.png>
-Package pdftex.def Info: img/SimSiam.png  used on input line 76.
-(pdftex.def)             Requested size: 259.72032pt x 214.11072pt.
-
-Underfull \vbox (badness 1521) has occurred while \output is active []
-
- [1{d:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
-
-
- <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/auto-encoder.png> <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/BYOL.png> <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/SimSiam.png
-
-pdfTeX warning: pdflatex.exe (file c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/SimSiam.png): large interlaced PNG might cause out of memory (use non-interlaced PNG to fix this)
->]
-Underfull \hbox (badness 10000) in paragraph at lines 117--117
+Underfull \hbox (badness 10000) in paragraph at lines 64--64
 []|\OT1/ptm/m/n/10 Negative
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 117--118
+Underfull \hbox (badness 10000) in paragraph at lines 64--65
 []|\OT1/ptm/m/n/10 Momentum
  []
 
+<img/BYOL.png, id=16, 924.0924pt x 606.5862pt>
+File: img/BYOL.png Graphic file (type png)
+<use img/BYOL.png>
+Package pdftex.def Info: img/BYOL.png  used on input line 90.
+(pdftex.def)             Requested size: 259.72032pt x 170.48161pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+<img/SimSiam.png, id=21, 888.921pt x 732.8178pt>
+File: img/SimSiam.png Graphic file (type png)
+<use img/SimSiam.png>
+Package pdftex.def Info: img/SimSiam.png  used on input line 114.
+(pdftex.def)             Requested size: 259.72032pt x 214.11072pt.
+ [1{d:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+
+ <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/BYOL.png>]
+<img/auto-encoder.png, id=130, 882.1758pt x 453.3738pt>
+File: img/auto-encoder.png Graphic file (type png)
+<use img/auto-encoder.png>
+Package pdftex.def Info: img/auto-encoder.png  used on input line 156.
+(pdftex.def)             Requested size: 259.72032pt x 133.4743pt.
 PGFPlots: reading {../experiment/BYOL/history.csv}
 PGFPlots: reading {../experiment/SimSiam/history.csv}
 PGFPlots: reading {../experiment/Normal/history.csv}
@@ -823,27 +820,28 @@ PGFPlots: reading {../experiment/SimSiam-pretrain/history.csv}
 PGFPlots: reading {../experiment/BYOL-few/history.csv}
 PGFPlots: reading {../experiment/SimSiam-few/history.csv}
 PGFPlots: reading {../experiment/Normal-few/history.csv}
-(c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.bbl [2]
-Underfull \hbox (badness 1406) in paragraph at lines 20--27
+ [2 <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/SimSiam.png
+
+pdfTeX warning: pdflatex.exe (file c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/SimSiam.png): large interlaced PNG might cause out of memory (use non-interlaced PNG to fix this)
+> <c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/img/auto-encoder.png>] (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.bbl
+Underfull \hbox (badness 1406) in paragraph at lines 10--17
 \OT1/ptm/m/n/9 lec, Pierre H. Richemond, Elena Buchatskaya, Carl Do-er-sch,
  []
 
-[3]) [4
-
-] (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.aux) ) 
+[3]) [4] (c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.aux) ) 
 Here is how much of TeX's memory you used:
- 33129 strings out of 480901
- 751668 string characters out of 5906224
- 1472536 words of memory out of 5000000
- 49665 multiletter control sequences out of 15000+600000
- 474574 words of font info for 237 fonts, out of 8000000 for 9000
+ 33136 strings out of 480901
+ 751700 string characters out of 5906224
+ 1463922 words of memory out of 5000000
+ 49666 multiletter control sequences out of 15000+600000
+ 473979 words of font info for 235 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 102i,20n,103p,796b,2867s stack positions out of 5000i,500n,10000p,200000b,80000s
-{d:/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc}<d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu30.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu50.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu51.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu52.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu53.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu54.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu55.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu56.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu57.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu58.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu59.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu60.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu61.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu62.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu63.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu64.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu65.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu66.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu67.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu68.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu69.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu70.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu71.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu72.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu73.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu74.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu75.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu76.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu77.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu78.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu79.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu80.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu81.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu82.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu84.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu85.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu86.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu88.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu89.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu90.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu91.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu93.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu95.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu96.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu97.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu98.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiuff.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.pdf (4 pages, 749324 bytes).
+ 102i,20n,103p,796b,2869s stack positions out of 5000i,500n,10000p,200000b,80000s
+{d:/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc}<d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu30.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu4f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu50.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu51.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu52.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu53.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu54.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu55.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu56.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu57.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu58.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu59.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu5f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu60.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu61.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu62.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu63.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu64.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu65.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu66.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu67.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu68.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu69.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu6f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu70.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu71.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu72.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu73.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu74.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu75.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu76.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu77.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu78.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu79.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu7f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu80.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu81.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu82.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu84.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu85.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu86.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu88.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu89.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8b.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8c.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu8f.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu90.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu91.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu93.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu95.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu96.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu97.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu98.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9d.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiu9e.pfb><d:/texlive/2021/texmf-dist/fonts/type1/arphic/bkaiu/bkaiuff.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><d:/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><d:/texlive/2021/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.pdf (4 pages, 782576 bytes).
 PDF statistics:
- 441 PDF objects out of 1000 (max. 8388607)
- 339 compressed objects within 4 object streams
- 36 named destinations out of 1000 (max. 500000)
+ 477 PDF objects out of 1000 (max. 8388607)
+ 370 compressed objects within 4 object streams
+ 42 named destinations out of 1000 (max. 500000)
  28 words of extra memory for PDF output out of 10000 (max. 10000000)
 

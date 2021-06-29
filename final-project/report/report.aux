@@ -19,51 +19,61 @@
 \citation{SimCLR}
 \citation{BYOL}
 \citation{SimSiam}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces 語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。}}{1}{figure.1}\protected@file@percent }
-\newlabel{fig:auto-encode}{{1}{1}{語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。}{figure.1}{}}
+\citation{SISDR}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Contrastive Learning 方法比較。}}{1}{table.1}\protected@file@percent }
+\newlabel{table:CL-methods}{{1}{1}{Contrastive Learning 方法比較。}{table.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1}\hskip -1em.\nobreakspace  {}Introduction}{1}{section.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2}\hskip -1em.\nobreakspace  {}Related works}{1}{section.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標， 計算 L2 Loss 後更新 Encoder-PredictNet 的參數， Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。}}{1}{figure.2}\protected@file@percent }
-\newlabel{fig:BYOL}{{2}{1}{BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標， 計算 L2 Loss 後更新 Encoder-PredictNet 的參數， Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。}{figure.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$， 在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$， $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距， 以此更新 Encoder-PredictNet 的參數。}}{1}{figure.3}\protected@file@percent }
-\newlabel{fig:SimSiam}{{3}{1}{SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$， 在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$， $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距， 以此更新 Encoder-PredictNet 的參數。}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標， 計算 L2 Loss 後更新 Encoder-PredictNet 的參數， Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。}}{1}{figure.1}\protected@file@percent }
+\newlabel{fig:BYOL}{{1}{1}{BYOL 的算法架構。Encoder-PredictNet 會將 Encoder' 取出特徵做為目標， 計算 L2 Loss 後更新 Encoder-PredictNet 的參數， Encoder' 則會把自身目前參數與更新後 Encoder 做加權平均當新參數。}{figure.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}\hskip -1em.\nobreakspace  {}BYOL}{1}{subsection.2.1}\protected@file@percent }
+\newlabel{eq:BYOL-Loss}{{1}{1}{\hskip -1em.~BYOL}{equation.2.1}{}}
+\newlabel{eq:Momentum}{{2}{1}{\hskip -1em.~BYOL}{equation.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}\hskip -1em.\nobreakspace  {}SimSiam}{1}{subsection.2.2}\protected@file@percent }
+\newlabel{eq:SimSiam-Loss}{{3}{1}{\hskip -1em.~SimSiam}{equation.2.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Method}{1}{section.3}\protected@file@percent }
 \citation{Nonspeech}
 \citation{TIMIT}
 \citation{PESQ}
 \citation{STOI}
 \citation{SISDR}
-\bibstyle{ieee_fullname}
-\bibdata{egbib}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Contrastive Learning 方法比較。}}{2}{table.1}\protected@file@percent }
-\newlabel{table:CL-methods}{{1}{2}{Contrastive Learning 方法比較。}{table.1}{}}
-\newlabel{eq:BYOL-Loss}{{1}{2}{\hskip -1em.~BYOL}{equation.2.1}{}}
-\newlabel{eq:Momentum}{{2}{2}{\hskip -1em.~BYOL}{equation.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}\hskip -1em.\nobreakspace  {}SimSiam}{2}{subsection.2.2}\protected@file@percent }
-\newlabel{eq:SimSiam-Loss}{{3}{2}{\hskip -1em.~SimSiam}{equation.2.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}\hskip -1em.\nobreakspace  {}Method}{2}{section.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$， 在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$， $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距， 以此更新 Encoder-PredictNet 的參數。}}{2}{figure.2}\protected@file@percent }
+\newlabel{fig:SimSiam}{{2}{2}{SimSiam 的算法架構。將混合不同噪音的語音輸入 Encoder 得到 $Z_1$ 與 $Z_2$， 在將 $Z_1$ 與 $Z_2$ 輸入 PredictNet 後獲得 $P_1$ 與 $P_2$， $P_1$ 與 $P_2$ 會各自將 $Z_2$ 與 $Z_1$ 做為目標並計算差距， 以此更新 Encoder-PredictNet 的參數。}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces 語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。}}{2}{figure.3}\protected@file@percent }
+\newlabel{fig:auto-encode}{{3}{2}{語音增強使用的 Auto Encoder。期望模型能將受雜訊污染的語音還原成乾淨語音。}{figure.3}{}}
+\newlabel{eq:SI-SDR}{{4}{2}{\hskip -1em.~Method}{equation.3.4}{}}
+\newlabel{eq:Mix-Loss}{{5}{2}{\hskip -1em.~Method}{equation.3.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}\hskip -1em.\nobreakspace  {}Experiments}{2}{section.4}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces 使用 BYOL、SimSiam 的模型與未使用 Contrastive Learning 方法的 Normal 進行比較。可以發現 Contrastive Learning 在前期可以快速的提升模型的效能。}}{2}{figure.4}\protected@file@percent }
 \newlabel{chart:CL-vs-Normal}{{4}{2}{使用 BYOL、SimSiam 的模型與未使用 Contrastive Learning 方法的 Normal 進行比較。可以發現 Contrastive Learning 在前期可以快速的提升模型的效能。}{figure.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 各模型的對噪聲語音進行去噪後的平均評估結果}}{2}{table.2}\protected@file@percent }
-\newlabel{table:Metrics}{{2}{2}{各模型的對噪聲語音進行去噪後的平均評估結果}{table.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}\hskip -1em.\nobreakspace  {}Conclusion}{2}{section.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces 各模型對噪聲語音進行去噪後的平均評估結果}}{2}{table.2}\protected@file@percent }
+\newlabel{table:Metrics}{{2}{2}{各模型對噪聲語音進行去噪後的平均評估結果}{table.2}{}}
+\bibstyle{unsrt}
+\bibdata{egbib}
 \bibcite{SimCLR}{1}
-\bibcite{SimSiam}{2}
-\bibcite{TIMIT}{3}
-\bibcite{BYOL}{4}
-\bibcite{Nonspeech}{5}
-\bibcite{PESQ}{6}
+\bibcite{BYOL}{2}
+\bibcite{SimSiam}{3}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces BYOL 與 SimSiam 的實驗結果。若在中後期減少 CL Loss 的約束力，反而能使模型效能提升更加迅速。但也可從 SimSiam pretrain 的實驗也觀察到，若完全移除 CL Loss 會導致模型發生 overfitting。}}{3}{figure.5}\protected@file@percent }
 \newlabel{chart:BYOL-SimSiam}{{5}{3}{BYOL 與 SimSiam 的實驗結果。若在中後期減少 CL Loss 的約束力，反而能使模型效能提升更加迅速。但也可從 SimSiam pretrain 的實驗也觀察到，若完全移除 CL Loss 會導致模型發生 overfitting。}{figure.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces 改為使用測試集進行訓練、訓練集進行測試。即使是在只有少量資料的情況，Contrastive Learning 依然比只使用 Speech Enhancement Loss 的方法具有更高的效能。}}{3}{figure.6}\protected@file@percent }
 \newlabel{chart:few-data}{{6}{3}{改為使用測試集進行訓練、訓練集進行測試。即使是在只有少量資料的情況，Contrastive Learning 依然比只使用 Speech Enhancement Loss 的方法具有更高的效能。}{figure.6}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 各模型的對混和不同 SNR 雜訊進行去噪後的 PESQ 評估結果}}{3}{table.3}\protected@file@percent }
-\newlabel{table:PESQ}{{3}{3}{各模型的對混和不同 SNR 雜訊進行去噪後的 PESQ 評估結果}{table.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 各模型的對混和不同 SNR 雜訊進行去噪後的 STOI 評估結果}}{3}{table.4}\protected@file@percent }
-\newlabel{table:STOI}{{4}{3}{各模型的對混和不同 SNR 雜訊進行去噪後的 STOI 評估結果}{table.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 各模型的對混和不同 SNR 雜訊進行去噪後的 SI-SDR 評估結果}}{3}{table.5}\protected@file@percent }
-\newlabel{table:SI-SDR}{{5}{3}{各模型的對混和不同 SNR 雜訊進行去噪後的 SI-SDR 評估結果}{table.5}{}}
-\bibcite{SISDR}{7}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces 各模型針對混和不同 SNR 雜訊進行去噪後的 PESQ 評估結果}}{3}{table.3}\protected@file@percent }
+\newlabel{table:PESQ}{{3}{3}{各模型針對混和不同 SNR 雜訊進行去噪後的 PESQ 評估結果}{table.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}\hskip -1em.\nobreakspace  {}Conclusion}{3}{section.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces 各模型針對混和不同 SNR 雜訊進行去噪後的 STOI 評估結果}}{3}{table.4}\protected@file@percent }
+\newlabel{table:STOI}{{4}{3}{各模型針對混和不同 SNR 雜訊進行去噪後的 STOI 評估結果}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces 各模型針對混和不同 SNR 雜訊進行去噪後的 SI-SDR 評估結果}}{3}{table.5}\protected@file@percent }
+\newlabel{table:SI-SDR}{{5}{3}{各模型針對混和不同 SNR 雜訊進行去噪後的 SI-SDR 評估結果}{table.5}{}}
+\bibcite{SISDR}{4}
+\bibcite{Nonspeech}{5}
+\bibcite{TIMIT}{6}
+\bibcite{PESQ}{7}
 \bibcite{STOI}{8}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Encoder 結構}}{4}{table.6}\protected@file@percent }
+\newlabel{table:Encoder}{{6}{4}{Encoder 結構}{table.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Predictor 結構}}{4}{table.7}\protected@file@percent }
+\newlabel{table:Predictor}{{7}{4}{Predictor 結構}{table.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Decoder 結構}}{4}{table.8}\protected@file@percent }
+\newlabel{table:Decoder}{{8}{4}{Decoder 結構}{table.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}\hskip -1em.\nobreakspace  {}Model}{4}{appendix.A}\protected@file@percent }
 \gdef \@abspage@last{4}
