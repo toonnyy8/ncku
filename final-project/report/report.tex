@@ -57,7 +57,16 @@
    我們認為，藉由 CL 的方法來學習語音特徵的潛在編碼，再利用此特徵編碼還原語音，應該會具備比一般深度學習的語音增強方法更高的通用性與泛化能力。因此，本次專題研究的主軸便是將對比學習應用於語音增強任務的可行性。
    %------------------------------------------------------------------------
    \section{Related works}
-   \begin{table}
+
+   Table.\ref{table:CL-methods} 對幾種常見的 Contrastive Learning 方法進行比較。包含 SimCLR~\cite{SimCLR} 在內的多數
+   CL 方法都需要使用到大量的負樣本輔助進行訓練，否則會發生 collapsing output
+   的問題，也就是不論輸入任何東西都只會有相同輸出。而大量的負樣本需求導致這些方法必須使用極大的 batch size 才能獲得良好效果，例如在
+   SimCLR 的論文中，實驗所使用的 batch size 就到達了 4096。此外，Speech Enhancement 問題本身亦並不容易訂定 Frame Level
+   的負樣本。為了因應硬體資源與 SE 任務的限制，本次研究使用 BYOL\cite{BYOL} 與 SimSiam\cite{SimSiam} 這兩項不需要極大 Batch Size，同時也不需負樣本的
+   Contrastive Learning 架構，其架構如 Fig.\ref{fig:BYOL} 與 Fig.\ref{fig:SimSiam} 所示\footnote{在
+      Fig.\ref{fig:BYOL} 與 Fig.\ref{fig:SimSiam} 中的 $\sim$ 代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
+
+   \begin{table}[h]
       \caption{Contrastive Learning 方法比較。\label{table:CL-methods}}
       \begin{center}
          \begin{tabular}{ m{1.7cm} m{1.7cm} m{1.7cm} m{1.7cm} }
@@ -76,13 +85,6 @@
          \end{tabular}
       \end{center}
    \end{table}
-   Table.\ref{table:CL-methods} 對幾種常見的 Contrastive Learning 方法進行比較。包含 SimCLR~\cite{SimCLR} 在內的多數
-   CL 方法都需要使用到大量的負樣本輔助進行訓練，否則會發生 collapsing output
-   的問題，也就是不論輸入任何東西都只會有相同輸出。而大量的負樣本需求導致這些方法必須使用極大的 batch size 才能獲得良好效果，例如在
-   SimCLR 的論文中，實驗所使用的 batch size 就到達了 4096。此外，Speech Enhancement 問題本身亦並不容易訂定 Frame Level
-   的負樣本。為了因應硬體資源與 SE 任務的限制，本次研究使用 BYOL\cite{BYOL} 與 SimSiam\cite{SimSiam} 這兩項不需要極大 Batch Size，同時也不需負樣本的
-   Contrastive Learning 架構，其架構如 Fig.\ref{fig:BYOL} 與 Fig.\ref{fig:SimSiam} 所示\footnote{在
-      Fig.\ref{fig:BYOL} 與 Fig.\ref{fig:SimSiam} 中的 $\sim$ 代表 Stop Gradient，因此梯度並不會通過該區段向前更新。}。
 
    \subsection{BYOL}
    \begin{figure}
@@ -427,7 +429,7 @@
    Down Sample Block (如 Table.\ref{table:DSB})，並將其結果與右邊的 Patch Conv 串聯後向下輸入至 Table.\ref{table:Main-Block} 的 Main Block
    進行計算。在 Main Block 中使用了兩層的 Skip Connection 結構來避免梯度消失的問題。
 
-   \begin{table}[t]
+   \begin{table}[h]
       \caption{實驗模型結構\label{table:Model}}
       \begin{center}
          \begin{tabular}{ | c | c c | }
@@ -468,7 +470,7 @@
       \end{center}
    \end{table}
 
-   \begin{table}[t]
+   \begin{table}[h]
       \caption{Down Sample Block (DSB) 結構\label{table:DSB}}
       \begin{center}
          \begin{tabular}{ | c | c | }
@@ -487,7 +489,7 @@
       \end{center}
    \end{table}
 
-   \begin{table}[t]
+   \begin{table}[h]
       \caption{Main Block 結構\label{table:Main-Block}}
       \begin{center}
          \begin{tabular}{ | c c c c }
