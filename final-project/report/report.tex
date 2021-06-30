@@ -425,7 +425,7 @@
 
    \appendix
    \section{Model} \label{Model}
-   本次實驗使用的模型結構如 Table.\ref{table:Model} 所示，總參數量約為 26M，在 Encoder 前三層左邊會通過使用 Maxpool 的
+   本次實驗使用的模型結構如 Table.\ref{table:Model} 所示，總參數量約為 2.6M，在 Encoder 前三層左邊會通過使用 Maxpool 的
    Down Sample Block (如 Table.\ref{table:DSB})，並將其結果與右邊的 Patch Conv 串聯後向下輸入至 Table.\ref{table:Main-Block} 的 Main Block
    進行計算。在 Main Block 中使用了兩層的 Skip Connection 結構來避免梯度消失的問題。
 
