@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex report"] 1624994104 "report.aux" "report.bbl" "report" 1624994115
+["bibtex report"] 1625024119 "report.aux" "report.bbl" "report" 1625024356
   "d:/texlive/2021/texmf-dist/bibtex/bst/base/unsrt.bst" 1621330803 18030 1376b4b231b50c66211e47e42eda2875 ""
   "egbib.bib" 1624797830 5063 28a8115b013a7efe86f424a5ee020dfa ""
-  "report.aux" 1624994111 7900 401655402a43bb70506cc59f6489114c "pdflatex"
+  "report.aux" 1625024355 7959 aa0ab70785b4009c8e4971cb2e9e189c "pdflatex"
   (generated)
   "report.blg"
   "report.bbl"
-["pdflatex"] 1624994105 "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.tex" "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.pdf" "report" 1624994115
+["pdflatex"] 1625024349 "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.tex" "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.pdf" "report" 1625024356
   "../experiment/BYOL-few/history.csv" 1624804237 16598 17c8f5dcde9e29a891d0b51b0f4bbcf9 ""
   "../experiment/BYOL-round-100-step/history.csv" 1624804336 16607 37af72abf126052892b1338ee619ffc0 ""
   "../experiment/BYOL-round/history.csv" 1624804284 16614 86cf48e797749f2c0facdb8e4b1ae63a ""
@@ -17,8 +17,8 @@
   "../experiment/SimSiam-pretrain/history.csv" 1624804485 16636 ef0e9ee2c0ad06da887aed5d7c4f98e4 ""
   "../experiment/SimSiam-round/history.csv" 1624804500 16616 4200ab42100cc31ba09f9297f02e88a8 ""
   "../experiment/SimSiam/history.csv" 1624804454 9999 1d189f09da29f91cb69d601b3fefc585 ""
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.aux" 1624994111 7900 401655402a43bb70506cc59f6489114c ""
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.tex" 1624994086 33425 6f12931b6ea5a1bf8bcaf49ca3287b51 ""
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.aux" 1625024355 7959 aa0ab70785b4009c8e4971cb2e9e189c ""
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.tex" 1625024347 33490 eaff3258e21061297919c9fc18037cdc ""
   "cvpr.sty" 1624797830 8434 9c85e63bb1830fdefeac27370f229c9e ""
   "cvpr_eso.sty" 1624797830 3987 6aa7c08ff2621006e0603349e40a30a8 ""
   "d:/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc" 1621331440 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -409,12 +409,12 @@
   "img/BYOL.png" 1624981453 93437 7ddaddde608d0ccaa1a8a67fe0ab8b53 ""
   "img/SimSiam.png" 1624979429 150975 d171c1e01fa52862c9848b733ef6ee45 ""
   "img/auto-encoder.png" 1624984243 121436 d4dd26b7a371c51f47caf004c4c6fec2 ""
-  "report.aux" 1624994111 7900 401655402a43bb70506cc59f6489114c "pdflatex"
-  "report.bbl" 1624994105 2131 d5c6e04f10f0b3911a691d76ab898d82 "bibtex report"
-  "report.tex" 1624994086 33425 6f12931b6ea5a1bf8bcaf49ca3287b51 ""
+  "report.aux" 1625024355 7959 aa0ab70785b4009c8e4971cb2e9e189c "pdflatex"
+  "report.bbl" 1625024119 2131 d5c6e04f10f0b3911a691d76ab898d82 "bibtex report"
+  "report.tex" 1625024347 33490 eaff3258e21061297919c9fc18037cdc ""
   (generated)
-  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.log"
   "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.pdf"
+  "c:/Users/Lenovo/Desktop/programs/side-project/ncku/final-project/report/report.log"
   "report.pdf"
-  "report.aux"
   "report.log"
+  "report.aux"

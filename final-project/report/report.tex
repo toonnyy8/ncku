@@ -171,8 +171,8 @@
    -2.5, 2.5, 7.5 SNR 進行混合，並擷取約 2s (32768 個樣本點) 進行測試並計算其 PESQ\cite{PESQ}、STOI\cite{STOI} 及 SISDR\cite{SISDR}
    作為效能評估指標。
 
-   使用 SGD 作為優化器，learning rate、SGD momentum 與 weight decay 分別設為 0.05、0.9 與 0.0001，使用的
-   Batch Size 是 256，BYOL 的超參數 $\tau$ 設定是 0.99。
+   詳細的模型結構收錄在 Appendix.\ref{Model}，使用 SGD 作為優化器，learning rate、SGD momentum 與 weight decay 分別設為 0.05、0.9 與
+   0.0001，而 Batch Size 定為 256，BYOL 的超參數 $\tau$ 設定是 0.99。
 
    實驗中訓練了使用 BYOL、SimSiam 以及未使用 CL 的 Normal 這大三類模型，並依據訓練過程中的 Loss
    切換方式，可區分為從頭到尾皆使用 Mix Loss 的基本模型、每 50 個 epoch 就在 Mix 與 SE Loss 之間切換的
@@ -424,7 +424,7 @@
    \newpage
 
    \appendix
-   \section{Model}
+   \section{Model} \label{Model}
    本次實驗使用的模型結構如 Table.\ref{table:Model} 所示，總參數量約為 26M，在 Encoder 前三層左邊會通過使用 Maxpool 的
    Down Sample Block (如 Table.\ref{table:DSB})，並將其結果與右邊的 Patch Conv 串聯後向下輸入至 Table.\ref{table:Main-Block} 的 Main Block
    進行計算。在 Main Block 中使用了兩層的 Skip Connection 結構來避免梯度消失的問題。
