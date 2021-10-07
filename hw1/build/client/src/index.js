@@ -6125,44 +6125,17 @@ Component that was made reactive: `, type);
   }
 
   // hw1/client/dev/app.tsx
-  var searchSubString = (searchStr, str) => {
-    let indices = [];
-    if (searchStr.length == 0)
-      return indices;
-    let idx = -1;
-    while (true) {
-      idx = str.indexOf(searchStr, idx + 1);
-      if (idx == -1)
-        return indices;
-      indices.push(idx);
-    }
-  };
   var KeyWord = defineComponent((_, { slots }) => {
     let keyWord = ref("hi!");
     let index = ref([]);
-    const txt_file = "Attention is all you need\uFF01";
-    const processed_txt = txt_file.toLowerCase();
-    let wordBook = [];
-    let str = "";
-    for (let i = 0; i < processed_txt.length; i++) {
-      if (processed_txt[i] >= "a" && processed_txt[i] <= "z") {
-        str += processed_txt[i];
-      } else if (processed_txt[i] != " ") {
-        wordBook.push(str);
-        str = processed_txt[i];
-      }
-    }
-    if (str != "" && str != " ")
-      wordBook;
     let search = (e) => {
       keyWord.value = e.target.value;
-      index.value = searchSubString(keyWord.value.toLowerCase(), processed_txt);
       fetch(`./keyWord/${keyWord.value}`).then((res) => res.text()).catch((err) => console.error(err)).then((response) => console.log(response));
     };
     return () => /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h("input", {
       onChange: search,
       value: keyWord.value
-    }), /* @__PURE__ */ h("br", null), txt_file, /* @__PURE__ */ h("br", null), "char:", " ", index.value.length == 0 ? "not found" : `[${index.value.reduce((prev, curr) => prev + curr + ", ", "")}]`, /* @__PURE__ */ h("br", null), "word: ");
+    }), /* @__PURE__ */ h("br", null));
   });
   createApp(KeyWord).mount(document.body);
 })();

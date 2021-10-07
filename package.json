@@ -10,8 +10,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-client": "esbuild ./hw1/client/dev/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --outfile=./hw1/client/build/index.js",
-    "build-server": "esbuild ./hw1/server/dev/index.ts --bundle --outfile=./hw1/server/build/index.js --platform=node"
+    "build:hw1-client": "esbuild ./hw1/client/dev/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --outfile=./hw1/build/client/src/index.js",
+    "build:hw1-server": "esbuild ./hw1/server/dev/index.ts --bundle --outfile=./hw1/build/server.js --platform=node"
   },
   "repository": {
     "type": "git",
@@ -27,10 +27,14 @@
   "dependencies": {
     "@types/koa": "^2.13.4",
     "@types/koa-router": "^7.4.4",
+    "@types/xml2js": "^0.4.9",
+    "compromise": "^13.11.4",
+    "compromise-sentences": "^0.3.0",
     "esbuild": "^0.13.3",
     "koa": "^2.13.3",
     "koa-router": "^10.1.1",
-    "vue": "^3.2.19"
+    "vue": "^3.2.19",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "@types/node": "^16.10.2"
