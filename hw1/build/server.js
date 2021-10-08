@@ -23999,20 +23999,6 @@ var HttpError = import_application.default.HttpError;
 var import_koa_router = __toModule(require_router());
 var import_xml2js = __toModule(require_xml2js());
 
-// hw1/server/idx_table.ts
-compromise_default.extend(require_compromise_sentences());
-var genIdxTable = (docs2) => {
-  for (let doc of docs2) {
-    let docSentences = doc.content.reduce((prev, paragraph) => {
-      return [
-        ...prev,
-        ...compromise_default(paragraph).sentences().json().map((sentence) => sentence["text"])
-      ];
-    }, []);
-    console.log(docSentences);
-  }
-};
-
 // hw1/server/utils.ts
 compromise_default.extend(require_compromise_sentences());
 var getDocInfo = (content) => {
@@ -24023,17 +24009,54 @@ var getDocInfo = (content) => {
       ...compromise_default(paragraph).sentences().json().map((sentence) => sentence["text"])
     ];
   }, []);
+  let words = sentences.reduce((prev, sentence) => [
+    ...prev,
+    ...compromise_default(sentence).text("reduced").split(/\s+/)
+  ], []);
   let sentenceNum = sentences.length;
-  let wordNum = sentences.reduce((prev, sentence) => prev + sentence.split(" ").length, 0);
+  let wordNum = words.length;
   return { charNum, wordNum, sentenceNum };
+};
+var createTokenDict = (doc, docIdx) => {
+  let tokenDict2 = {};
+  for (let token of doc.title.toLowerCase().matchAll(/[a-zA-Z0-9\-]+/g)) {
+    if (tokenDict2[token[0]] == void 0)
+      tokenDict2[token[0]] = [];
+    tokenDict2[token[0]].push({ docIdx, category: "title", index: token.index });
+  }
+  for (let [pgIdx, paragraph] of doc.content.entries()) {
+    for (let token of paragraph.toLowerCase().matchAll(/[a-zA-Z0-9\-]+/g)) {
+      if (tokenDict2[token[0]] == void 0)
+        tokenDict2[token[0]] = [];
+      tokenDict2[token[0]].push({
+        docIdx,
+        category: `content:${pgIdx}`,
+        index: token.index
+      });
+    }
+  }
+  return tokenDict2;
+};
+var mergeTokenDict = (a2, b2) => {
+  let tokenDict2 = {};
+  for (let token in a2) {
+    tokenDict2[token] = [...a2[token]];
+  }
+  for (let token in b2) {
+    if (tokenDict2[token] == void 0)
+      tokenDict2[token] = [];
+    tokenDict2[token] = [...tokenDict2[token], ...b2[token]];
+  }
+  return tokenDict2;
 };
 
 // hw1/server/index.ts
 compromise_default.extend(require_compromise_sentences());
 var xmlParser = new import_xml2js.Parser({ explicitArray: false });
 var datasName = import_fs.default.readdirSync(`${__dirname}/.data/`);
-var cached = false;
+var cached = datasName.find((file) => file == ".docs") != void 0;
 var docs;
+var tokenDict;
 if (!cached) {
   docs = datasName.reduce((prev, dataName) => {
     switch (dataName.split(".").at(-1)) {
@@ -24078,10 +24101,14 @@ if (!cached) {
       }
     }
   }, []);
-  let idxTable = genIdxTable(docs);
-  import_fs.default.writeFileSync(`${__dirname}/.data/.cache`, JSON.stringify(docs));
+  tokenDict = docs.reduce((prev, doc, docIdx) => {
+    return mergeTokenDict(prev, createTokenDict(doc, docIdx));
+  }, {});
+  import_fs.default.writeFileSync(`${__dirname}/.data/.docs`, JSON.stringify(docs));
+  import_fs.default.writeFileSync(`${__dirname}/.data/.token_dict`, JSON.stringify(tokenDict));
 } else {
-  docs = JSON.parse(import_fs.default.readFileSync(`${__dirname}/.data/.cache`, "utf8"));
+  docs = JSON.parse(import_fs.default.readFileSync(`${__dirname}/.data/.docs`, "utf8"));
+  tokenDict = JSON.parse(import_fs.default.readFileSync(`${__dirname}/.data/.token_dict`, "utf8"));
 }
 var app = new koa_default();
 var router = new import_koa_router.default();
@@ -24094,8 +24121,10 @@ router.get("/", (ctx, next) => {
   let data = import_fs.default.readFileSync(`${__dirname}/client/src/${path}`, "utf8");
   ctx.body = data;
 }).get("/keyWord/:keyWord", (ctx, next) => {
-  let keyWord = ctx.params["keyWord"];
-  ctx.body = `search doc\uFF1A${keyWord}`;
+  let keyWord = ctx.params["keyWord"].toLowerCase();
+  ctx.body = tokenDict[keyWord];
+}).get("/doc/:docIdx", (ctx, next) => {
+  ctx.body = JSON.stringify(docs[ctx.params["docIdx"]]);
 });
 app.use(router.routes()).use(router.allowedMethods());
 app.listen(3e3);

@@ -6124,18 +6124,47 @@ Component that was made reactive: `, type);
     initDev();
   }
 
-  // hw1/client/dev/app.tsx
-  var KeyWord = defineComponent((_, { slots }) => {
+  // hw1/client/app.tsx
+  var Doc = defineComponent((_, { slots }) => {
+    return () => /* @__PURE__ */ h("div", {
+      class: "doc"
+    }, /* @__PURE__ */ h("h1", null, slots.title()), slots.content().map((paragraph) => /* @__PURE__ */ h("p", null, paragraph)), ["a", "b", "c"]);
+  });
+  var App = defineComponent((_, { slots }) => {
     let keyWord = ref("hi!");
-    let index = ref([]);
+    let docs = ref([]);
     let search = (e) => {
       keyWord.value = e.target.value;
-      fetch(`./keyWord/${keyWord.value}`).then((res) => res.text()).catch((err) => console.error(err)).then((response) => console.log(response));
+      fetch(`./keyWord/${keyWord.value}`).then((res) => res.json()).catch((err) => console.error(err)).then((tokenInfos) => {
+        let docsTokenInfos = {};
+        for (let tokenInfo of tokenInfos) {
+          if (docsTokenInfos[tokenInfo.docIdx] == void 0) {
+            docsTokenInfos[tokenInfo.docIdx] = [];
+          }
+          docsTokenInfos[tokenInfo.docIdx].push({
+            index: tokenInfo.index,
+            category: tokenInfo.category
+          });
+        }
+        for (let docIdx of Object.keys(docsTokenInfos)) {
+          docsTokenInfos[Number(docIdx)].sort((a, b) => {
+            return b.index - a.index;
+          });
+          fetch(`./doc/${docIdx}`).then((res) => res.json()).then((doc2) => {
+            docs.value.push(doc2);
+          });
+        }
+        console.log(docsTokenInfos);
+      });
     };
-    return () => /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h("input", {
+    return () => /* @__PURE__ */ h("div", {
+      class: "app"
+    }, /* @__PURE__ */ h("input", {
       onChange: search,
       value: keyWord.value
-    }), /* @__PURE__ */ h("br", null));
+    }), /* @__PURE__ */ h("br", null), docs.value.map((doc2) => {
+      return /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h(Doc, null, { title: () => doc2.title, content: () => doc2.content }), /* @__PURE__ */ h("hr", null));
+    }));
   });
-  createApp(KeyWord).mount(document.body);
+  createApp(App).mount(document.body);
 })();

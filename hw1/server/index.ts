@@ -3,17 +3,17 @@ import fs from "fs";
 import Koa from "koa";
 import Route from "koa-router";
 import { Parser } from "xml2js";
-import { Doc } from "./types";
+import { Doc, TokenInfo } from "./types";
 import { genIdxTable } from "./idx_table";
-import { getDocInfo } from "./utils";
+import { getDocInfo, createTokenDict, mergeTokenDict } from "./utils";
 
 nlp.extend(require("compromise-sentences"));
 
 let xmlParser = new Parser({ explicitArray: false });
 let datasName = fs.readdirSync(`${__dirname}/.data/`);
-// let cached = datasName.find((file) => file == ".cache") != undefined;
-let cached = false; // datasName.find((file) => file == ".cache") != undefined;
+let cached = datasName.find((file) => file == ".docs") != undefined;
 let docs: Doc[];
+let tokenDict: { [token: string]: TokenInfo[] };
 if (!cached) {
   docs = datasName.reduce((prev, dataName) => {
     switch (dataName.split(".").at(-1)) {
@@ -66,10 +66,17 @@ if (!cached) {
       }
     }
   }, []);
-  let idxTable = genIdxTable(docs);
-  fs.writeFileSync(`${__dirname}/.data/.cache`, JSON.stringify(docs));
+  tokenDict = docs.reduce((prev, doc, docIdx) => {
+    return mergeTokenDict(prev, createTokenDict(doc, docIdx));
+  }, {} as { [token: string]: TokenInfo[] });
+
+  fs.writeFileSync(`${__dirname}/.data/.docs`, JSON.stringify(docs));
+  fs.writeFileSync(`${__dirname}/.data/.token_dict`, JSON.stringify(tokenDict));
 } else {
-  docs = JSON.parse(fs.readFileSync(`${__dirname}/.data/.cache`, "utf8"));
+  docs = JSON.parse(fs.readFileSync(`${__dirname}/.data/.docs`, "utf8"));
+  tokenDict = JSON.parse(
+    fs.readFileSync(`${__dirname}/.data/.token_dict`, "utf8")
+  );
 }
 // console.dir(datas);
 
@@ -87,8 +94,39 @@ router
     ctx.body = data;
   })
   .get("/keyWord/:keyWord", (ctx, next) => {
-    let keyWord: string = ctx.params["keyWord"];
-    ctx.body = `search doc：${keyWord}`;
+    let keyWord: string = ctx.params["keyWord"].toLowerCase();
+    // ctx.body = `search doc：${keyWord}`;
+    ctx.body = tokenDict[keyWord];
+    // let tokenInfos = tokenDict[keyWord];
+    // let resDoc = {};
+    // for (let tokenInfo of tokenInfos) {
+    //   if (resDoc[tokenInfo.docIdx] == undefined)
+    //     resDoc[tokenInfo.docIdx] = docs[tokenInfo.docIdx];
+    // }
+    // ctx.body = JSON.stringify(Object.values(resDoc));
+
+    // ctx.body = JSON.stringify(
+    //   tokenInfos.map((tokenInfo) => {
+    //     let title = docs[tokenInfo.docIdx].title;
+    //     let content = [];
+    //     if (tokenInfo.category == "title") {
+    //     } else {
+    //       let paragraphIdx = Number(tokenInfo.category.split(":").at(-1));
+    //       content = [
+    //         docs[tokenInfo.docIdx].content[paragraphIdx].slice(
+    //           Math.max(0, tokenInfo.index - 0),
+    //           tokenInfo.index + keyWord.length + 20
+    //         ),
+    //       ];
+    //     }
+    //     return { title, content };
+    //     // return docs[tokenInfo.docIdx];
+    //   })
+    // );
+    // console.dir(tokenDict[keyWord]);
+  })
+  .get("/doc/:docIdx", (ctx, next) => {
+    ctx.body = JSON.stringify(docs[ctx.params["docIdx"]]);
   });
 app;
 app.use(router.routes()).use(router.allowedMethods());
