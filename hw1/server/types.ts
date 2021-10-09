@@ -11,3 +11,10 @@ export interface TokenInfo {
   category: "title" | `content:${number}`;
   index: number;
 }
+
+export interface DocTokenDict {
+  [docIdx: number]: {
+    title: number[];
+    content: { [paragraphIdx: number]: number[] };
+  };
+}

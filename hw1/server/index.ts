@@ -3,7 +3,7 @@ import fs from "fs";
 import Koa from "koa";
 import Route from "koa-router";
 import { Parser } from "xml2js";
-import { Doc, TokenInfo } from "./types";
+import { Doc, TokenInfo, DocTokenDict } from "./types";
 import { genIdxTable } from "./idx_table";
 import { getDocInfo, createTokenDict, mergeTokenDict } from "./utils";
 
@@ -26,7 +26,7 @@ if (!cached) {
           ...data.map(({ tweet_text }) => ({
             title: "",
             content: [tweet_text],
-            docInfo: getDocInfo([tweet_text]),
+            ...getDocInfo([tweet_text]),
           })),
         ];
       }
@@ -96,8 +96,33 @@ router
   .get("/keyWord/:keyWord", (ctx, next) => {
     let keyWord: string = ctx.params["keyWord"].toLowerCase();
     // ctx.body = `search doc：${keyWord}`;
-    ctx.body = tokenDict[keyWord];
-    // let tokenInfos = tokenDict[keyWord];
+    let tokenInfos = tokenDict[keyWord];
+    let docSet: Set<number> = new Set();
+    for (let tokenInfo of tokenInfos) {
+      docSet.add(tokenInfo.docIdx);
+    }
+    let docTokenDict: DocTokenDict = {};
+    for (let docIdx of docSet) {
+      let docTokenInfos = tokenInfos.filter(
+        (tokenInfo) => tokenInfo.docIdx == docIdx
+      );
+      for (let docTokenInfo of docTokenInfos) {
+        if (docTokenDict[docIdx] == undefined)
+          docTokenDict[docIdx] = { title: [], content: {} };
+
+        if (docTokenInfo.category == "title") {
+          docTokenDict[docIdx].title.push(docTokenInfo.index);
+        } else {
+          let paragraphIdx = Number(docTokenInfo.category.split(":").at(-1));
+          if (docTokenDict[docIdx].content[paragraphIdx] == undefined)
+            docTokenDict[docIdx].content[paragraphIdx] = [];
+
+          docTokenDict[docIdx].content[paragraphIdx].push(docTokenInfo.index);
+        }
+      }
+    }
+
+    ctx.body = docTokenDict;
     // let resDoc = {};
     // for (let tokenInfo of tokenInfos) {
     //   if (resDoc[tokenInfo.docIdx] == undefined)

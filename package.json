@@ -10,8 +10,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:hw1-client": "esbuild ./hw1/client/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --outfile=./hw1/build/client/src/index.js",
-    "build:hw1-server": "esbuild ./hw1/server/index.ts --bundle --outfile=./hw1/build/server.js --platform=node"
+    "build:hw1-client": "esbuild ./hw1/client/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --sourcemap --outfile=./hw1/build/client/src/index.js",
+    "build:hw1-server": "esbuild ./hw1/server/index.ts --bundle --outfile=./hw1/build/server.js --sourcemap --platform=node"
   },
   "repository": {
     "type": "git",

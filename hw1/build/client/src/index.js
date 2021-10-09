@@ -6126,35 +6126,75 @@ Component that was made reactive: `, type);
 
   // hw1/client/app.tsx
   var Doc = defineComponent((_, { slots }) => {
-    return () => /* @__PURE__ */ h("div", {
-      class: "doc"
-    }, /* @__PURE__ */ h("h1", null, slots.title()), slots.content().map((paragraph) => /* @__PURE__ */ h("p", null, paragraph)), ["a", "b", "c"]);
+    return () => {
+      return /* @__PURE__ */ h("div", {
+        class: "doc"
+      }, /* @__PURE__ */ h("h1", null, slots.title() ?? ""), slots.content().map((paragraph) => {
+        return /* @__PURE__ */ h("p", null, paragraph);
+      }), /* @__PURE__ */ h("span", null, "Number of Characters: ", slots.charNum()), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", null, "Number of Words: ", slots.wordNum()), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", null, "Number of Sentences: ", slots.sentenceNum()));
+    };
   });
   var App = defineComponent((_, { slots }) => {
     let keyWord = ref("hi!");
     let docs = ref([]);
+    let getDoc = (docIdx, docTokenDict) => {
+      return fetch(`./doc/${docIdx}`).then((res) => res.json()).then((doc2) => {
+        let { lastIndex: titleLastIndex, texts: titleTexts } = docTokenDict[docIdx].title.reduce(({ lastIndex, texts }, index) => {
+          texts = [
+            ...texts,
+            doc2.title.slice(lastIndex, index),
+            /* @__PURE__ */ h("span", {
+              class: "highlight"
+            }, doc2.title.slice(index, index + keyWord.value.length))
+          ];
+          return { lastIndex: index + keyWord.value.length, texts };
+        }, { lastIndex: 0, texts: [] });
+        titleTexts.push(doc2.title.slice(titleLastIndex));
+        let content = [];
+        for (let [pIdx, paragraph] of doc2.content.entries()) {
+          let pp = docTokenDict[docIdx].content[pIdx];
+          if (pp == void 0) {
+            content[pIdx] = [paragraph];
+          } else {
+            let { lastIndex: paragraphLastIndex, texts: paragraphTexts } = pp.reduce(({ lastIndex, texts }, index) => {
+              texts = [
+                ...texts,
+                /* @__PURE__ */ h("span", null, paragraph.slice(lastIndex, index)),
+                /* @__PURE__ */ h("span", {
+                  class: "highlight"
+                }, paragraph.slice(index, index + keyWord.value.length))
+              ];
+              return {
+                lastIndex: index + keyWord.value.length,
+                texts
+              };
+            }, { lastIndex: 0, texts: [] });
+            paragraphTexts.push(/* @__PURE__ */ h("span", null, paragraph.slice(paragraphLastIndex)));
+            content[pIdx] = paragraphTexts;
+          }
+        }
+        docs.value = [
+          ...docs.value,
+          {
+            title: titleTexts,
+            content,
+            charNum: doc2.charNum,
+            wordNum: doc2.wordNum,
+            sentenceNum: doc2.sentenceNum
+          }
+        ];
+        return;
+      });
+    };
     let search = (e) => {
       keyWord.value = e.target.value;
-      fetch(`./keyWord/${keyWord.value}`).then((res) => res.json()).catch((err) => console.error(err)).then((tokenInfos) => {
-        let docsTokenInfos = {};
-        for (let tokenInfo of tokenInfos) {
-          if (docsTokenInfos[tokenInfo.docIdx] == void 0) {
-            docsTokenInfos[tokenInfo.docIdx] = [];
-          }
-          docsTokenInfos[tokenInfo.docIdx].push({
-            index: tokenInfo.index,
-            category: tokenInfo.category
-          });
+      fetch(`./keyWord/${keyWord.value}`).then((res) => res.json()).catch((err) => console.error(err)).then((docTokenDict) => {
+        docs.value = [];
+        let funcs = [];
+        for (let docIdx of Object.keys(docTokenDict)) {
+          funcs.push(() => getDoc(Number(docIdx), docTokenDict));
         }
-        for (let docIdx of Object.keys(docsTokenInfos)) {
-          docsTokenInfos[Number(docIdx)].sort((a, b) => {
-            return b.index - a.index;
-          });
-          fetch(`./doc/${docIdx}`).then((res) => res.json()).then((doc2) => {
-            docs.value.push(doc2);
-          });
-        }
-        console.log(docsTokenInfos);
+        funcs.reduce((p2, f) => p2.then(f), Promise.resolve());
       });
     };
     return () => /* @__PURE__ */ h("div", {
@@ -6163,8 +6203,15 @@ Component that was made reactive: `, type);
       onChange: search,
       value: keyWord.value
     }), /* @__PURE__ */ h("br", null), docs.value.map((doc2) => {
-      return /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h(Doc, null, { title: () => doc2.title, content: () => doc2.content }), /* @__PURE__ */ h("hr", null));
+      return /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h(Doc, null, {
+        title: () => doc2.title,
+        content: () => doc2.content,
+        charNum: () => doc2.charNum,
+        wordNum: () => doc2.wordNum,
+        sentenceNum: () => doc2.sentenceNum
+      }), /* @__PURE__ */ h("hr", null));
     }));
   });
   createApp(App).mount(document.body);
 })();
+//# sourceMappingURL=index.js.map

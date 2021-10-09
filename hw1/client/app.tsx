@@ -1,5 +1,5 @@
 import { createApp, ref, defineComponent, h, Fragment } from "vue";
-import { TokenInfo, Doc } from "./types";
+import { TokenInfo, Doc, DocTokenDict, TextWithAttr } from "./types";
 
 let searchSubString = (searchStr: string, str: string): number[] => {
   let indices: number[] = [];
@@ -14,79 +14,111 @@ let searchSubString = (searchStr: string, str: string): number[] => {
 };
 
 const Doc = defineComponent((_, { slots }: { slots }) => {
-  return () => (
-    <div class="doc">
-      <h1>{slots.title()}</h1>
-      {slots.content().map((paragraph) => (
-        <p>{paragraph}</p>
-      ))}
-      {["a", "b", "c"]}
-    </div>
-  );
+  return () => {
+    return (
+      <div class="doc">
+        <h1>{slots.title() ?? ""}</h1>
+        {slots.content().map((paragraph) => {
+          return <p>{paragraph}</p>;
+        })}
+        <span>Number of Characters: {slots.charNum()}</span>
+        <br />
+        <span>Number of Words: {slots.wordNum()}</span>
+        <br />
+        <span>Number of Sentences: {slots.sentenceNum()}</span>
+      </div>
+    );
+  };
 });
 
 const App = defineComponent((_, { slots }: { slots }) => {
   let keyWord = ref("hi!");
-  let docs = ref([]);
+  let docs = ref<
+    {
+      title: any[];
+      content: any[][];
+      charNum: number;
+      wordNum: number;
+      sentenceNum: number;
+    }[]
+  >([]);
 
-  //  const txt_file = "Attention is all you need！";
-  //  const processed_txt = txt_file.toLowerCase();
-  //  let wordBook = [];
-  //  let str = "";
-  //  for (let i = 0; i < processed_txt.length; i++) {
-  //    if (processed_txt[i] >= "a" && processed_txt[i] <= "z") {
-  //      str += processed_txt[i];
-  //    } else if (processed_txt[i] != " ") {
-  //      wordBook.push(str);
-  //      str = processed_txt[i];
-  //    }
-  //  }
-  //  if (str != "" && str != " ") wordBook;
+  let getDoc = (docIdx: number, docTokenDict: DocTokenDict) => {
+    return fetch(`./doc/${docIdx}`)
+      .then((res) => res.json())
+      .then((doc: Doc) => {
+        let { lastIndex: titleLastIndex, texts: titleTexts } = docTokenDict[
+          docIdx
+        ].title.reduce(
+          ({ lastIndex, texts }, index) => {
+            texts = [
+              ...texts,
+              doc.title.slice(lastIndex, index),
+              <span class="highlight">
+                {doc.title.slice(index, index + keyWord.value.length)}
+              </span>,
+            ];
 
+            return { lastIndex: index + keyWord.value.length, texts };
+          },
+          { lastIndex: 0, texts: [] }
+        );
+        titleTexts.push(doc.title.slice(titleLastIndex));
+        let content = [];
+        for (let [pIdx, paragraph] of doc.content.entries()) {
+          let pp = docTokenDict[docIdx].content[pIdx];
+          if (pp == undefined) {
+            content[pIdx] = [paragraph];
+          } else {
+            let { lastIndex: paragraphLastIndex, texts: paragraphTexts } =
+              pp.reduce(
+                ({ lastIndex, texts }, index) => {
+                  texts = [
+                    ...texts,
+                    <span>{paragraph.slice(lastIndex, index)}</span>,
+                    <span class="highlight">
+                      {paragraph.slice(index, index + keyWord.value.length)}
+                    </span>,
+                  ];
+
+                  return {
+                    lastIndex: index + keyWord.value.length,
+                    texts,
+                  };
+                },
+                { lastIndex: 0, texts: [] }
+              );
+            paragraphTexts.push(
+              <span>{paragraph.slice(paragraphLastIndex)}</span>
+            );
+            content[pIdx] = paragraphTexts;
+          }
+        }
+        docs.value = [
+          ...docs.value,
+          {
+            title: titleTexts,
+            content,
+            charNum: doc.charNum,
+            wordNum: doc.wordNum,
+            sentenceNum: doc.sentenceNum,
+          },
+        ];
+        return;
+      });
+  };
   let search = (e: InputEvent & { target: HTMLInputElement }) => {
     keyWord.value = e.target.value;
-    // index.value = searchSubString(keyWord.value.toLowerCase(), processed_txt);
     fetch(`./keyWord/${keyWord.value}`)
       .then((res) => res.json())
       .catch((err) => console.error(err))
-      .then((tokenInfos: TokenInfo[]) => {
-        // console.log(tokenInfos);
-        let contentTokenIndices: {
-          [docIdx: number]: {
-            [paragraphIdx: number]: number[];
-          };
-        } = {};
-
-        let docsTokenInfos: {
-          [docIdx: number]: {
-            index: number;
-            category: "title" | `content:${number}`;
-          }[];
-        } = {};
-
-        for (let tokenInfo of tokenInfos) {
-          if (contentTokenIndices[tokenInfo.docIdx] == undefined) {
-            contentTokenIndices[tokenInfo.docIdx] = {};
-          }
-          if (docsTokenInfos[tokenInfo.docIdx] == undefined) {
-            docsTokenInfos[tokenInfo.docIdx] = [];
-          }
-          docsTokenInfos[tokenInfo.docIdx].push({
-            index: tokenInfo.index,
-            category: tokenInfo.category,
-          });
+      .then((docTokenDict: DocTokenDict) => {
+        docs.value = [];
+        let funcs = [];
+        for (let docIdx of Object.keys(docTokenDict)) {
+          funcs.push(() => getDoc(Number(docIdx), docTokenDict));
         }
-        for (let docIdx of Object.keys(docsTokenInfos)) {
-          docsTokenInfos[Number(docIdx)].sort((a, b) => {
-            return b.index - a.index;
-          });
-          fetch(`./doc/${docIdx}`)
-            .then((res) => res.json())
-            .then((doc: Doc) => {
-              docs.value.push(doc);
-            });
-        }
-        console.log(docsTokenInfos);
+        funcs.reduce((p, f) => p.then(f), Promise.resolve());
       });
   };
   return () => (
@@ -96,7 +128,15 @@ const App = defineComponent((_, { slots }: { slots }) => {
       {docs.value.map((doc) => {
         return (
           <>
-            <Doc>{{ title: () => doc.title, content: () => doc.content }}</Doc>
+            <Doc>
+              {{
+                title: () => doc.title,
+                content: () => doc.content,
+                charNum: () => doc.charNum,
+                wordNum: () => doc.wordNum,
+                sentenceNum: () => doc.sentenceNum,
+              }}
+            </Doc>
             <hr />
           </>
         );
@@ -104,13 +144,5 @@ const App = defineComponent((_, { slots }: { slots }) => {
     </div>
   );
 });
-
-let app = (
-  <>
-    <App />
-    <br />
-    <Doc />
-  </>
-);
 
 createApp(App).mount(document.body);

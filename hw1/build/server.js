@@ -24067,7 +24067,7 @@ if (!cached) {
           ...data.map(({ tweet_text }) => ({
             title: "",
             content: [tweet_text],
-            docInfo: getDocInfo([tweet_text])
+            ...getDocInfo([tweet_text])
           }))
         ];
       }
@@ -24122,7 +24122,28 @@ router.get("/", (ctx, next) => {
   ctx.body = data;
 }).get("/keyWord/:keyWord", (ctx, next) => {
   let keyWord = ctx.params["keyWord"].toLowerCase();
-  ctx.body = tokenDict[keyWord];
+  let tokenInfos = tokenDict[keyWord];
+  let docSet = new Set();
+  for (let tokenInfo of tokenInfos) {
+    docSet.add(tokenInfo.docIdx);
+  }
+  let docTokenDict = {};
+  for (let docIdx of docSet) {
+    let docTokenInfos = tokenInfos.filter((tokenInfo) => tokenInfo.docIdx == docIdx);
+    for (let docTokenInfo of docTokenInfos) {
+      if (docTokenDict[docIdx] == void 0)
+        docTokenDict[docIdx] = { title: [], content: {} };
+      if (docTokenInfo.category == "title") {
+        docTokenDict[docIdx].title.push(docTokenInfo.index);
+      } else {
+        let paragraphIdx = Number(docTokenInfo.category.split(":").at(-1));
+        if (docTokenDict[docIdx].content[paragraphIdx] == void 0)
+          docTokenDict[docIdx].content[paragraphIdx] = [];
+        docTokenDict[docIdx].content[paragraphIdx].push(docTokenInfo.index);
+      }
+    }
+  }
+  ctx.body = docTokenDict;
 }).get("/doc/:docIdx", (ctx, next) => {
   ctx.body = JSON.stringify(docs[ctx.params["docIdx"]]);
 });
@@ -24278,3 +24299,4 @@ app.listen(3e3);
  * MIT Licensed
  */
 /*! http://mths.be/fromcodepoint v0.1.0 by @mathias */
+//# sourceMappingURL=server.js.map
