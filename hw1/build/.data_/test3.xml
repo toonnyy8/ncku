@@ -1,0 +1,441 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2019//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_190101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">32949798</PMID>
+        <DateRevised>
+            <Year>2020</Year>
+            <Month>09</Month>
+            <Day>19</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1878-8769</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2020</Year>
+                        <Month>Sep</Month>
+                        <Day>16</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>World neurosurgery</Title>
+                <ISOAbbreviation>World Neurosurg</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Neurosurgical services in the Northern Zone of Sarawak in Malaysia: The way forward amid COVID-19 pandemic.</ArticleTitle>
+            <ELocationID EIdType="pii" ValidYN="Y">S1878-8750(20)32053-2</ELocationID>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.wneu.2020.09.045</ELocationID>
+            <Abstract>
+                <AbstractText Label="BACKGROUND" NlmCategory="BACKGROUND">The novel coronavirus disease 2019 (COVID-19) pandemic has set a huge challenge to the delivery of neurosurgical services including the transfer of patients. We aimed to share our strategy in handling neurosurgical emergencies at a remote center in Borneo Island. Our objectives included discussing the logistic and geographical challenges faced during the COVID-19 pandemic.</AbstractText>
+                <AbstractText Label="METHODS" NlmCategory="METHODS">Miri General Hospital (MGH) is a remote center in Sarawak, Malaysia, serving a population with difficult access to neurosurgical services. Two neurosurgeons were stationed here on a rotational basis every fortnight during the pandemic to handle neurosurgical cases. Patients were triaged depending on their urgent needs for surgery or transfer to a neurosurgical center and managed accordingly. All patients were screened for potential risk of contracting COVID-19 prior to the surgery. Based on this, the level of personal protective equipment required for the healthcare workers involved was determined.</AbstractText>
+                <AbstractText Label="RESULTS" NlmCategory="RESULTS">During the initial six weeks of the Movement Control Order (MCO) in Malaysia, there were 50 urgent neurosurgical consultations. Twenty patients (40%) required emergency surgery or intervention. There were nine vascular (45%), five trauma (25%), four tumor (15%), and two infection cases (10%). Eighteen patients were operated at MGH, among whom 17 (94.4%) survived. Ninety percent of anticipated transfers were avoided. None of the medical staff acquired COVID-19.</AbstractText>
+                <AbstractText Label="CONCLUSIONS" NlmCategory="CONCLUSIONS">This framework allowed timely intervention for neurosurgical emergencies (within a safe limit), minimized transfer, and enabled uninterrupted neurosurgical services at a remote center with difficult access to neurosurgical care during a pandemic.</AbstractText>
+                <CopyrightInformation>Copyright © 2020 Elsevier Inc. All rights reserved.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Low</LastName>
+                    <ForeName>Peh Hueh</ForeName>
+                    <Initials>PH</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Neurosurgery, Sarawak General Hospital, Kuching, Sarawak, Malaysia. Electronic address: peh.hueh@gmail.com.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Mangat</LastName>
+                    <ForeName>Manvinder Singh</ForeName>
+                    <Initials>MS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Neurosurgery, Sarawak General Hospital, Kuching, Sarawak, Malaysia.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>San Liew</LastName>
+                    <ForeName>Donald Ngian</ForeName>
+                    <Initials>DN</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Neurosurgery, Sarawak General Hospital, Kuching, Sarawak, Malaysia.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Hieng Wong</LastName>
+                    <ForeName>Albert Sii</ForeName>
+                    <Initials>AS</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Neurosurgery, Sarawak General Hospital, Kuching, Sarawak, Malaysia.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>16</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>World Neurosurg</MedlineTA>
+            <NlmUniqueID>101528275</NlmUniqueID>
+            <ISSNLinking>1878-8750</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">COVID-19</Keyword>
+            <Keyword MajorTopicYN="N">Neurosurgical emergencies</Keyword>
+            <Keyword MajorTopicYN="N">pandemic</Keyword>
+            <Keyword MajorTopicYN="N">remote center</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2020</Year>
+                <Month>08</Month>
+                <Day>06</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>09</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>10</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>19</Day>
+                <Hour>20</Hour>
+                <Minute>10</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">32949798</ArticleId>
+            <ArticleId IdType="pii">S1878-8750(20)32053-2</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.wneu.2020.09.045</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">32949777</PMID>
+        <DateRevised>
+            <Year>2020</Year>
+            <Month>09</Month>
+            <Day>19</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1878-3511</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2020</Year>
+                        <Month>Sep</Month>
+                        <Day>16</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>International journal of infectious diseases : IJID : official publication of the International Society for Infectious Diseases</Title>
+                <ISOAbbreviation>Int. J. Infect. Dis.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>COVID-19 Infection Among Healthcare Workers in a National Healthcare System: the Qatar Experience.</ArticleTitle>
+            <ELocationID EIdType="pii" ValidYN="Y">S1201-9712(20)30743-8</ELocationID>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.ijid.2020.09.027</ELocationID>
+            <Abstract>
+                <AbstractText Label="BACKGROUND" NlmCategory="BACKGROUND">Our aim was to determine the prevalence of COVID-19 infection in healthcare workers (HCW) in a national healthcare system and to understand the risk factors for infection.</AbstractText>
+                <AbstractText Label="METHODS" NlmCategory="METHODS">The study was conducted at Hamad Medical Corporation in Qatar, a national healthcare system with 14 hospitals and &gt;28,000 employees, between March 10-June 24, 2020. Data on COVID-19+ HCW were retrieved from the electronic health records and employment records, followed by an email survey and a focused telephone interview.</AbstractText>
+                <AbstractText Label="RESULTS" NlmCategory="RESULTS">Among 16,912 HCW tested, 10.6% tested positive. Hospitalization rate was 11.6%, 1.3% required supplemental oxygen, 0.6% needed intensive care unit admission and 0.3% required mechanical ventilation. There were no deaths. In a follow-up survey of 393 HCW, 5% reported acquiring infection at a COVID-19-designated facility and 95% at a non-COVID-19 facility having acquired the infection through accidental exposure to a colleague (45%) or a patient (29%). Full PPE adherence was 82% at COVID-19-designated but only 68% at non-COVID-19 facilities.</AbstractText>
+                <AbstractText Label="CONCLUSIONS" NlmCategory="CONCLUSIONS">COVID-19 infection among HCW often occurs among those not directly working with COVID-19 patients. PPE use is less stringent in such settings. Risk of exposure and need for strict PPE must be stressed upon all HCW in all settings.</AbstractText>
+                <CopyrightInformation>Copyright © 2020. Published by Elsevier Ltd.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Alajmi</LastName>
+                    <ForeName>Jameela</ForeName>
+                    <Initials>J</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hamad Medical Corporation, Doha, Qatar.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Jeremijenko</LastName>
+                    <ForeName>Andrew M</ForeName>
+                    <Initials>AM</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hamad Medical Corporation, Doha, Qatar.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Abraham</LastName>
+                    <ForeName>Joji C</ForeName>
+                    <Initials>JC</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hamad Medical Corporation, Doha, Qatar.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Alishaq</LastName>
+                    <ForeName>Moza</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hamad Medical Corporation, Doha, Qatar.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Concepcion</LastName>
+                    <ForeName>Elli Gabriel</ForeName>
+                    <Initials>EG</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hamad Medical Corporation, Doha, Qatar.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Butt</LastName>
+                    <ForeName>Adeel Ajwad</ForeName>
+                    <Initials>AA</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hamad Medical Corporation, Doha, Qatar; Weill Cornell Medical College, New York, USA; Weill Cornell Medical College, Doha, Qatar.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Abou-Samra</LastName>
+                    <ForeName>Abdul-Badi</ForeName>
+                    <Initials>AB</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hamad Medical Corporation, Doha, Qatar.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>16</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Canada</Country>
+            <MedlineTA>Int J Infect Dis</MedlineTA>
+            <NlmUniqueID>9610933</NlmUniqueID>
+            <ISSNLinking>1201-9712</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">COVID-19</Keyword>
+            <Keyword MajorTopicYN="N">Healthcare workers</Keyword>
+            <Keyword MajorTopicYN="N">Qatar</Keyword>
+            <Keyword MajorTopicYN="N">SARS-CoV-2</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2020</Year>
+                <Month>08</Month>
+                <Day>12</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>02</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>11</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>19</Day>
+                <Hour>20</Hour>
+                <Minute>9</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">32949777</ArticleId>
+            <ArticleId IdType="pii">S1201-9712(20)30743-8</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.ijid.2020.09.027</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">32949775</PMID>
+        <DateRevised>
+            <Year>2020</Year>
+            <Month>09</Month>
+            <Day>19</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1878-3511</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2020</Year>
+                        <Month>Sep</Month>
+                        <Day>16</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>International journal of infectious diseases : IJID : official publication of the International Society for Infectious Diseases</Title>
+                <ISOAbbreviation>Int. J. Infect. Dis.</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Destructive pulmonary fibrosis after severe COVID-19 pneumonia.</ArticleTitle>
+            <ELocationID EIdType="pii" ValidYN="Y">S1201-9712(20)30741-4</ELocationID>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.ijid.2020.09.026</ELocationID>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Letellier</LastName>
+                    <ForeName>Alice</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>AP-HP, Hôpital Tenon, Service de Médecine intensive Réanimation, DMU APPROCHES, Hôpital Tenon, 4 rue de la Chine, 75020, PARIS cedex 20, France.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Gibelin</LastName>
+                    <ForeName>Aude</ForeName>
+                    <Initials>A</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>AP-HP, Hôpital Tenon, Service de Médecine intensive Réanimation, DMU APPROCHES, Hôpital Tenon, 4 rue de la Chine, 75020, PARIS cedex 20, France.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Voiriot</LastName>
+                    <ForeName>Guillaume</ForeName>
+                    <Initials>G</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>AP-HP, Hôpital Tenon, Service de Médecine intensive Réanimation, DMU APPROCHES, Hôpital Tenon, 4 rue de la Chine, 75020, PARIS cedex 20, France; Sorbonne Université, Paris, France; Groupe de Recherche Clinique CARMAS, Collégium Gallilée.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Fartoukh</LastName>
+                    <ForeName>Muriel</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>AP-HP, Hôpital Tenon, Service de Médecine intensive Réanimation, DMU APPROCHES, Hôpital Tenon, 4 rue de la Chine, 75020, PARIS cedex 20, France; Sorbonne Université, Paris, France; Groupe de Recherche Clinique CARMAS, Collégium Gallilée.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Djibré</LastName>
+                    <ForeName>Michel</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>AP-HP, Hôpital Tenon, Service de Médecine intensive Réanimation, DMU APPROCHES, Hôpital Tenon, 4 rue de la Chine, 75020, PARIS cedex 20, France. Electronic address: michel.djibre@aphp.fr.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>16</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Canada</Country>
+            <MedlineTA>Int J Infect Dis</MedlineTA>
+            <NlmUniqueID>9610933</NlmUniqueID>
+            <ISSNLinking>1201-9712</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">COVID – 19 pneumonia</Keyword>
+            <Keyword MajorTopicYN="N">Pulmonary cavity</Keyword>
+            <Keyword MajorTopicYN="N">Pulmonary fibrosis</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2020</Year>
+                <Month>08</Month>
+                <Day>10</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>09</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>11</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>19</Day>
+                <Hour>20</Hour>
+                <Minute>9</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">32949775</ArticleId>
+            <ArticleId IdType="pii">S1201-9712(20)30741-4</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.ijid.2020.09.026</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+</PubmedArticleSet>

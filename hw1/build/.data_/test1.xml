@@ -1,0 +1,641 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2019//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_190101.dtd">
+<PubmedArticleSet>
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">32950037</PMID>
+        <DateRevised>
+            <Year>2020</Year>
+            <Month>09</Month>
+            <Day>19</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">1754-4505</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <PubDate>
+                        <Year>2020</Year>
+                        <Month>Sep</Month>
+                        <Day>19</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Special care in dentistry : official publication of the American Association of Hospital Dentists, the Academy of Dentistry for the Handicapped, and the American Society for Geriatric Dentistry</Title>
+                <ISOAbbreviation>Spec Care Dentist</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Dental care management during the COVID-19 outbreak.</ArticleTitle>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1111/scd.12523</ELocationID>
+            <Abstract>
+                <AbstractText Label="AIM" NlmCategory="OBJECTIVE">The level of preparedness of the healthcare system plays an important role in management of coronavirus disease 2019 (COVID-19). This study attempted to devise a comprehensive protocol regarding dental care during the COVID-19 outbreak.</AbstractText>
+                <AbstractText Label="METHODS AND RESULT" NlmCategory="RESULTS">Embase, PubMed, and Google Scholar were searched until March 2020 for relevant papers. Sixteen English papers were enrolled to answer questions about procedures that are allowed to perform during the COVID-19 outbreak, patients who are in priority to receive dental care services, the conditions and necessities for patient admission, waiting room and operatory room, and personal protective equipment (PPE) that is necessary for dental clinicians and the office staff.</AbstractText>
+                <AbstractText Label="CONCLUSION" NlmCategory="CONCLUSIONS">Dental treatment should be limited to patients with urgent or emergency situation. By screening questionnaires for COVID-19, patients are divided into three groups of (a) apparently healthy, (b) suspected for COVID-19, and (c) confirmed for COVID-19. Separate waiting and operating rooms should be assigned to each group of patients to minimize the risk of disease transmission. All groups should be treated with the same protective measures with regard to PPE for the dental clinicians and staff.</AbstractText>
+                <CopyrightInformation>© 2020 Special Care Dentistry Association and Wiley Periodicals, Inc.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Falahchai</LastName>
+                    <ForeName>Mehran</ForeName>
+                    <Initials>M</Initials>
+                    <Identifier Source="ORCID">https://orcid.org/0000-0001-9661-5509</Identifier>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Prosthodontics, Dental Sciences Research Center, School of Dentistry, Guilan University of Medical Sciences, Rasht, Iran.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Babaee Hemmati</LastName>
+                    <ForeName>Yasamin</ForeName>
+                    <Initials>Y</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Orthodontics, Dental Sciences Research Center, School of Dentistry, Guilan University of Medical Sciences, Rasht, Iran.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Hasanzade</LastName>
+                    <ForeName>Mahya</ForeName>
+                    <Initials>M</Initials>
+                    <Identifier Source="ORCID">https://orcid.org/0000-0002-9114-2471</Identifier>
+                    <AffiliationInfo>
+                        <Affiliation>Department of Prosthodontics, Dental Research Center, Dentistry Research Institute, School of Dentistry, Tehran University of Medical Sciences, Tehran, Iran.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+                <PublicationType UI="D016454">Review</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>19</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>United States</Country>
+            <MedlineTA>Spec Care Dentist</MedlineTA>
+            <NlmUniqueID>8103755</NlmUniqueID>
+            <ISSNLinking>0275-1879</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>D</CitationSubset>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">COVID-19</Keyword>
+            <Keyword MajorTopicYN="N">dental care</Keyword>
+            <Keyword MajorTopicYN="N">dental infection control</Keyword>
+            <Keyword MajorTopicYN="N">occupational health</Keyword>
+            <Keyword MajorTopicYN="N">pandemics</Keyword>
+        </KeywordList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2020</Year>
+                <Month>04</Month>
+                <Day>24</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2020</Year>
+                <Month>08</Month>
+                <Day>14</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2020</Year>
+                <Month>08</Month>
+                <Day>15</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>19</Day>
+                <Hour>20</Hour>
+                <Minute>20</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">32950037</ArticleId>
+            <ArticleId IdType="doi">10.1111/scd.12523</ArticleId>
+        </ArticleIdList>
+        <ReferenceList>
+            <Title>REFERENCES</Title>
+            <Reference>
+                <Citation>Van Doremalen N, Bushmaker T, Morris DH, et al. Aerosol and surface stability of SARS-CoV-2 as compared with SARS-CoV-1. N Engl J Med. 2020;382:1564-1567.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Rodriguez-Morales AJ, Cardona-Ospina JA, Gutiérrez-Ocampo E, et al. Clinical, laboratory and imaging features of COVID-19: a systematic review and meta-analysis. Travel Med Infect Di. 2020:34;101623.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Li Q, Guan X, Wu P, et al. Early transmission dynamics in Wuhan, China, of novel coronavirus-infected pneumonia. N Engl J Med. 2020;382:1199-1207.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>W-j Guan, Z-y Ni, Hu Y, et al. Clinical characteristics of coronavirus disease 2019 in China. N Engl J Med. 2020;382:1708-1720.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Rothe C, Schunk M, Sothmann P, et al. Transmission of 2019-nCoV infection from an asymptomatic contact in Germany. N Engl J Med. 2020;382:970-971.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>WHO. Coronavirus disease 2019 (COVID-19), Situation Report - 65. 2020. https://www.who.int/docs/default-source/coronaviruse/situation-reports/20200325-sitrep-65-covid-19.pdf?sfvrsn=2b74edd8_2. Accessed April 5, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Meng L, Hua F, Bian Z. Coronavirus disease 2019 (COVID-19): emerging and future challenges for dental and oral medicine. J Dent Res. 2020;99:481-487.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Gamio L, The workers who face the greatest coronavirus risk. 2020. https://www.nytimes.com/interactive/2020/03/15/business/economy/coronavirus-worker-risk.html?action=click%26module=TV. Accessed April 1, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Jin Y-H, Cai L, Cheng Z-S, et al. A rapid advice guideline for the diagnosis and treatment of 2019 novel coronavirus (2019-nCoV) infected pneumonia (standard version). Mil Med Res. 2020;7:4.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Peng X, Xu X, Li Y, Cheng L, Zhou X, Ren B. Transmission routes of 2019-nCoV and controls in dental practice. Int J Oral Sci. 2020;12:1-6.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Hinds WC. Aerosol Technology: Properties, Behavior, and Measurement of Airborne Particles. New York: Wiley; 1982.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Kampf G, Todt D, Pfaender S, Steinmann E. Persistence of coronaviruses on inanimate surfaces and its inactivation with biocidal agents. J Hosp Infect. 2020;104:246-251.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Ijaz MK, Brunner AH, Sattar SA, Nair RC, Johnson-Lussenburg CM. Survival characteristics of airborne human coronavirus 229E. J Gen Virol. 1985;66(Pt 12):2743-2748.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Bai Y, Yao L, Wei T, et al. Presumed asymptomatic carrier transmission of COVID-19. JAMA. 2020;323:1406-1407.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Gao Z, Xu Y, Sun C, et al. A systematic review of asymptomatic infections with COVID-19. J Microbiol Immunol Infect. 2020. https://doi.org/10.1016/j.jmii.2020.05.001.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>ADA. What constitutes a dental emergency? 2020 https://success.ada.org/~/media/CPS/Files/Open%20Files/ADA_COVID19_Dental_Emergency_DDS.pdf. Accessed April 2, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>CDC. Discontinuation of isolation for persons with COVID-19 not in healthcare settings. 2020. https://www.cdc.gov/coronavirus/2019-ncov/hcp/disposition-in-home-patients.html. Accessed July 20, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>van Kampen J, van de Vijver D, Fraaij P, et al. Shedding of infectious virus in hospitalized patients with coronavirus disease-2019 (COVID-19): duration and key determinants. Medrxiv. 2020. https://www.medrxiv.org/content/10.1101/2020.06.08.20125310v1external.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Amber Ather B, Nikita B, Ruparel NB, Diogenes A, Hargreaves KM. Coronavirus disease 19 (COVID-19): implications for clinical dental care. J Endod. 2020;46:584-595.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>WHO. Infection prevention and control during health care when novel coronavirus (nCoV) infection is suspected: Interim guidance. 2020. https://www.who.int/publications-detail/infection-prevention-and-control-during-health-care-when-novel-coronavirus-(ncov)-infection-is-suspected-20200125. Accessed April 1, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Little JW, Falace DA, Miller CS, Rhodus NL. Dental Management of the Medically Compromised Patient. 8th ed. St. Louis: Elsevier; 2013.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Chartier Y, Pessoa-Silva CL. Natural ventilation for infection control in health-care settings. Geneva, Switzerland: World Health Organization; 2009.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Kutter JS, Spronken MI, Fraaij PL, Fouchier RA, Herfst S. Transmission routes of respiratory viruses among humans. Curr Opin Virol. 2018;28:142-151.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Spagnuolo G, De Vito D, Rengo S, Tatullo M. COVID-19 outbreak: an overview on dentistry. Int J Environ Res Public Health. 2020;17:2094.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Chan JF-W, Yuan S, Kok K-H, et al. A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster. The Lancet. 2020;395:514-523.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Fu H, Xu H, Zhang N, et al. Association between clinical, laboratory and CT characteristics and RT-PCR results in the follow-up of COVID-19 patients. medRxiv. 2020. https://doi.org/10.1101/2020.03.19.20038315.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>WHO. Clinical management of severe acute respiratory infection when novel coronavirus (2019-nCoV) infection is suspected: interim guidance: World Health Organization. 2020. https://www.who.int/publications-detail/clinical-management-of-severe-acute-respiratory-infection-when-novel-coronavirus-(ncov)-infection-is-suspected. Accessed April 2, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Ter Chee VW, Khoo ML-C, Lee SF, Lai YC, Chin NM. Infection control measures for operative procedures in severe acute respiratory syndrome-related patients. Anesthesiology. 2004;100:1394-1398.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>CDC. PPE-sequence. 2020. https://www.cdc.gov/hai/pdfs/ppe/ppe-sequence.pdf. Accessed April 3, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>FDA. Medical gowns. 2020. https://www.fda.gov/medical-devices/personal-protective-equipment-infection-control/medical-gowns#g2. Accessed April 2, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Chen X, Shang Y, Yao S, Liu R, Liu H. Perioperative care provider's considerations in managing patients with the COVID-19 infections. Transl Perioper Pain Med. 2020;7:216-223.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Greenhalgh T, Chan XH, Khunti K, et al. What is the efficacy of standard face masks compared to respirator masks in preventing COVID-type respiratory illnesses in primary care staff? 2020. https://www.cebm.net/covid-19/what-is-the-efficacy-of-standard-face-masks-compared-to-respirator-masks-in-preventing-covid-type-respiratory-illnesses-in-primary-care-staff/. Accessed April 2, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>NHS England South East Region Standard Operating Procedure for Urgent Dental Care Hubs (UDCH) during the COVID-19 Pandemic. Available from: https://secureservercdn.net/50.62.88.87/kpx.090.myftpupload.com/wp-content/uploads/2020/05/NHSEI-SEUrgent-Dental-Care-Hubs-combined-SOP-1.doc</Citation>
+            </Reference>
+            <Reference>
+                <Citation>CDC. Interim infection prevention and control guidance for dental settings during the COVID-19 response. 2020. https://www.cdc.gov/coronavirus/2019-ncov/hcp/dental-settings.html. Accessed June 17, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>England PH. When to use a face mask or FF£ respirator. 2020. https://www.rdash.nhs.uk/wp-content/uploads/2017/08/Appendix-47-Surgical-Face-Mask-FFP3.pdf. Accessed April 2, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>CDC. Understanding the difference (surgical masks, N95 FFRs, and elastomerics) infographic. 2020. https://www.cdc.gov/niosh/npptl/pdfs/UnderstandingDifference3-508.pdf. Accessed April 2, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>CDC. Recommended guidance for extended use and limited reuse of N95 filtering facepiece respirators in healthcare settings. 2020. https://www.cdc.gov/niosh/topics/hcwcontrols/recommendedguidanceextuse.html. Accessed April 1, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Huang C, Wang Y, Li X, et al. Clinical features of patients infected with 2019 novel coronavirus in Wuhan, China. Lancet. 2020;395:497-506.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>To KK-W, Tsang OT-Y, Yip CC-Y, et al. Consistent detection of 2019 novel coronavirus in saliva. Clin Infect Dis. 2020;71:841-843.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>CDC. Chemical disinfectants. 2016. https://www.cdc.gov/infectioncontrol/guidelines/disinfection/disinfection-methods/chemical.html#:~:text=For%20small%20spills%20of%20blood,an%20EPA%2Dregistered%20tuberculocidal%20disinfectant. Accessed September 18, 2016.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Kohn WG, Collins AS, Cleveland JL, Harte JA, Eklund KJ, Malvitz DM. Guidelines for infection control in dental health-care settings, 2003. MMWR Recomm Rep. 2003;52:1-61.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>European Centre for Disease Prevention and Control. Disinfection of environments in healthcare and non-healthcare settings potentially contaminated with SARS-CoV-2. 2020. https://www.ecdc.europa.eu/sites/default/files/documents/Environmental-persistence-of-SARS_CoV_2-virus-Options-for-cleaning2020-03-26_0.pdf. Accessed March 26, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>CDC. Interim infection prevention and control recommendations for healthcare personnel during the coronavirus disease 2019 (COVID-19) pandemic. 2020. https://www.cdc.gov/coronavirus/2019-ncov/hcp/infection-control-recommendations.html. Accessed July 15, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Amato A, Caggiano M, Amato M, Moccia G, Capunzo M, De Caro F. Infection control in dental practice during the COVID-19 pandemic. Int J Environ Res Public Health. 2020;17:4769.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Patil S, Mukhit Kazi M, Shidhore A, More P, Mohite M. Compliance of sterilization and disinfection protocols in dental practice - A review to reconsider basics. Int J Recent Sci Res. 2020;04(11):38050-38054.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Marui VC, Souto MLS, Rovai ES, Romito GA, Chambrone L, Pannuti CM. Efficacy of preprocedural mouthrinses in the reduction of microorganisms in aerosol: a systematic review. J Am Dent Assoc. 2019;150:1015-1026.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Tiwari RVC. Dental considerations in corona virus infections: first review in literature. J Adv Med Dent Scie Res. 2020;8:100-103.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Eggers M, Koburger-Janssen T, Eickmann M, Zorn J. In vitro bactericidal and virucidal efficacy of povidone-iodine gargle/mouthwash against respiratory and oral tract pathogens. Infect Dis Ther. 2018;7:249-259.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Harrel SK, Barnes JB, Rivera-Hidalgo F. Aerosol and splatter contamination from the operative site during ultrasonic scaling. J Am Dent Assoc. 1998;129(9):1241-1249.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Li R, Zhao Y, Ye L. How to make choice of the carious removal methods, Carisolv or traditional drilling? A meta-analysis. J Oral Rehabil. 2014;41:432-442.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Cochran MA, Miller CH, Sheldrake MA. The efficacy of the rubber dam as a barrier to the spread of microorganisms during dental treatment. J Am Dent Assoc. 1989;119:141-144.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Hu T, Li G, Zuo Y, Zhou X. Risk of hepatitis B virus transmission via dental handpieces and evaluation of an antisuction device for prevention of transmission. Infect Control Hosp Epidemiol. 2007;28(1):80-82.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Little P. Non-steroidal anti-inflammatory drugs and covid-19. BMJ. 2020;368:m1185.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Fascia D, Dalili D, Rennie W, Rowbotham E, Carne A, Robinson P. The safety of corticosteroid injections during the COVID-19 global pandemic. 2020. Available online at https://www.wnswphn.org.au/uploads/documents/Resources/Coronavirus/Musculoskeletal_Radiology_during_the_COVID-19_Global_Pandemic.pdf. Assessed on 5 May, 2020.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Kumar P, Dixit P, Kalaivani V, Rajapandian K. Future advances in robotic dentistry. J Dent Health Oral Disord Ther. 2017;7:00241.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Rekow ED. Digital dentistry: the new state of the art-Is it disruptive or destructive?. Dent Mater. 2020;36:9-24.</Citation>
+            </Reference>
+            <Reference>
+                <Citation>Schuh CM, Benso B, Aguayo S. Potential novel strategies for the treatment of dental pulp-derived pain: pharmacological approaches and beyond. Front Pharmacol. 2019;10:1068.</Citation>
+            </Reference>
+        </ReferenceList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="Publisher" Owner="NLM">
+        <PMID Version="1">32950003</PMID>
+        <DateRevised>
+            <Year>2020</Year>
+            <Month>09</Month>
+            <Day>19</Day>
+        </DateRevised>
+        <Article PubModel="Print-Electronic">
+            <Journal>
+                <ISSN IssnType="Electronic">2352-3964</ISSN>
+                <JournalIssue CitedMedium="Internet">
+                    <Volume>60</Volume>
+                    <PubDate>
+                        <Year>2020</Year>
+                        <Month>Sep</Month>
+                        <Day>16</Day>
+                    </PubDate>
+                </JournalIssue>
+                <Title>EBioMedicine</Title>
+                <ISOAbbreviation>EBioMedicine</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>Impact of interleukin-6 blockade with tocilizumab on SARS-CoV-2 viral kinetics and antibody responses in patients with COVID-19: A prospective cohort study.</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>102999</MedlinePgn>
+            </Pagination>
+            <ELocationID EIdType="pii" ValidYN="Y">S2352-3964(20)30375-3</ELocationID>
+            <ELocationID EIdType="doi" ValidYN="Y">10.1016/j.ebiom.2020.102999</ELocationID>
+            <Abstract>
+                <AbstractText Label="BACKGROUND" NlmCategory="BACKGROUND">The virological and immunological effects of the immunomodulatory drugs used for COVID-19 remain unknown. We evaluated the impact of interleukin (IL)-6 blockade with tocilizumab on SARS-CoV-2 viral kinetics and the antibody response in patients with COVID-19.</AbstractText>
+                <AbstractText Label="METHODS" NlmCategory="METHODS">Prospective cohort study in patients admitted with COVID-19. Serial nasopharyngeal and plasma samples were measured for SARS-CoV-2 RNA and S-IgG/N-IgG titers, respectively.</AbstractText>
+                <AbstractText Label="FINDINGS" NlmCategory="RESULTS">138 patients with confirmed infection were included; 76 (55%) underwent IL-6 blockade. Median initial SOFA (p = 0•016) and SARS-CoV-2 viral load (p&lt;0•001, Mann-Whitney-Wilcoxon test) were significantly higher among anti-IL-6 users. Patients under IL-6 blockade showed delayed viral clearance in the Kaplan-Meier curves (HR 0•35 [95%CI] [0•15-0•81], log-rank p = 0•014), but an adjusted propensity score matching model did not demonstrate a significant relationship of IL-6 blockade with viral clearance (HR 1•63 [0•35-7•7]). Cox regression showed an inverse association between SARS-CoV-2 RNA clearance and the initial viral load (HR 0•35 [0•11-0•89]). Patients under the IL-6 blocker showed shorter median time to seropositivity, higher peak antibody titers, and higher cumulative proportion of seropositivity in the Kaplan Meier curves (HR 3•1 [1•9-5] for S-IgG; and HR 3•0 [1•9-4•9] for N-IgG; log-rank p&lt;0•001 for both). However, no significant differences between groups were found in either S-IgG (HR 1•56 [0•41-6•0]) nor N-IgG (HR 0•96 [0•26-3•5]) responses in an adjusted propensity score analysis.</AbstractText>
+                <AbstractText Label="INTERPRETATION" NlmCategory="CONCLUSIONS">Our results suggest that in patients infected with SARS-CoV-2, IL-6 blockade does not impair the viral specific antibody responses. Although a delayed viral clearance was observed, it was driven by a higher initial viral load. The study supports the safety of this therapy in patients with COVID-19.</AbstractText>
+                <AbstractText Label="FUNDING" NlmCategory="BACKGROUND">Instituto de salud Carlos III (Spain).</AbstractText>
+                <CopyrightInformation>Copyright © 2020 The Authors. Published by Elsevier B.V. All rights reserved.</CopyrightInformation>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Masiá</LastName>
+                    <ForeName>Mar</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche and Universidad Miguel Hernández, Camí de la Almazara 11, Elche, Alicante 03203, Spain. Electronic address: marmasia@umh.es.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Fernández-González</LastName>
+                    <ForeName>Marta</ForeName>
+                    <Initials>M</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche, Camí de la Almazara 11, Elche, Alicante 03203, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Padilla</LastName>
+                    <ForeName>Sergio</ForeName>
+                    <Initials>S</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche, Camí de la Almazara 11, Elche, Alicante 03203, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Ortega</LastName>
+                    <ForeName>Piedad</ForeName>
+                    <Initials>P</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche, Camí de la Almazara 11, Elche, Alicante 03203, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>García</LastName>
+                    <ForeName>José A</ForeName>
+                    <Initials>JA</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Operational Research Center, Universidad Miguel Hernández, Elche, Alicante, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Agulló</LastName>
+                    <ForeName>Vanesa</ForeName>
+                    <Initials>V</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche, Camí de la Almazara 11, Elche, Alicante 03203, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>García-Abellán</LastName>
+                    <ForeName>Javier</ForeName>
+                    <Initials>J</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche, Camí de la Almazara 11, Elche, Alicante 03203, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Telenti</LastName>
+                    <ForeName>Guillermo</ForeName>
+                    <Initials>G</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche, Camí de la Almazara 11, Elche, Alicante 03203, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Guillén</LastName>
+                    <ForeName>Lucía</ForeName>
+                    <Initials>L</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche, Camí de la Almazara 11, Elche, Alicante 03203, Spain.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Gutiérrez</LastName>
+                    <ForeName>Félix</ForeName>
+                    <Initials>F</Initials>
+                    <AffiliationInfo>
+                        <Affiliation>Hospital General Universitario de Elche and Universidad Miguel Hernández, Camí de la Almazara 11, Elche, Alicante 03203, Spain. Electronic address: gutierrez_fel@gva.es.</Affiliation>
+                    </AffiliationInfo>
+                </Author>
+            </AuthorList>
+            <Language>eng</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <ArticleDate DateType="Electronic">
+                <Year>2020</Year>
+                <Month>09</Month>
+                <Day>16</Day>
+            </ArticleDate>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>Netherlands</Country>
+            <MedlineTA>EBioMedicine</MedlineTA>
+            <NlmUniqueID>101647039</NlmUniqueID>
+            <ISSNLinking>2352-3964</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <KeywordList Owner="NOTNLM">
+            <Keyword MajorTopicYN="N">Anti-cytokine therapy</Keyword>
+            <Keyword MajorTopicYN="N">Antibody responses</Keyword>
+            <Keyword MajorTopicYN="N">COVID-19</Keyword>
+            <Keyword MajorTopicYN="N">N-IgG</Keyword>
+            <Keyword MajorTopicYN="N">S-IgG</Keyword>
+            <Keyword MajorTopicYN="N">SARS-CoV-2</Keyword>
+            <Keyword MajorTopicYN="N">Tocilizumab</Keyword>
+            <Keyword MajorTopicYN="N">Viral kinetics</Keyword>
+        </KeywordList>
+        <CoiStatement>Declaration of Competing Interests Dr. Gutiérrez reports personal fees from Janssen-Cilag and from ViiV Health Care, outside the submitted work. The other authors have nothing to disclose.</CoiStatement>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="received">
+                <Year>2020</Year>
+                <Month>07</Month>
+                <Day>25</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="revised">
+                <Year>2020</Year>
+                <Month>08</Month>
+                <Day>24</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="accepted">
+                <Year>2020</Year>
+                <Month>08</Month>
+                <Day>27</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>19</Day>
+                <Hour>20</Hour>
+                <Minute>19</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>2020</Year>
+                <Month>9</Month>
+                <Day>20</Day>
+                <Hour>6</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>aheadofprint</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">32950003</ArticleId>
+            <ArticleId IdType="pii">S2352-3964(20)30375-3</ArticleId>
+            <ArticleId IdType="doi">10.1016/j.ebiom.2020.102999</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+
+<PubmedArticle>
+    <MedlineCitation Status="MEDLINE" Owner="NLM">
+        <PMID Version="1">3294998</PMID>
+        <DateCompleted>
+            <Year>1987</Year>
+            <Month>07</Month>
+            <Day>10</Day>
+        </DateCompleted>
+        <DateRevised>
+            <Year>2006</Year>
+            <Month>11</Month>
+            <Day>15</Day>
+        </DateRevised>
+        <Article PubModel="Print">
+            <Journal>
+                <ISSN IssnType="Print">0368-2315</ISSN>
+                <JournalIssue CitedMedium="Print">
+                    <Volume>16</Volume>
+                    <Issue>2</Issue>
+                    <PubDate>
+                        <Year>1987</Year>
+                    </PubDate>
+                </JournalIssue>
+                <Title>Journal de gynecologie, obstetrique et biologie de la reproduction</Title>
+                <ISOAbbreviation>J Gynecol Obstet Biol Reprod (Paris)</ISOAbbreviation>
+            </Journal>
+            <ArticleTitle>[Intrauterine growth retardation. Changes in obstetrical practice in France].</ArticleTitle>
+            <Pagination>
+                <MedlinePgn>163-71</MedlinePgn>
+            </Pagination>
+            <Abstract>
+                <AbstractText>The change in practice in connection with fetal growth retardation was studied using two national enquiries on pregnancy and delivery carried out in 1976 and 1981. These showed important changes in practice between the two studies. Although ultrasound and fetal heart rate monitoring are widely used and are shown as being very important for pregnancies overall, they are not used more often in cases of fetal growth retardation. On the other hand, when they have been started these examinations are more often easily repeated. Recourse to hormonal essay has not changed in intra-uterine growth retardation cases (17%). The percentage of caesareans carried out for retardation rose from 9.4 to 17.4% and these caesarean operations were carried out earlier. 50% of this increase is due to the decision to carry out a caesarean before labour starts. This more aggressive tendency means that the number of premature babies in growth retarded infants was higher in 1981, although the difference not significant and this practice would need further study. There are improvements in neonatal health as a result of the changes although one cannot pinpoint for certain which procedure has caused this improvement.</AbstractText>
+            </Abstract>
+            <AuthorList CompleteYN="Y">
+                <Author ValidYN="Y">
+                    <LastName>Poisson-Salomon</LastName>
+                    <ForeName>A S</ForeName>
+                    <Initials>AS</Initials>
+                </Author>
+                <Author ValidYN="Y">
+                    <LastName>Bréart</LastName>
+                    <ForeName>G</ForeName>
+                    <Initials>G</Initials>
+                </Author>
+            </AuthorList>
+            <Language>fre</Language>
+            <PublicationTypeList>
+                <PublicationType UI="D004740">English Abstract</PublicationType>
+                <PublicationType UI="D016428">Journal Article</PublicationType>
+            </PublicationTypeList>
+            <VernacularTitle>Retard de croissance intra-utérin. Evolution des pratiques obstétricales en France.</VernacularTitle>
+        </Article>
+        <MedlineJournalInfo>
+            <Country>France</Country>
+            <MedlineTA>J Gynecol Obstet Biol Reprod (Paris)</MedlineTA>
+            <NlmUniqueID>0322206</NlmUniqueID>
+            <ISSNLinking>0150-9918</ISSNLinking>
+        </MedlineJournalInfo>
+        <CitationSubset>IM</CitationSubset>
+        <MeshHeadingList>
+            <MeshHeading>
+                <DescriptorName UI="D000649" MajorTopicYN="N">Amniocentesis</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D001724" MajorTopicYN="N">Birth Weight</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D002585" MajorTopicYN="N">Cesarean Section</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D005260" MajorTopicYN="N">Female</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D005317" MajorTopicYN="N">Fetal Growth Retardation</DescriptorName>
+                <QualifierName UI="Q000175" MajorTopicYN="Y">diagnosis</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D005323" MajorTopicYN="N">Fetal Monitoring</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D005602" MajorTopicYN="N" Type="Geographic">France</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D006339" MajorTopicYN="N">Heart Rate</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D006801" MajorTopicYN="N">Humans</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D007231" MajorTopicYN="N">Infant, Newborn</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D011247" MajorTopicYN="N">Pregnancy</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D011295" MajorTopicYN="N">Prenatal Care</DescriptorName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D011296" MajorTopicYN="N">Prenatal Diagnosis</DescriptorName>
+                <QualifierName UI="Q000639" MajorTopicYN="Y">trends</QualifierName>
+            </MeshHeading>
+            <MeshHeading>
+                <DescriptorName UI="D014463" MajorTopicYN="N">Ultrasonography</DescriptorName>
+                <QualifierName UI="Q000639" MajorTopicYN="N">trends</QualifierName>
+            </MeshHeading>
+        </MeshHeadingList>
+    </MedlineCitation>
+    <PubmedData>
+        <History>
+            <PubMedPubDate PubStatus="pubmed">
+                <Year>1987</Year>
+                <Month>1</Month>
+                <Day>1</Day>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="medline">
+                <Year>1987</Year>
+                <Month>1</Month>
+                <Day>1</Day>
+                <Hour>0</Hour>
+                <Minute>1</Minute>
+            </PubMedPubDate>
+            <PubMedPubDate PubStatus="entrez">
+                <Year>1987</Year>
+                <Month>1</Month>
+                <Day>1</Day>
+                <Hour>0</Hour>
+                <Minute>0</Minute>
+            </PubMedPubDate>
+        </History>
+        <PublicationStatus>ppublish</PublicationStatus>
+        <ArticleIdList>
+            <ArticleId IdType="pubmed">3294998</ArticleId>
+        </ArticleIdList>
+    </PubmedData>
+</PubmedArticle>
+
+</PubmedArticleSet>

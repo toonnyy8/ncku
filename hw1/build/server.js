@@ -24076,6 +24076,26 @@ if (!cached) {
         xmlParser.parseString(import_fs.default.readFileSync(`${__dirname}/.data/${dataName}`, "utf8"), (err, result) => {
           data = result;
         });
+        if (data["PubmedArticleSet"]["PubmedArticle"].map == void 0) {
+          let MedlineCitation = data["PubmedArticleSet"]["PubmedArticle"]["MedlineCitation"];
+          let article = MedlineCitation["Article"];
+          let abstrsctText = article?.["Abstract"]?.["AbstractText"];
+          let content = [];
+          if (typeof abstrsctText == "object") {
+            content = abstrsctText.map(({ _: _2 }) => _2);
+          } else if (typeof abstrsctText == "string") {
+            content = [abstrsctText];
+          }
+          let docInfo = getDocInfo(content);
+          return [
+            ...prev,
+            {
+              title: MedlineCitation["Article"]["ArticleTitle"],
+              content,
+              ...docInfo
+            }
+          ];
+        }
         return [
           ...prev,
           ...data["PubmedArticleSet"]["PubmedArticle"].map(({ MedlineCitation }) => {
