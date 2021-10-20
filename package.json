@@ -12,7 +12,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:hw1-client": "esbuild ./hw1/client/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --sourcemap --outfile=./hw1/build/client/src/index.js",
     "build:hw1-server": "esbuild ./hw1/server/index.ts --bundle --outfile=./hw1/build/server.js --sourcemap --platform=node",
-    "build:hw1-report": "esbuild ./hw1/report/dev/index.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --outfile=./hw1/report/build/index.js --sourcemap  --loader:.svg=dataurl"
+    "build:hw1-report": "esbuild ./hw1/report/dev/index.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --outfile=./hw1/report/build/index.js --sourcemap  --loader:.svg=dataurl",
+    "build:hw2-data": "esbuild ./hw2/dl_data.ts --bundle --outfile=./hw2/dl_data.js --sourcemap  --platform=node",
+    "build:hw2-client": "esbuild ./hw2/client/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --sourcemap --outfile=./hw2/build/client/src/index.js",
+    "build:hw2-server": "esbuild ./hw2/server/index.ts --bundle --outfile=./hw2/build/server.js --sourcemap --platform=node"
   },
   "repository": {
     "type": "git",
@@ -29,15 +32,20 @@
     "@types/koa": "^2.13.4",
     "@types/koa-router": "^7.4.4",
     "@types/xml2js": "^0.4.9",
+    "canvas": "^2.8.0",
     "compromise": "^13.11.4",
     "compromise-sentences": "^0.3.0",
     "esbuild": "^0.13.3",
+    "jsdom": "^18.0.0",
     "koa": "^2.13.3",
     "koa-router": "^10.1.1",
+    "node-fetch": "^3.0.0",
+    "node-libcurl": "^2.3.3",
     "vue": "^3.2.19",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
+    "@types/jsdom": "^16.2.13",
     "@types/node": "^16.10.2"
   }
 }
