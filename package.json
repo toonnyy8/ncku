@@ -41,6 +41,7 @@
     "koa-router": "^10.1.1",
     "node-fetch": "^3.0.0",
     "node-libcurl": "^2.3.3",
+    "porter-stemmer": "^0.9.1",
     "vue": "^3.2.19",
     "xml2js": "^0.4.23"
   },

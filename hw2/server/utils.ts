@@ -2,7 +2,8 @@ import nlp from "compromise";
 import { JSDOM } from "jsdom";
 import { Parser } from "xml2js";
 
-import { Doc, PubMed, TokenInfo, AbstractText } from "./types";
+import { stemmer } from "./porter";
+import { AbstractText, Doc, PubMed, TokenInfo, TokenTable } from "./types";
 
 nlp.extend(require("compromise-sentences"));
 
@@ -112,4 +113,95 @@ export const parsePubMedXML = (xml: string): PubMed[] => {
       return { title, abstract };
     }
   );
+};
+
+export const buildTokenTable = (
+  pubMeds: PubMed[],
+  startDidx?: number,
+  table?: TokenTable
+): TokenTable => {
+  startDidx = startDidx ?? 0;
+  table = table ?? {};
+
+  for (let [didx, pubMed] of pubMeds.entries()) {
+    for (let [widx, token] of nlp(pubMed.title)
+      .text("reduced")
+      .toLowerCase()
+      .split(" ")
+      .entries()) {
+      token = stemmer(token);
+      if (table[token] == undefined) {
+        table[token] = {};
+      }
+      let docs = table[token];
+
+      if (docs[`${didx + startDidx}`] == undefined) {
+        docs[`${didx + startDidx}`] = {};
+      }
+      let doc = docs[`${didx + startDidx}`];
+
+      if (doc.title == undefined) {
+        doc.title = new Set<number>();
+      }
+      doc.title.add(widx);
+    }
+    for (let [aidx, abstractText] of pubMed.abstract.entries()) {
+      for (let [widx, token] of nlp(abstractText.text)
+        .text("reduced")
+        .toLowerCase()
+        .split(" ")
+        .entries()) {
+        token = stemmer(token);
+        if (table[token] == undefined) {
+          table[token] = {};
+        }
+        let docs = table[token];
+
+        if (docs[`${didx + startDidx}`] == undefined) {
+          docs[`${didx + startDidx}`] = {};
+        }
+        let doc = docs[`${didx + startDidx}`];
+
+        if (doc[`${aidx}`] == undefined) {
+          doc[`${aidx}`] = new Set<number>();
+        }
+        doc[`${aidx}`].add(widx);
+      }
+    }
+  }
+
+  return table;
+};
+
+export const levenshteinDistance = (source: string, target: string): number => {
+  let distances: number[][] = [
+    [
+      0,
+      ...Array(target.length)
+        .fill(0)
+        .map((_, idx) => idx + 1),
+    ],
+  ];
+  for (let [i, c1] of source.split("").entries()) {
+    distances.push([i + 1]);
+    for (let [j, c2] of target.split("").entries()) {
+      let ins = distances[i + 1][j] + 1;
+      let del = distances[i][j + 1] + 1;
+      let sub = distances[i][j] + (c1 == c2 ? 0 : 1);
+      distances[i + 1].push(Math.min(ins, del, sub));
+    }
+  }
+
+  return distances[source.length][target.length];
+};
+
+export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
+  let words = nlp(w).text("reduced").toLowerCase().split(" ");
+  for (let word of words) {
+    for (let token of Object.keys(table)) {
+      let distance =
+        levenshteinDistance(word, token) / Math.max(word.length, token.length);
+    }
+  }
+  return new Set();
 };

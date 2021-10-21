@@ -14,6 +14,14 @@ export interface PubMed {
   abstract: AbstractText[];
 }
 
+export interface TokenTable {
+  [token: string]: {
+    [didx: `${number}`]: {
+      title?: Set<number>;
+      [aidx: `${number}`]: Set<number>;
+    };
+  };
+}
 export interface Doc {
   title: string;
   content: string[];
