@@ -185,6 +185,8 @@ export const levenshteinDistance = (source: string, target: string): number => {
 };
 
 export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
+  let ttt = {}
+
   let words = nlp(w).text("reduced").toLowerCase().split(" ");
   for (let word of words) {
     let {token, distance} =
@@ -198,7 +200,12 @@ export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
                 return curr
               }
             }, {token : "", distance : Infinity})
-    table[token]
+    for (let didx of Object.keys(table[token])) {
+      if (ttt[didx] == undefined) {
+        ttt[didx] = 0
+      }
+      ttt[didx] += 1
+    }
   }
   return new Set();
 };
