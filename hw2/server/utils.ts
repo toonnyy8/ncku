@@ -175,6 +175,40 @@ export const buildTokenTable = (
   return table;
 };
 
+export const json2table = (jtable: {
+  [token: string]: { [didx: `${number}`]: { [aidx: `${number}`]: number[] } };
+}) => {
+  let table: TokenTable = {};
+  for (let token of Object.keys(jtable)) {
+    table[token] = {};
+    for (let didx of Object.keys(jtable[token]) as `${number}`[]) {
+      table[token][didx] = {};
+      for (let aidx of Object.keys(jtable[token][didx]) as `${number}`[]) {
+        table[token][didx][aidx] = new Set([
+          ...jtable[token][didx][aidx].values(),
+        ]);
+      }
+    }
+  }
+  return table;
+};
+
+export const table2json = (table: TokenTable) => {
+  let jtable: {
+    [token: string]: { [didx: `${number}`]: { [aidx: `${number}`]: number[] } };
+  } = {};
+  for (let token of Object.keys(table)) {
+    jtable[token] = {};
+    for (let didx of Object.keys(table[token]) as `${number}`[]) {
+      jtable[token][didx] = {};
+      for (let aidx of Object.keys(table[token][didx]) as `${number}`[]) {
+        jtable[token][didx][aidx] = [...table[token][didx][aidx].values()];
+      }
+    }
+  }
+  return jtable;
+};
+
 export const levenshteinDistance = (source: string, target: string): number => {
   let distances: number[][] = [
     [

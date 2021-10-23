@@ -5,8 +5,16 @@ import Route from "koa-router";
 import { Parser } from "xml2js";
 
 import { genIdxTable } from "./idx_table";
-import { Doc, DocTokenDict, TokenInfo } from "./types";
-import { createTokenDict, getDocInfo, mergeTokenDict } from "./utils";
+import { Doc, DocTokenDict, TokenInfo, TokenTable } from "./types";
+import {
+  createTokenDict,
+  getDocInfo,
+  mergeTokenDict,
+  parsePubMedXML,
+  buildTokenTable,
+  table2json,
+  json2table,
+} from "./utils";
 
 nlp.extend(require("compromise-sentences"));
 
@@ -15,93 +23,30 @@ let datasName = fs.readdirSync(`${__dirname}/.data/`);
 let cached = datasName.find((file) => file == ".docs") != undefined;
 let docs: Doc[];
 let tokenDict: { [token: string]: TokenInfo[] };
+let table: TokenTable;
 if (!cached) {
-  docs = datasName.reduce((prev, dataName) => {
-    switch (dataName.split(".").at(-1)) {
-      case "json": {
-        let data: Array<{ tweet_text: string }> = JSON.parse(
-          fs.readFileSync(`${__dirname}/.data/${dataName}`, "utf8")
-        );
-        return [
-          ...prev,
-          ...data.map(({ tweet_text }) => ({
-            title: "",
-            content: [tweet_text],
-            ...getDocInfo([tweet_text]),
-          })),
-        ];
-      }
-      case "xml": {
-        let data: any;
-        xmlParser.parseString(
-          fs.readFileSync(`${__dirname}/.data/${dataName}`, "utf8"),
-          (err, result) => {
-            data = result;
-          }
-        );
-        if (data["PubmedArticleSet"]["PubmedArticle"].map == undefined) {
-          let MedlineCitation =
-            data["PubmedArticleSet"]["PubmedArticle"]["MedlineCitation"];
-
-          let article = MedlineCitation["Article"];
-          let abstrsctText = article?.["Abstract"]?.["AbstractText"];
-          let content: string[] = [];
-
-          if (typeof abstrsctText == "object") {
-            content = abstrsctText.map(({ _ }) => _);
-          } else if (typeof abstrsctText == "string") {
-            content = [abstrsctText];
-          }
-          let docInfo = getDocInfo(content);
-          return [
-            ...prev,
-            {
-              title: MedlineCitation["Article"]["ArticleTitle"],
-              content,
-              ...docInfo,
-            },
-          ];
-        }
-
-        return [
-          ...prev,
-          ...data["PubmedArticleSet"]["PubmedArticle"].map(
-            ({ MedlineCitation }) => {
-              let article = MedlineCitation["Article"];
-              let abstrsctText = article?.["Abstract"]?.["AbstractText"];
-              let content: string[] = [];
-
-              if (typeof abstrsctText == "object") {
-                content = abstrsctText.map(({ _ }) => _);
-              } else if (typeof abstrsctText == "string") {
-                content = [abstrsctText];
-              }
-              let docInfo = getDocInfo(content);
-              return {
-                title: MedlineCitation["Article"]["ArticleTitle"],
-                content,
-                ...docInfo,
-              };
-            }
-          ),
-        ];
-      }
-
-      default: {
-        return prev;
-      }
+  let docs = datasName.reduce((prev, dataName) => {
+    if ((dataName.split(".")?.at(-1) ?? "") == "xml") {
+      let xml = fs.readFileSync(`${__dirname}/../.data/${dataName}`, "utf8");
+      let pubMeds = parsePubMedXML(xml);
+      return [...prev, ...pubMeds];
     }
+    return prev;
   }, []);
-  tokenDict = docs.reduce((prev, doc, docIdx) => {
-    return mergeTokenDict(prev, createTokenDict(doc, docIdx));
-  }, {} as { [token: string]: TokenInfo[] });
 
-  fs.writeFileSync(`${__dirname}/.data/.docs`, JSON.stringify(docs));
-  fs.writeFileSync(`${__dirname}/.data/.token_dict`, JSON.stringify(tokenDict));
+  table = buildTokenTable(docs);
+
+  table2json(table);
+
+  fs.writeFileSync(`${__dirname}/../.data/.docs`, JSON.stringify(docs));
+  fs.writeFileSync(
+    `${__dirname}/../.data/.token_table`,
+    JSON.stringify(table2json(table))
+  );
 } else {
-  docs = JSON.parse(fs.readFileSync(`${__dirname}/.data/.docs`, "utf8"));
-  tokenDict = JSON.parse(
-    fs.readFileSync(`${__dirname}/.data/.token_dict`, "utf8")
+  docs = JSON.parse(fs.readFileSync(`${__dirname}/../.data/.docs`, "utf8"));
+  table = json2table(
+    JSON.parse(fs.readFileSync(`${__dirname}/../.data/.token_dict`, "utf8"))
   );
 }
 // console.dir(datas);
