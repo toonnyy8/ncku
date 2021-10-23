@@ -128,6 +128,7 @@ export const buildTokenTable = (
       .text("reduced")
       .toLowerCase()
       .split(" ")
+      // .split(/[\s-_][\s-_]*/)
       .entries()) {
       token = stemmer(token);
       if (table[token] == undefined) {
@@ -150,6 +151,7 @@ export const buildTokenTable = (
         .text("reduced")
         .toLowerCase()
         .split(" ")
+        // .split(/[\s-_][\s-_]*/)
         .entries()) {
         token = stemmer(token);
         if (table[token] == undefined) {
@@ -173,7 +175,7 @@ export const buildTokenTable = (
   return table;
 };
 
-const levenshteinDistances = (source: string, target: string): number[][] => {
+export const levenshteinDistance = (source: string, target: string): number => {
   let distances: number[][] = [
     [
       0,
@@ -191,18 +193,32 @@ const levenshteinDistances = (source: string, target: string): number[][] => {
       distances[i + 1].push(Math.min(ins, del, sub));
     }
   }
-  return distances;
+  return distances?.at(-1)?.at(-1) ?? NaN;
 };
 
-export const levenshteinDistance = (source: string, target: string): number => {
-  return levenshteinDistances(source, target)?.at(-1)?.at(-1) ?? NaN;
-};
-
-export const subseqEditDistance = (source: string, target: string) => {
+export const subseqEditDistance = (source: string[][], target: string[]) => {
   let min_len = Infinity;
   for (let i = 0; i < target.length; i++) {
-    let distances = levenshteinDistances(source, target.slice(i))?.at(-1) ?? [];
-    min_len = Math.min(min_len, ...distances);
+    let distances: number[][] = [
+      [
+        0,
+        ...Array(target.length)
+          .fill(0)
+          .map((_, idx) => idx + 1),
+      ],
+    ];
+    for (let [i, c1] of source.entries()) {
+      distances.push([i + 1]);
+      for (let [j, c2] of target.entries()) {
+        let ins = distances[i + 1][j] + 1;
+        let del = distances[i][j + 1] + 1;
+        let sub =
+          distances[i][j] + (c1.findIndex((c) => c == c2) != -1 ? 0 : 1);
+        distances[i + 1].push(Math.min(ins, del, sub));
+      }
+    }
+    // return distances?.at(-1)?.at(-1) ?? NaN;
+    min_len = Math.min(min_len, ...(distances?.at(-1) ?? []));
   }
 
   return min_len;
@@ -211,48 +227,86 @@ export const subseqEditDistance = (source: string, target: string) => {
 export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
   let ttt: { [key: `${number}`]: number } = {};
 
-  let kkk: { [didx: `${number}`]: { [aidx: `${number}`]: string[] } } = {};
+  let kkk: {
+    [didx: `${number}`]: { [aidx: `${number}`]: string[]; title?: string[] };
+  } = {};
 
-  let words = nlp(w).text("reduced").toLowerCase().split(" ");
+  let words = nlp(w)
+    .text("reduced")
+    .toLowerCase()
+    .split(" ")
+    // .split(/[\s-_][\s-_]*/)
+    .map((word) => stemmer(word));
+  let source: string[][] = [];
   for (let word of words) {
-    let { token, distance } = Object.keys(table)
-      .map((token) => ({
-        token,
-        distance:
-          levenshteinDistance(word, token) /
-          Math.max(word.length, token.length),
-      }))
-      .reduce(
-        (prev, curr) => {
-          if (prev.distance < curr.distance) {
-            return prev;
-          } else {
-            return curr;
-          }
-        },
-        { token: "", distance: Infinity }
-      );
-    if (distance > 0.3) continue;
-    for (let didx of Object.keys(table[token]) as `${number}`[]) {
-      if (ttt[didx] == undefined) {
-        ttt[didx] = 0;
-        kkk[didx] = {};
-      }
-      ttt[didx] += 1;
-      for (let aidx of Object.keys(table[token][didx]) as `${number}`[]) {
-        if (kkk[didx][aidx] == undefined) {
-          kkk[didx][aidx] = [];
+    let tokens = Object.keys(table)
+      .map((token) => {
+        let distance = levenshteinDistance(word, token);
+        return {
+          token,
+          distance,
+          normDistance: distance / Math.max(word.length, token.length),
+        };
+      })
+      .reduce((prev, { token, distance, normDistance }) => {
+        if (normDistance <= 0.5) {
+          return [...prev, { token, distance, normDistance }];
         }
 
-        for (let widx of table[token][didx][aidx]) {
-          kkk[didx][aidx][widx] = token;
+        return prev;
+      }, [] as { token: string; distance: number; normDistance: number }[])
+      .sort((a, b) => a.normDistance - b.normDistance)
+      .slice(0, 3)
+      .map(({ token }) => token);
+
+    source.push(tokens);
+
+    for (let token of tokens) {
+      for (let didx of Object.keys(table[token]) as `${number}`[]) {
+        if (ttt[didx] == undefined) {
+          ttt[didx] = 0;
+          kkk[didx] = {};
+        }
+        ttt[didx] += 1;
+        for (let aidx of Object.keys(table[token][didx]) as `${number}`[]) {
+          if (kkk[didx][aidx] == undefined) {
+            kkk[didx][aidx] = [];
+          }
+
+          for (let widx of table[token][didx][aidx]) {
+            kkk[didx][aidx][widx] = token;
+          }
         }
       }
     }
   }
+  let docSet = new Set<number>();
+  for (let didx of Object.keys(kkk) as `${number}`[]) {
+    for (let aidx of Object.keys(kkk[didx]) as (`${number}` | "title")[]) {
+      let target = kkk[didx][aidx] ?? [];
 
+      let start = 0;
+      let end = target.length;
+
+      for (let i = 0; target[i] == undefined; i++) {
+        start = i + 1;
+      }
+
+      for (let i = end; target[i - 1] == undefined; i--) {
+        end = i;
+      }
+      target = target.slice(start, end);
+      kkk[didx][aidx] = target;
+      if (subseqEditDistance(source, target) / source.length < 0.3) {
+        docSet.add(Number(didx));
+      }
+    }
+  }
+  console.dir(source);
   console.dir(kkk);
-  return new Set();
+  return docSet;
+  // console.dir(kkk);
+  // return new Set();
 };
 
 export const zipf = (table: TokenTable): { token: string; count: number }[] => {
