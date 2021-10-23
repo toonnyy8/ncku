@@ -173,7 +173,7 @@ export const buildTokenTable = (
   return table;
 };
 
-export const levenshteinDistance = (source: string, target: string): number => {
+const levenshteinDistances = (source: string, target: string): number[][] => {
   let distances: number[][] = [
     [
       0,
@@ -191,33 +191,21 @@ export const levenshteinDistance = (source: string, target: string): number => {
       distances[i + 1].push(Math.min(ins, del, sub));
     }
   }
-
-  return distances[source.length][target.length];
+  return distances;
 };
 
-// todo
-const longCommonSubsequence = (source: string, target: string) => {
-  let [len1, len2] = [source.length, target.length];
-  let dp = [
-    Array(len1 + 1)
-      .fill(0)
-      .map((_, idx) => idx),
-  ];
-  for (let i of Array(len1)
-    .fill(0)
-    .map((_, idx) => idx + 1)) {
-    for (let j of Array(len2)
-      .fill(0)
-      .map((_, idx) => idx + 1)) {
-      // 找到一個公共字元串
-      if (source[i - 1] == target[j - 1]) {
-        dp[i][j] = dp[i - 1][j - 1] + 1;
-      } else {
-        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-      }
-    }
+export const levenshteinDistance = (source: string, target: string): number => {
+  return levenshteinDistances(source, target)?.at(-1)?.at(-1) ?? NaN;
+};
+
+export const subseqEditDistance = (source: string, target: string) => {
+  let min_len = Infinity;
+  for (let i = 0; i < target.length; i++) {
+    let distances = levenshteinDistances(source, target.slice(i))?.at(-1) ?? [];
+    min_len = Math.min(min_len, ...distances);
   }
-  return dp[-1][-1];
+
+  return min_len;
 };
 
 export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
