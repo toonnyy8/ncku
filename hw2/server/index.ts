@@ -24,11 +24,11 @@ nlp.extend(require("compromise-sentences"));
 let xmlParser = new Parser({ explicitArray: false });
 let datasName = fs.readdirSync(`${__dirname}/../.data/`);
 let cached = datasName.find((file) => file == ".docs") != undefined;
-let docs: Doc[];
+let docs: PubMed[];
 let tokenDict: { [token: string]: TokenInfo[] };
 let table: TokenTable;
 if (!cached) {
-  let docs = datasName.reduce((prev, dataName) => {
+  docs = datasName.reduce((prev, dataName) => {
     if ((dataName.split(".")?.at(-1) ?? "") == "xml") {
       let xml = fs.readFileSync(`${__dirname}/../.data/${dataName}`, "utf8");
       let pubMeds = parsePubMedXML(xml);
@@ -140,7 +140,9 @@ router
   .get("/doc/:start/:end", (ctx, next) => {
     let start = Number(ctx.params["start"]);
     let end = Number(ctx.params["end"]);
-    ctx.body = JSON.stringify((docSet ?? []).slice(start, end));
+    let docIndices = (docSet ?? []).slice(start, end);
+    ctx.body = docIndices.map((didx) => docs[didx]);
+    // ctx.body = JSON.stringify((docSet ?? []).slice(start, end));
   });
 
 // app.keys = ["some secret hurr"];

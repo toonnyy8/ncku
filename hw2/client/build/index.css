@@ -46,6 +46,34 @@ input[type="text"]:focus {
   -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
     rgb(255, 255, 255) -4px -4px 8px 0px inset;
 }
+input[type="text"].small {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  height: 30px;
+  min-width: 12rem;
+  border: 0;
+  border-radius: 15px;
+  font-size: 1.2rem;
+  text-align: center;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+}
+
+input[type="text"].small:focus {
+  outline: none;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+}
 
 input[type="number"] {
   height: 24px;

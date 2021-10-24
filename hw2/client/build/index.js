@@ -53097,8 +53097,8 @@ Component that was made reactive: `, type);
         zipf = zipfData;
         tokenNum.value = zipf.length;
         range.value = {
-          min: Math.ceil(tokenNum.value * 0.05),
-          max: Math.ceil(tokenNum.value * 0.25)
+          min: Math.ceil(tokenNum.value * 0.01),
+          max: Math.ceil(tokenNum.value * 0.05)
         };
         chart = new chart_default({
           container: chartRef.value,
@@ -53198,67 +53198,10 @@ Component that was made reactive: `, type);
   };
   var App = defineComponent((_6, { slots }) => {
     let keyWord = ref("");
-    let docs = ref([
-      {
-        title: ["Hi"],
-        content: [["hello"]],
-        charNum: 1,
-        wordNum: 1,
-        sentenceNum: 1
-      }
-    ]);
-    let getDoc = (docIdx, docTokenDict) => {
-      return fetch(`./doc/${docIdx}`).then((res) => res.json()).then((doc2) => {
-        let { lastIndex: titleLastIndex, texts: titleTexts } = docTokenDict[docIdx].title.reduce(({ lastIndex, texts }, index) => {
-          texts = [
-            ...texts,
-            doc2.title.slice(lastIndex, index),
-            /* @__PURE__ */ h("span", {
-              class: "highlight"
-            }, doc2.title.slice(index, index + keyWord.value.length))
-          ];
-          return { lastIndex: index + keyWord.value.length, texts };
-        }, { lastIndex: 0, texts: [] });
-        titleTexts.push(doc2.title.slice(titleLastIndex));
-        let content = [];
-        for (let [pIdx, paragraph] of doc2.content.entries()) {
-          let pp = docTokenDict[docIdx].content[pIdx];
-          if (pp == void 0) {
-            content[pIdx] = [paragraph];
-          } else {
-            let { lastIndex: paragraphLastIndex, texts: paragraphTexts } = pp.reduce(({ lastIndex, texts }, index) => {
-              texts = [
-                ...texts,
-                /* @__PURE__ */ h("span", null, paragraph.slice(lastIndex, index)),
-                /* @__PURE__ */ h("span", {
-                  class: "highlight"
-                }, paragraph.slice(index, index + keyWord.value.length))
-              ];
-              return {
-                lastIndex: index + keyWord.value.length,
-                texts
-              };
-            }, { lastIndex: 0, texts: [] });
-            paragraphTexts.push(/* @__PURE__ */ h("span", null, paragraph.slice(paragraphLastIndex)));
-            content[pIdx] = paragraphTexts;
-          }
-        }
-        docs.value = [
-          ...docs.value,
-          {
-            title: titleTexts,
-            content,
-            charNum: doc2.charNum,
-            wordNum: doc2.wordNum,
-            sentenceNum: doc2.sentenceNum
-          }
-        ];
-        return;
-      });
-    };
+    let docs = ref([]);
     let docSet;
     let page = ref(1);
-    let numOfDocPerPage = 20;
+    let numOfDocPerPage = 10;
     let numOfPage = ref(0);
     let search = (e) => {
       keyWord.value = e.target.value;
@@ -53268,6 +53211,7 @@ Component that was made reactive: `, type);
         toPage(1)();
       });
     };
+    let showingDoc = ref(-1);
     const toPage = (targetPage) => () => {
       if (targetPage < 1) {
         targetPage = 1;
@@ -53276,7 +53220,10 @@ Component that was made reactive: `, type);
       }
       page.value = targetPage;
       if (docSet.length != 0)
-        fetch(`./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(page.value * numOfDocPerPage, docSet.length)}`).then((res) => res.json()).then((res) => console.log(res));
+        fetch(`./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(page.value * numOfDocPerPage, docSet.length)}`).then((res) => res.json()).then((pubMeds) => {
+          docs.value = pubMeds;
+          console.log(pubMeds);
+        });
     };
     return () => /* @__PURE__ */ h("div", {
       class: "app"
@@ -53285,14 +53232,20 @@ Component that was made reactive: `, type);
       onChange: search,
       value: keyWord.value,
       placeholder: "\u8ACB\u586B\u5165\u95DC\u9375\u5B57"
-    }), /* @__PURE__ */ h("br", null), docs.value.map((doc2) => {
-      return /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h(Doc, null, {
-        title: () => doc2.title,
-        content: () => doc2.content,
-        charNum: () => doc2.charNum,
-        wordNum: () => doc2.wordNum,
-        sentenceNum: () => 1
-      }), /* @__PURE__ */ h("hr", null));
+    }), /* @__PURE__ */ h("br", null), docs.value.map((doc2, idx) => {
+      return /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h("div", {
+        class: "doc"
+      }, /* @__PURE__ */ h("h2", {
+        onClick: () => showingDoc.value = idx
+      }, doc2.title ?? ""), /* @__PURE__ */ h("div", {
+        style: idx != showingDoc.value ? "display:none;" : ""
+      }, /* @__PURE__ */ h("input", {
+        class: "small",
+        type: "text",
+        placeholder: "\u6587\u672C\u641C\u5C0B"
+      }), doc2.abstract.map((abstractText) => {
+        return /* @__PURE__ */ h(Fragment, null, abstractText.category != "UNASSIGNED" ? /* @__PURE__ */ h("h2", null, abstractText.category) : "", /* @__PURE__ */ h("p", null, abstractText.text));
+      }))), /* @__PURE__ */ h("hr", null));
     }), numOfPage.value != 0 ? pageListFn(page.value, numOfPage.value, toPage) : "");
   });
   createApp(App).mount(document.body);

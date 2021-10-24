@@ -9,7 +9,7 @@ import {
   Ref,
   onMounted,
 } from "vue";
-import { TokenInfo, Doc, DocTokenDict, TextWithAttr } from "./types";
+import { TokenInfo, Doc, DocTokenDict, TextWithAttr, PubMed } from "./types";
 import { Chart } from "@antv/g2";
 
 let searchSubString = (searchStr: string, str: string): number[] => {
@@ -37,8 +37,8 @@ const ZipfChart = defineComponent((_, { slots }: { slots }) => {
         zipf = zipfData;
         tokenNum.value = zipf.length;
         range.value = {
-          min: Math.ceil(tokenNum.value * 0.05),
-          max: Math.ceil(tokenNum.value * 0.25),
+          min: Math.ceil(tokenNum.value * 0.01),
+          max: Math.ceil(tokenNum.value * 0.05),
         };
 
         chart = new Chart({
@@ -175,91 +175,92 @@ const pageListFn = (
 
 const App = defineComponent((_, { slots }: { slots }) => {
   let keyWord = ref("");
-  let docs = ref<
-    {
-      title: any[];
-      content: any[][];
-      charNum: number;
-      wordNum: number;
-      sentenceNum: number;
-    }[]
-  >([
-    {
-      title: ["Hi"],
-      content: [["hello"]],
-      charNum: 1,
-      wordNum: 1,
-      sentenceNum: 1,
-    },
-  ]);
+  let docs = ref<PubMed[]>([]);
+  // let docs = ref<
+  //   {
+  //     title: any[];
+  //     content: any[][];
+  //     charNum: number;
+  //     wordNum: number;
+  //     sentenceNum: number;
+  //   }[]
+  // >([
+  //   {
+  //     title: ["Hi"],
+  //     content: [["hello"]],
+  //     charNum: 1,
+  //     wordNum: 1,
+  //     sentenceNum: 1,
+  //   },
+  // ]);
 
-  let getDoc = (docIdx: number, docTokenDict: DocTokenDict) => {
-    return fetch(`./doc/${docIdx}`)
-      .then((res) => res.json())
-      .then((doc: Doc) => {
-        let { lastIndex: titleLastIndex, texts: titleTexts } = docTokenDict[
-          docIdx
-        ].title.reduce(
-          ({ lastIndex, texts }, index) => {
-            texts = [
-              ...texts,
-              doc.title.slice(lastIndex, index),
-              <span class="highlight">
-                {doc.title.slice(index, index + keyWord.value.length)}
-              </span>,
-            ];
+  // let getDoc = (docIdx: number, docTokenDict: DocTokenDict) => {
+  //   return fetch(`./doc/${docIdx}`)
+  //     .then((res) => res.json())
+  //     .then((doc: Doc) => {
+  //       let { lastIndex: titleLastIndex, texts: titleTexts } = docTokenDict[
+  //         docIdx
+  //       ].title.reduce(
+  //         ({ lastIndex, texts }, index) => {
+  //           texts = [
+  //             ...texts,
+  //             doc.title.slice(lastIndex, index),
+  //             <span class="highlight">
+  //               {doc.title.slice(index, index + keyWord.value.length)}
+  //             </span>,
+  //           ];
 
-            return { lastIndex: index + keyWord.value.length, texts };
-          },
-          { lastIndex: 0, texts: [] }
-        );
-        titleTexts.push(doc.title.slice(titleLastIndex));
-        let content = [];
-        for (let [pIdx, paragraph] of doc.content.entries()) {
-          let pp = docTokenDict[docIdx].content[pIdx];
-          if (pp == undefined) {
-            content[pIdx] = [paragraph];
-          } else {
-            let { lastIndex: paragraphLastIndex, texts: paragraphTexts } =
-              pp.reduce(
-                ({ lastIndex, texts }, index) => {
-                  texts = [
-                    ...texts,
-                    <span>{paragraph.slice(lastIndex, index)}</span>,
-                    <span class="highlight">
-                      {paragraph.slice(index, index + keyWord.value.length)}
-                    </span>,
-                  ];
+  //           return { lastIndex: index + keyWord.value.length, texts };
+  //         },
+  //         { lastIndex: 0, texts: [] }
+  //       );
+  //       titleTexts.push(doc.title.slice(titleLastIndex));
+  //       let content = [];
+  //       for (let [pIdx, paragraph] of doc.content.entries()) {
+  //         let pp = docTokenDict[docIdx].content[pIdx];
+  //         if (pp == undefined) {
+  //           content[pIdx] = [paragraph];
+  //         } else {
+  //           let { lastIndex: paragraphLastIndex, texts: paragraphTexts } =
+  //             pp.reduce(
+  //               ({ lastIndex, texts }, index) => {
+  //                 texts = [
+  //                   ...texts,
+  //                   <span>{paragraph.slice(lastIndex, index)}</span>,
+  //                   <span class="highlight">
+  //                     {paragraph.slice(index, index + keyWord.value.length)}
+  //                   </span>,
+  //                 ];
 
-                  return {
-                    lastIndex: index + keyWord.value.length,
-                    texts,
-                  };
-                },
-                { lastIndex: 0, texts: [] }
-              );
-            paragraphTexts.push(
-              <span>{paragraph.slice(paragraphLastIndex)}</span>
-            );
-            content[pIdx] = paragraphTexts;
-          }
-        }
-        docs.value = [
-          ...docs.value,
-          {
-            title: titleTexts,
-            content,
-            charNum: doc.charNum,
-            wordNum: doc.wordNum,
-            sentenceNum: doc.sentenceNum,
-          },
-        ];
-        return;
-      });
-  };
+  //                 return {
+  //                   lastIndex: index + keyWord.value.length,
+  //                   texts,
+  //                 };
+  //               },
+  //               { lastIndex: 0, texts: [] }
+  //             );
+  //           paragraphTexts.push(
+  //             <span>{paragraph.slice(paragraphLastIndex)}</span>
+  //           );
+  //           content[pIdx] = paragraphTexts;
+  //         }
+  //       }
+  //       docs.value = [
+  //         ...docs.value,
+  //         {
+  //           title: titleTexts,
+  //           content,
+  //           charNum: doc.charNum,
+  //           wordNum: doc.wordNum,
+  //           sentenceNum: doc.sentenceNum,
+  //         },
+  //       ];
+  //       return;
+  //     });
+  // };
   let docSet: number[];
   let page = ref(1);
-  let numOfDocPerPage = 20;
+  let numOfDocPerPage = 10;
   let numOfPage = ref(0);
   let search = (e: InputEvent & { target: HTMLInputElement }) => {
     keyWord.value = e.target.value;
@@ -279,6 +280,8 @@ const App = defineComponent((_, { slots }: { slots }) => {
       });
   };
 
+  let showingDoc = ref(-1);
+
   const toPage = (targetPage: number) => () => {
     if (targetPage < 1) {
       targetPage = 1;
@@ -294,7 +297,10 @@ const App = defineComponent((_, { slots }: { slots }) => {
         )}`
       )
         .then((res) => res.json())
-        .then((res) => console.log(res));
+        .then((pubMeds: PubMed[]) => {
+          docs.value = pubMeds;
+          console.log(pubMeds);
+        });
   };
   return () => (
     <div class="app">
@@ -307,18 +313,30 @@ const App = defineComponent((_, { slots }: { slots }) => {
         placeholder="請填入關鍵字"
       />
       <br />
-      {docs.value.map((doc) => {
+      {docs.value.map((doc, idx) => {
         return (
           <>
-            <Doc>
-              {{
-                title: () => doc.title,
-                content: () => doc.content,
-                charNum: () => doc.charNum,
-                wordNum: () => doc.wordNum,
-                sentenceNum: () => 1,
-              }}
-            </Doc>
+            <div class="doc">
+              <h2 onClick={() => (showingDoc.value = idx)}>
+                {doc.title ?? ""}
+              </h2>
+              <div style={idx != showingDoc.value ? "display:none;" : ""}>
+                <input class="small" type="text" placeholder="文本搜尋" />
+
+                {doc.abstract.map((abstractText) => {
+                  return (
+                    <>
+                      {abstractText.category != "UNASSIGNED" ? (
+                        <h2>{abstractText.category}</h2>
+                      ) : (
+                        ""
+                      )}
+                      <p>{abstractText.text}</p>
+                    </>
+                  );
+                })}
+              </div>
+            </div>
             <hr />
           </>
         );
