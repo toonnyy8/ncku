@@ -1,0 +1,96 @@
+body {
+  background-color: rgb(224, 229, 236);
+}
+.app {
+  max-width: 1000px;
+  padding-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.doc {
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.highlight {
+  background-color: #f57;
+}
+
+input[type="text"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height: 50px;
+  min-width: 20rem;
+  border: 0;
+  border-radius: 25px;
+  font-size: 1.5rem;
+  text-align: center;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+}
+
+input[type="number"] {
+  height: 24px;
+  border: 0;
+  border-radius: 12px;
+  text-align: center;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+}
+
+input[type="number"]:focus {
+  outline: none;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+}
+.page-button {
+  display: inline-block;
+  height: 24px;
+  border-radius: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: 3px;
+  margin-right: 3px;
+  text-align: center;
+  user-select: none;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+}
+
+.page-button-focus {
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.8) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.8) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+}

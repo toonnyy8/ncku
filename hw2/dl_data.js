@@ -4710,7 +4710,7 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 var pmids = import_fs.default.readFileSync(`${__dirname}/pmid-bipolardis-set.txt`, "utf8").matchAll(/[0-9][0-9]*/g);
 var pmid_list = "";
 var count = 0;
-var f = (url, idx) => () => fetch(url).then((response) => response.text()).then((xml) => import_fs.default.writeFileSync(`${__dirname}/build/.data/${idx}.xml`, xml));
+var f = (url, idx) => () => fetch(url).then((response) => response.text()).then((xml) => import_fs.default.writeFileSync(`${__dirname}/.data/${idx}.xml`, xml));
 var fn_arr = [];
 for (let [pmid] of pmids) {
   pmid_list += pmid + ",";

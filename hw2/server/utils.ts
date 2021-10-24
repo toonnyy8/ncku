@@ -291,6 +291,12 @@ export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
       }, [] as { token: string; distance: number; normDistance: number }[])
       .sort((a, b) => a.normDistance - b.normDistance)
       .slice(0, 3)
+      // .reduce((prev, curr) => {
+      //   if (prev[0] != undefined && prev[0].distance == 0) {
+      //     return prev;
+      //   }
+      //   return [...prev, curr];
+      // }, [] as { token: string; distance: number; normDistance: number }[])
       .map(({ token }) => token);
 
     source.push(tokens);
@@ -336,8 +342,6 @@ export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
       }
     }
   }
-  console.dir(source);
-  console.dir(kkk);
   return docSet;
   // console.dir(kkk);
   // return new Set();
