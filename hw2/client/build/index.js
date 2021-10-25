@@ -53167,6 +53167,8 @@ Component that was made reactive: `, type);
         min3 = max3 - 4;
       }
     }
+    max3 = Math.min(numOfPage, max3);
+    min3 = Math.max(1, min3);
     let pageIndices = Array(max3 - min3 + 1).fill(0).map((_6, idx) => idx + min3);
     return /* @__PURE__ */ h("div", {
       style: "width:fit-content;margin-left:auto;margin-right:auto;"
@@ -53219,11 +53221,38 @@ Component that was made reactive: `, type);
         targetPage = numOfPage.value;
       }
       page.value = targetPage;
+      showingDoc.value = -1;
       if (docSet.length != 0)
         fetch(`./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(page.value * numOfDocPerPage, docSet.length)}`).then((res) => res.json()).then((pubMeds) => {
           docs.value = pubMeds;
           console.log(pubMeds);
         });
+    };
+    let matchTarget = ref("");
+    let setMatchTarget = (e) => {
+      matchTarget.value = e.target.value;
+    };
+    const highlight = (text, target) => {
+      if (target == "") {
+        return [text];
+      } else {
+        let { vdom, lastIndex } = [
+          ...text.toLowerCase().matchAll(new RegExp(target.toLowerCase(), "g"))
+        ].reduce(({ vdom: vdom2, lastIndex: lastIndex2 }, curr) => {
+          curr.index;
+          return {
+            vdom: [
+              ...vdom2,
+              text.slice(lastIndex2, curr.index),
+              /* @__PURE__ */ h("span", {
+                class: "highlight"
+              }, text.slice(curr.index, curr.index + target.length))
+            ],
+            lastIndex: curr.index + target.length
+          };
+        }, { vdom: [], lastIndex: 0 });
+        return [...vdom, text.slice(lastIndex)];
+      }
     };
     return () => /* @__PURE__ */ h("div", {
       class: "app"
@@ -53232,21 +53261,27 @@ Component that was made reactive: `, type);
       onChange: search,
       value: keyWord.value,
       placeholder: "\u8ACB\u586B\u5165\u95DC\u9375\u5B57"
-    }), /* @__PURE__ */ h("br", null), docs.value.map((doc2, idx) => {
+    }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+      class: "small",
+      type: "text",
+      placeholder: "\u6587\u672C\u641C\u5C0B",
+      onChange: setMatchTarget,
+      style: docs.value.length == 0 ? "display:none;" : ""
+    }), /* @__PURE__ */ h("br", {
+      style: docs.value.length == 0 ? "display:none;" : ""
+    }), docs.value.map((doc2, idx) => {
       return /* @__PURE__ */ h(Fragment, null, /* @__PURE__ */ h("div", {
         class: "doc"
       }, /* @__PURE__ */ h("h2", {
         onClick: () => showingDoc.value = idx
-      }, doc2.title ?? ""), /* @__PURE__ */ h("div", {
+      }, highlight(doc2.title ?? "", matchTarget.value)), /* @__PURE__ */ h("div", {
         style: idx != showingDoc.value ? "display:none;" : ""
-      }, /* @__PURE__ */ h("input", {
-        class: "small",
-        type: "text",
-        placeholder: "\u6587\u672C\u641C\u5C0B"
-      }), doc2.abstract.map((abstractText) => {
-        return /* @__PURE__ */ h(Fragment, null, abstractText.category != "UNASSIGNED" ? /* @__PURE__ */ h("h2", null, abstractText.category) : "", /* @__PURE__ */ h("p", null, abstractText.text));
+      }, doc2.abstract.map((abstractText) => {
+        return /* @__PURE__ */ h(Fragment, null, abstractText.category != "UNASSIGNED" ? /* @__PURE__ */ h("h2", null, abstractText.category) : "", /* @__PURE__ */ h("p", null, highlight(abstractText.text, matchTarget.value)));
       }))), /* @__PURE__ */ h("hr", null));
-    }), numOfPage.value != 0 ? pageListFn(page.value, numOfPage.value, toPage) : "");
+    }), /* @__PURE__ */ h("br", {
+      style: docs.value.length == 0 ? "display:none;" : ""
+    }), numOfPage.value != 0 ? pageListFn(page.value, numOfPage.value, toPage) : "", /* @__PURE__ */ h("br", null));
   });
   createApp(App).mount(document.body);
 })();

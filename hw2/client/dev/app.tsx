@@ -133,6 +133,9 @@ const pageListFn = (
       min = max - 4;
     }
   }
+  max = Math.min(numOfPage, max);
+  min = Math.max(1, min);
+
   let pageIndices = Array(max - min + 1)
     .fill(0)
     .map((_, idx) => idx + min);
@@ -289,6 +292,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
       targetPage = numOfPage.value;
     }
     page.value = targetPage;
+    showingDoc.value = -1;
     if (docSet.length != 0)
       fetch(
         `./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(
@@ -302,6 +306,37 @@ const App = defineComponent((_, { slots }: { slots }) => {
           console.log(pubMeds);
         });
   };
+  let matchTarget = ref("");
+
+  let setMatchTarget = (e: InputEvent & { target: HTMLInputElement }) => {
+    matchTarget.value = e.target.value;
+  };
+  const highlight = (text: string, target: string) => {
+    if (target == "") {
+      return [text];
+    } else {
+      let { vdom, lastIndex } = [
+        ...text.toLowerCase().matchAll(new RegExp(target.toLowerCase(), "g")),
+      ].reduce(
+        ({ vdom, lastIndex }, curr) => {
+          curr.index;
+          return {
+            vdom: [
+              ...vdom,
+              text.slice(lastIndex, curr.index),
+              <span class="highlight">
+                {text.slice(curr.index, curr.index + target.length)}
+              </span>,
+            ],
+            lastIndex: curr.index + target.length,
+          };
+        },
+        { vdom: [], lastIndex: 0 }
+      );
+      return [...vdom, text.slice(lastIndex)];
+    }
+  };
+
   return () => (
     <div class="app">
       <ZipfChart></ZipfChart>
@@ -313,16 +348,23 @@ const App = defineComponent((_, { slots }: { slots }) => {
         placeholder="請填入關鍵字"
       />
       <br />
+
+      <input
+        class="small"
+        type="text"
+        placeholder="文本搜尋"
+        onChange={setMatchTarget}
+        style={docs.value.length == 0 ? "display:none;" : ""}
+      />
+      <br style={docs.value.length == 0 ? "display:none;" : ""} />
       {docs.value.map((doc, idx) => {
         return (
           <>
             <div class="doc">
               <h2 onClick={() => (showingDoc.value = idx)}>
-                {doc.title ?? ""}
+                {highlight(doc.title ?? "", matchTarget.value)}
               </h2>
               <div style={idx != showingDoc.value ? "display:none;" : ""}>
-                <input class="small" type="text" placeholder="文本搜尋" />
-
                 {doc.abstract.map((abstractText) => {
                   return (
                     <>
@@ -331,7 +373,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
                       ) : (
                         ""
                       )}
-                      <p>{abstractText.text}</p>
+                      <p>{highlight(abstractText.text, matchTarget.value)}</p>
                     </>
                   );
                 })}
@@ -341,9 +383,11 @@ const App = defineComponent((_, { slots }: { slots }) => {
           </>
         );
       })}
+      <br style={docs.value.length == 0 ? "display:none;" : ""} />
       {numOfPage.value != 0
         ? pageListFn(page.value, numOfPage.value, toPage)
         : ""}
+      <br />
     </div>
   );
 });
