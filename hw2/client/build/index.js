@@ -53210,7 +53210,7 @@ Component that was made reactive: `, type);
     let page = ref(1);
     let numOfDocPerPage = 10;
     let numOfPage = ref(0);
-    let numOfDoc = 0;
+    let numOfDoc = ref(0);
     let useStemmer = ref(true);
     let search = (e) => {
       if (e.target.value != "") {
@@ -53219,9 +53219,9 @@ Component that was made reactive: `, type);
           numOfDoc: _numOfDoc,
           suggest: _suggest
         }) => {
-          numOfDoc = _numOfDoc;
+          numOfDoc.value = _numOfDoc;
           suggest.value = _suggest;
-          numOfPage.value = Math.ceil(numOfDoc / numOfDocPerPage);
+          numOfPage.value = Math.ceil(numOfDoc.value / numOfDocPerPage);
           toPage(1)();
         });
       }
@@ -53235,8 +53235,8 @@ Component that was made reactive: `, type);
       }
       page.value = targetPage;
       showingDoc.value = -1;
-      if (numOfDoc != 0)
-        fetch(`./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(page.value * numOfDocPerPage, numOfDoc)}`).then((res) => res.json()).then((pubMeds) => {
+      if (numOfDoc.value != 0)
+        fetch(`./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(page.value * numOfDocPerPage, numOfDoc.value)}`).then((res) => res.json()).then((pubMeds) => {
           docs.value = pubMeds;
         });
     };
@@ -53288,7 +53288,12 @@ Component that was made reactive: `, type);
         return prev;
       else
         return `${prev} ${word2}`;
-    }, "")), /* @__PURE__ */ h("input", {
+    }, "")), /* @__PURE__ */ h("p", {
+      style: [
+        numOfDoc.value == 0 ? "display:none;" : "",
+        "text-align:center;"
+      ]
+    }, "\u7E3D\u5171\u6709 ", numOfDoc.value, " \u9805\u7D50\u679C"), /* @__PURE__ */ h("input", {
       class: "small",
       type: "text",
       placeholder: "\u6587\u672C\u641C\u5C0B",
@@ -53304,7 +53309,7 @@ Component that was made reactive: `, type);
       }, highlight(doc2.title ?? "", matchTarget.value)), /* @__PURE__ */ h("div", {
         style: idx != showingDoc.value ? "display:none;" : ""
       }, doc2.abstract.map((abstractText) => {
-        return /* @__PURE__ */ h(Fragment, null, abstractText.category != "UNASSIGNED" ? /* @__PURE__ */ h("h2", null, abstractText.category) : "", /* @__PURE__ */ h("p", null, highlight(abstractText.text, matchTarget.value)));
+        return /* @__PURE__ */ h(Fragment, null, abstractText.category != "UNASSIGNED" ? /* @__PURE__ */ h("h3", null, abstractText.category) : "", /* @__PURE__ */ h("p", null, highlight(abstractText.text, matchTarget.value)));
       }))), /* @__PURE__ */ h("hr", null));
     }), /* @__PURE__ */ h("br", {
       style: docs.value.length == 0 ? "display:none;" : ""

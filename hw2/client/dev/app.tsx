@@ -171,7 +171,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
   let page = ref(1);
   let numOfDocPerPage = 10;
   let numOfPage = ref(0);
-  let numOfDoc = 0;
+  let numOfDoc = ref(0);
   let useStemmer = ref(true);
   let search = (e: InputEvent & { target: HTMLInputElement }) => {
     if (e.target.value != "") {
@@ -187,9 +187,9 @@ const App = defineComponent((_, { slots }: { slots }) => {
             numOfDoc: number;
             suggest: string[];
           }) => {
-            numOfDoc = _numOfDoc;
+            numOfDoc.value = _numOfDoc;
             suggest.value = _suggest;
-            numOfPage.value = Math.ceil(numOfDoc / numOfDocPerPage);
+            numOfPage.value = Math.ceil(numOfDoc.value / numOfDocPerPage);
             toPage(1)();
           }
         );
@@ -206,11 +206,11 @@ const App = defineComponent((_, { slots }: { slots }) => {
     }
     page.value = targetPage;
     showingDoc.value = -1;
-    if (numOfDoc != 0)
+    if (numOfDoc.value != 0)
       fetch(
         `./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(
           page.value * numOfDocPerPage,
-          numOfDoc
+          numOfDoc.value
         )}`
       )
         .then((res) => res.json())
@@ -273,6 +273,15 @@ const App = defineComponent((_, { slots }: { slots }) => {
           else return `${prev} ${word}`;
         }, "")}
       </p>
+      <p
+        style={[
+          numOfDoc.value == 0 ? "display:none;" : "",
+          "text-align:center;",
+        ]}
+      >
+        總共有 {numOfDoc.value} 項結果
+      </p>
+
       <input
         class="small"
         type="text"
@@ -293,7 +302,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
                   return (
                     <>
                       {abstractText.category != "UNASSIGNED" ? (
-                        <h2>{abstractText.category}</h2>
+                        <h3>{abstractText.category}</h3>
                       ) : (
                         ""
                       )}
