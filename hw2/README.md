@@ -33,3 +33,7 @@ npx ts-node ./server/index.ts
 ```
 
 初次運行時會掃描文檔並建立 token table，需要耗費較長時間。
+
+## 系統展示
+
+![System](./img/system.png)
