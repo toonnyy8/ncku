@@ -73,10 +73,12 @@ export const parsePubMedXML = (xml: string): PubMed[] => {
 export const buildTokenTable = (
   pubMeds: PubMed[],
   startDidx?: number,
-  table?: TokenTable
+  table?: TokenTable,
+  useStemmer?: boolean
 ): TokenTable => {
   startDidx = startDidx ?? 0;
   table = table ?? {};
+  useStemmer = useStemmer ?? true;
 
   for (let [didx, pubMed] of pubMeds.entries()) {
     for (let [widx, token] of nlp(pubMed.title)
@@ -84,8 +86,8 @@ export const buildTokenTable = (
       .toLowerCase()
       .split(" ")
       // .split(/[\s-_][\s-_]*/)
+      .map((token) => (useStemmer ? stemmer(token) : token))
       .entries()) {
-      token = stemmer(token);
       if (table[token] == undefined) {
         table[token] = {};
       }
@@ -107,8 +109,8 @@ export const buildTokenTable = (
         .toLowerCase()
         .split(" ")
         // .split(/[\s-_][\s-_]*/)
+        .map((token) => (useStemmer ? stemmer(token) : token))
         .entries()) {
-        token = stemmer(token);
         if (table[token] == undefined) {
           table[token] = {};
         }
@@ -212,7 +214,12 @@ export const subseqEditDistance = (source: string[][], target: string[]) => {
   return min_len;
 };
 
-export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
+export const searchTokenTable = (
+  w: string,
+  table: TokenTable,
+  useStemmer?: boolean
+): { docSet: Set<number>; suggest: string[] } => {
+  useStemmer = useStemmer ?? true;
   let ttt: { [key: `${number}`]: number } = {};
 
   let kkk: {
@@ -224,7 +231,7 @@ export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
     .toLowerCase()
     .split(" ")
     // .split(/[\s-_][\s-_]*/)
-    .map((word) => stemmer(word));
+    .map((word) => (useStemmer ? stemmer(word) : word));
   let source: string[][] = [];
   for (let word of words) {
     let tokens = Object.keys(table)
@@ -291,12 +298,12 @@ export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
       }
       target = target.slice(start, end);
       kkk[didx][aidx] = target;
-      if (subseqEditDistance(source, target) / source.length < 0.3) {
+      if (subseqEditDistance(source, target) / source.length <= 0.5) {
         docSet.add(Number(didx));
       }
     }
   }
-  return docSet;
+  return { docSet, suggest: source.map((words) => words[0]) };
 };
 
 export const zipf = (table: TokenTable): { token: string; count: number }[] => {

@@ -122,3 +122,28 @@ input[type="number"]:focus {
   -webkit-box-shadow: rgba(163, 177, 198, 0.8) 4px 4px 8px 0px inset,
     rgb(255, 255, 255) -4px -4px 8px 0px inset;
 }
+
+button {
+  height: 24px;
+  border: 0;
+  border-radius: 12px;
+  text-align: center;
+
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px,
+    rgb(255, 255, 255) -4px -4px 8px 0px;
+}
+
+button.on {
+  background-color: rgb(224, 229, 236);
+  box-shadow: rgba(163, 177, 198, 0.5) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+  -webkit-box-shadow: rgba(163, 177, 198, 0.8) 4px 4px 8px 0px inset,
+    rgb(255, 255, 255) -4px -4px 8px 0px inset;
+}
+
+button:focus {
+  outline: none;
+}

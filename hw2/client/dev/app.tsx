@@ -1,5 +1,3 @@
-import noUiSlider from "nouislider";
-
 import {
   createApp,
   ref,
@@ -9,29 +7,43 @@ import {
   Ref,
   onMounted,
 } from "vue";
-import { TokenInfo, Doc, DocTokenDict, TextWithAttr, PubMed } from "./types";
+import { PubMed } from "./types";
 import { Chart } from "@antv/g2";
-
-let searchSubString = (searchStr: string, str: string): number[] => {
-  let indices: number[] = [];
-  if (searchStr.length == 0) return indices;
-
-  let idx = -1;
-  while (true) {
-    idx = str.indexOf(searchStr, idx + 1);
-    if (idx == -1) return indices;
-    indices.push(idx);
-  }
-};
 
 const ZipfChart = defineComponent((_, { slots }: { slots }) => {
   const chartRef: Ref<HTMLDivElement> = ref(null);
   let chart: Chart;
   const tokenNum = ref(1);
   const range = ref({ min: 1, max: 1 });
+  const useStemmer = ref(true);
+
   let zipf: { token: string; count: number }[] = [];
   onMounted(() => {
-    fetch(`./zipf`)
+    chart = new Chart({
+      container: chartRef.value,
+      autoFit: true,
+      height: 300,
+    });
+
+    changeStemmer(true);
+  });
+
+  const inputMin = (e: InputEvent & { target: HTMLInputElement }) => {
+    range.value = { min: Number(e.target.value), max: range.value.max };
+    chart.data(zipf.slice(range.value.min - 1, range.value.max));
+    chart.render();
+  };
+
+  const inputMax = (e: InputEvent & { target: HTMLInputElement }) => {
+    range.value = { max: Number(e.target.value), min: range.value.min };
+    chart.data(zipf.slice(range.value.min - 1, range.value.max));
+    chart.render();
+  };
+
+  const changeStemmer = (_useStemmer: boolean) => {
+    useStemmer.value = _useStemmer;
+    slots.changeStemmer(useStemmer.value);
+    fetch(`./zipf/${_useStemmer}`)
       .then((res) => res.json())
       .then((zipfData: { token: string; count: number }[]) => {
         zipf = zipfData;
@@ -40,12 +52,6 @@ const ZipfChart = defineComponent((_, { slots }: { slots }) => {
           min: Math.ceil(tokenNum.value * 0.01),
           max: Math.ceil(tokenNum.value * 0.05),
         };
-
-        chart = new Chart({
-          container: chartRef.value,
-          autoFit: true,
-          height: 300,
-        });
 
         chart.data(zipf.slice(range.value.min - 1, range.value.max));
         chart.scale("count", {
@@ -61,18 +67,6 @@ const ZipfChart = defineComponent((_, { slots }: { slots }) => {
 
         chart.render();
       });
-  });
-
-  const inputMin = (e: InputEvent & { target: HTMLInputElement }) => {
-    range.value = { min: Number(e.target.value), max: range.value.max };
-    chart.data(zipf.slice(range.value.min - 1, range.value.max));
-    chart.render();
-  };
-
-  const inputMax = (e: InputEvent & { target: HTMLInputElement }) => {
-    range.value = { max: Number(e.target.value), min: range.value.min };
-    chart.data(zipf.slice(range.value.min - 1, range.value.max));
-    chart.render();
   };
 
   return () => (
@@ -88,7 +82,17 @@ const ZipfChart = defineComponent((_, { slots }: { slots }) => {
         step="1"
         onChange={inputMin}
       />
-
+      <button
+        style={[
+          "position: absolute;",
+          "left: 50%;",
+          "transform: translate(-50%,0%);",
+        ]}
+        class={[useStemmer.value ? "on" : ""]}
+        onClick={() => changeStemmer(!useStemmer.value)}
+      >
+        stemmer
+      </button>
       <input
         type="number"
         value={range.value.max}
@@ -102,23 +106,6 @@ const ZipfChart = defineComponent((_, { slots }: { slots }) => {
   );
 });
 
-const Doc = defineComponent((_, { slots }: { slots }) => {
-  return () => {
-    return (
-      <div class="doc">
-        <h1>{slots.title() ?? ""}</h1>
-        {slots.content().map((paragraph) => {
-          return <p>{paragraph}</p>;
-        })}
-        <span>Number of Characters: {slots.charNum()}</span>
-        <br />
-        <span>Number of Words: {slots.wordNum()}</span>
-        <br />
-        <span>Number of Sentences: {slots.sentenceNum()}</span>
-      </div>
-    );
-  };
-});
 const pageListFn = (
   page: number,
   numOfPage: number,
@@ -179,108 +166,34 @@ const pageListFn = (
 const App = defineComponent((_, { slots }: { slots }) => {
   let keyWord = ref("");
   let docs = ref<PubMed[]>([]);
-  // let docs = ref<
-  //   {
-  //     title: any[];
-  //     content: any[][];
-  //     charNum: number;
-  //     wordNum: number;
-  //     sentenceNum: number;
-  //   }[]
-  // >([
-  //   {
-  //     title: ["Hi"],
-  //     content: [["hello"]],
-  //     charNum: 1,
-  //     wordNum: 1,
-  //     sentenceNum: 1,
-  //   },
-  // ]);
 
-  // let getDoc = (docIdx: number, docTokenDict: DocTokenDict) => {
-  //   return fetch(`./doc/${docIdx}`)
-  //     .then((res) => res.json())
-  //     .then((doc: Doc) => {
-  //       let { lastIndex: titleLastIndex, texts: titleTexts } = docTokenDict[
-  //         docIdx
-  //       ].title.reduce(
-  //         ({ lastIndex, texts }, index) => {
-  //           texts = [
-  //             ...texts,
-  //             doc.title.slice(lastIndex, index),
-  //             <span class="highlight">
-  //               {doc.title.slice(index, index + keyWord.value.length)}
-  //             </span>,
-  //           ];
-
-  //           return { lastIndex: index + keyWord.value.length, texts };
-  //         },
-  //         { lastIndex: 0, texts: [] }
-  //       );
-  //       titleTexts.push(doc.title.slice(titleLastIndex));
-  //       let content = [];
-  //       for (let [pIdx, paragraph] of doc.content.entries()) {
-  //         let pp = docTokenDict[docIdx].content[pIdx];
-  //         if (pp == undefined) {
-  //           content[pIdx] = [paragraph];
-  //         } else {
-  //           let { lastIndex: paragraphLastIndex, texts: paragraphTexts } =
-  //             pp.reduce(
-  //               ({ lastIndex, texts }, index) => {
-  //                 texts = [
-  //                   ...texts,
-  //                   <span>{paragraph.slice(lastIndex, index)}</span>,
-  //                   <span class="highlight">
-  //                     {paragraph.slice(index, index + keyWord.value.length)}
-  //                   </span>,
-  //                 ];
-
-  //                 return {
-  //                   lastIndex: index + keyWord.value.length,
-  //                   texts,
-  //                 };
-  //               },
-  //               { lastIndex: 0, texts: [] }
-  //             );
-  //           paragraphTexts.push(
-  //             <span>{paragraph.slice(paragraphLastIndex)}</span>
-  //           );
-  //           content[pIdx] = paragraphTexts;
-  //         }
-  //       }
-  //       docs.value = [
-  //         ...docs.value,
-  //         {
-  //           title: titleTexts,
-  //           content,
-  //           charNum: doc.charNum,
-  //           wordNum: doc.wordNum,
-  //           sentenceNum: doc.sentenceNum,
-  //         },
-  //       ];
-  //       return;
-  //     });
-  // };
-  let docSet: number[];
+  let suggest = ref<string[]>([]);
   let page = ref(1);
   let numOfDocPerPage = 10;
   let numOfPage = ref(0);
+  let numOfDoc = 0;
+  let useStemmer = ref(true);
   let search = (e: InputEvent & { target: HTMLInputElement }) => {
-    keyWord.value = e.target.value;
-    fetch(`./keyWord/${keyWord.value}`)
-      .then((res) => res.json())
-      .catch((err) => console.error(err))
-      .then((response: number[]) => {
-        docSet = response;
-        numOfPage.value = Math.ceil(docSet.length / numOfDocPerPage);
-        toPage(1)();
-        // docs.value = [];
-        // let funcs = [];
-        // for (let docIdx of Object.keys(docTokenDict)) {
-        //   funcs.push(() => getDoc(Number(docIdx), docTokenDict));
-        // }
-        // funcs.reduce((p, f) => p.then(f), Promise.resolve());
-      });
+    if (e.target.value != "") {
+      keyWord.value = e.target.value;
+      fetch(`./keyWord/${keyWord.value}/${useStemmer.value}`)
+        .then((res) => res.json())
+        .catch((err) => console.error(err))
+        .then(
+          ({
+            numOfDoc: _numOfDoc,
+            suggest: _suggest,
+          }: {
+            numOfDoc: number;
+            suggest: string[];
+          }) => {
+            numOfDoc = _numOfDoc;
+            suggest.value = _suggest;
+            numOfPage.value = Math.ceil(numOfDoc / numOfDocPerPage);
+            toPage(1)();
+          }
+        );
+    }
   };
 
   let showingDoc = ref(-1);
@@ -293,17 +206,16 @@ const App = defineComponent((_, { slots }: { slots }) => {
     }
     page.value = targetPage;
     showingDoc.value = -1;
-    if (docSet.length != 0)
+    if (numOfDoc != 0)
       fetch(
         `./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(
           page.value * numOfDocPerPage,
-          docSet.length
+          numOfDoc
         )}`
       )
         .then((res) => res.json())
         .then((pubMeds: PubMed[]) => {
           docs.value = pubMeds;
-          console.log(pubMeds);
         });
   };
   let matchTarget = ref("");
@@ -339,16 +251,28 @@ const App = defineComponent((_, { slots }: { slots }) => {
 
   return () => (
     <div class="app">
-      <ZipfChart></ZipfChart>
+      <ZipfChart>
+        {{
+          changeStemmer: (_useStemmer: boolean) =>
+            (useStemmer.value = _useStemmer),
+        }}
+      </ZipfChart>
       <br />
-      <input
-        type="text"
-        onChange={search}
-        value={keyWord.value}
-        placeholder="請填入關鍵字"
-      />
-      <br />
-
+      <input type="text" onChange={search} placeholder="請填入關鍵字" />
+      <br style={[suggest.value.length != 0 ? "display:none;" : ""]} />
+      <p
+        style={[
+          suggest.value.length == 0 ? "display:none;" : "",
+          "text-align:center;",
+        ]}
+      >
+        目前顯示的是以下字詞的搜尋結果：
+        {suggest.value.reduce((prev, word) => {
+          if (prev == "") return word;
+          else if (word == "") return prev;
+          else return `${prev} ${word}`;
+        }, "")}
+      </p>
       <input
         class="small"
         type="text"

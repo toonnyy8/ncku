@@ -53091,20 +53091,36 @@ Component that was made reactive: `, type);
     let chart;
     const tokenNum = ref(1);
     const range = ref({ min: 1, max: 1 });
+    const useStemmer = ref(true);
     let zipf = [];
     onMounted(() => {
-      fetch(`./zipf`).then((res) => res.json()).then((zipfData) => {
+      chart = new chart_default({
+        container: chartRef.value,
+        autoFit: true,
+        height: 300
+      });
+      changeStemmer(true);
+    });
+    const inputMin = (e) => {
+      range.value = { min: Number(e.target.value), max: range.value.max };
+      chart.data(zipf.slice(range.value.min - 1, range.value.max));
+      chart.render();
+    };
+    const inputMax = (e) => {
+      range.value = { max: Number(e.target.value), min: range.value.min };
+      chart.data(zipf.slice(range.value.min - 1, range.value.max));
+      chart.render();
+    };
+    const changeStemmer = (_useStemmer) => {
+      useStemmer.value = _useStemmer;
+      slots.changeStemmer(useStemmer.value);
+      fetch(`./zipf/${_useStemmer}`).then((res) => res.json()).then((zipfData) => {
         zipf = zipfData;
         tokenNum.value = zipf.length;
         range.value = {
           min: Math.ceil(tokenNum.value * 0.01),
           max: Math.ceil(tokenNum.value * 0.05)
         };
-        chart = new chart_default({
-          container: chartRef.value,
-          autoFit: true,
-          height: 300
-        });
         chart.data(zipf.slice(range.value.min - 1, range.value.max));
         chart.scale("count", {
           nice: true
@@ -53116,16 +53132,6 @@ Component that was made reactive: `, type);
         chart.interval().position("token*count");
         chart.render();
       });
-    });
-    const inputMin = (e) => {
-      range.value = { min: Number(e.target.value), max: range.value.max };
-      chart.data(zipf.slice(range.value.min - 1, range.value.max));
-      chart.render();
-    };
-    const inputMax = (e) => {
-      range.value = { max: Number(e.target.value), min: range.value.min };
-      chart.data(zipf.slice(range.value.min - 1, range.value.max));
-      chart.render();
     };
     return () => /* @__PURE__ */ h("div", {
       style: "position: relative;"
@@ -53138,7 +53144,15 @@ Component that was made reactive: `, type);
       min: "1",
       step: "1",
       onChange: inputMin
-    }), /* @__PURE__ */ h("input", {
+    }), /* @__PURE__ */ h("button", {
+      style: [
+        "position: absolute;",
+        "left: 50%;",
+        "transform: translate(-50%,0%);"
+      ],
+      class: [useStemmer.value ? "on" : ""],
+      onClick: () => changeStemmer(!useStemmer.value)
+    }, "stemmer"), /* @__PURE__ */ h("input", {
       type: "number",
       value: range.value.max,
       max: tokenNum.value,
@@ -53147,15 +53161,6 @@ Component that was made reactive: `, type);
       onChange: inputMax,
       style: "right:0px; position: absolute;"
     }));
-  });
-  var Doc = defineComponent((_6, { slots }) => {
-    return () => {
-      return /* @__PURE__ */ h("div", {
-        class: "doc"
-      }, /* @__PURE__ */ h("h1", null, slots.title() ?? ""), slots.content().map((paragraph) => {
-        return /* @__PURE__ */ h("p", null, paragraph);
-      }), /* @__PURE__ */ h("span", null, "Number of Characters: ", slots.charNum()), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", null, "Number of Words: ", slots.wordNum()), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("span", null, "Number of Sentences: ", slots.sentenceNum()));
-    };
   });
   var pageListFn = (page, numOfPage, toPage) => {
     let max3 = Math.min(numOfPage, page + 2);
@@ -53201,17 +53206,25 @@ Component that was made reactive: `, type);
   var App = defineComponent((_6, { slots }) => {
     let keyWord = ref("");
     let docs = ref([]);
-    let docSet;
+    let suggest = ref([]);
     let page = ref(1);
     let numOfDocPerPage = 10;
     let numOfPage = ref(0);
+    let numOfDoc = 0;
+    let useStemmer = ref(true);
     let search = (e) => {
-      keyWord.value = e.target.value;
-      fetch(`./keyWord/${keyWord.value}`).then((res) => res.json()).catch((err) => console.error(err)).then((response) => {
-        docSet = response;
-        numOfPage.value = Math.ceil(docSet.length / numOfDocPerPage);
-        toPage(1)();
-      });
+      if (e.target.value != "") {
+        keyWord.value = e.target.value;
+        fetch(`./keyWord/${keyWord.value}/${useStemmer.value}`).then((res) => res.json()).catch((err) => console.error(err)).then(({
+          numOfDoc: _numOfDoc,
+          suggest: _suggest
+        }) => {
+          numOfDoc = _numOfDoc;
+          suggest.value = _suggest;
+          numOfPage.value = Math.ceil(numOfDoc / numOfDocPerPage);
+          toPage(1)();
+        });
+      }
     };
     let showingDoc = ref(-1);
     const toPage = (targetPage) => () => {
@@ -53222,10 +53235,9 @@ Component that was made reactive: `, type);
       }
       page.value = targetPage;
       showingDoc.value = -1;
-      if (docSet.length != 0)
-        fetch(`./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(page.value * numOfDocPerPage, docSet.length)}`).then((res) => res.json()).then((pubMeds) => {
+      if (numOfDoc != 0)
+        fetch(`./doc/${(page.value - 1) * numOfDocPerPage}/${Math.min(page.value * numOfDocPerPage, numOfDoc)}`).then((res) => res.json()).then((pubMeds) => {
           docs.value = pubMeds;
-          console.log(pubMeds);
         });
     };
     let matchTarget = ref("");
@@ -53256,12 +53268,27 @@ Component that was made reactive: `, type);
     };
     return () => /* @__PURE__ */ h("div", {
       class: "app"
-    }, /* @__PURE__ */ h(ZipfChart, null), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+    }, /* @__PURE__ */ h(ZipfChart, null, {
+      changeStemmer: (_useStemmer) => useStemmer.value = _useStemmer
+    }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
       type: "text",
       onChange: search,
-      value: keyWord.value,
       placeholder: "\u8ACB\u586B\u5165\u95DC\u9375\u5B57"
-    }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
+    }), /* @__PURE__ */ h("br", {
+      style: [suggest.value.length != 0 ? "display:none;" : ""]
+    }), /* @__PURE__ */ h("p", {
+      style: [
+        suggest.value.length == 0 ? "display:none;" : "",
+        "text-align:center;"
+      ]
+    }, "\u76EE\u524D\u986F\u793A\u7684\u662F\u4EE5\u4E0B\u5B57\u8A5E\u7684\u641C\u5C0B\u7D50\u679C\uFF1A", suggest.value.reduce((prev, word2) => {
+      if (prev == "")
+        return word2;
+      else if (word2 == "")
+        return prev;
+      else
+        return `${prev} ${word2}`;
+    }, "")), /* @__PURE__ */ h("input", {
       class: "small",
       type: "text",
       placeholder: "\u6587\u672C\u641C\u5C0B",
