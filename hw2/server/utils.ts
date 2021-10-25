@@ -1,9 +1,8 @@
 import nlp from "compromise";
-import { JSDOM } from "jsdom";
 import { Parser } from "xml2js";
 
 import { stemmer } from "./porter";
-import { AbstractText, Doc, PubMed, TokenInfo, TokenTable } from "./types";
+import { AbstractText, PubMed, TokenTable } from "./types";
 
 nlp.extend(require("compromise-sentences"));
 
@@ -31,50 +30,6 @@ export const getDocInfo = (content: string[]) => {
   return { charNum, wordNum, sentenceNum };
 };
 
-export const createTokenDict = (doc: Doc, docIdx: number) => {
-  let tokenDict: { [token: string]: TokenInfo[] } = {};
-  for (let token of doc.title.toLowerCase().matchAll(/[a-zA-Z0-9\-]+/g)) {
-    if (tokenDict[token[0]] == undefined) tokenDict[token[0]] = [];
-
-    tokenDict[token[0]].push({
-      docIdx,
-      category: "title",
-      index: token.index as number,
-    });
-  }
-
-  for (let [pgIdx, paragraph] of doc.content.entries()) {
-    for (let token of paragraph.toLowerCase().matchAll(/[a-zA-Z0-9\-]+/g)) {
-      if (tokenDict[token[0]] == undefined) tokenDict[token[0]] = [];
-
-      tokenDict[token[0]].push({
-        docIdx,
-        category: `content:${pgIdx}`,
-        index: token.index as number,
-      });
-    }
-  }
-
-  return tokenDict;
-};
-
-export const mergeTokenDict = (
-  a: { [token: string]: TokenInfo[] },
-  b: { [token: string]: TokenInfo[] }
-) => {
-  let tokenDict: { [token: string]: TokenInfo[] } = {};
-
-  for (let token in a) {
-    tokenDict[token] = [...a[token]];
-  }
-  for (let token in b) {
-    if (tokenDict[token] == undefined) tokenDict[token] = [];
-    tokenDict[token] = [...tokenDict[token], ...b[token]];
-  }
-
-  return tokenDict;
-};
-
 interface PubMedJSON {
   PubmedArticleSet: {
     PubmedArticle: {
@@ -85,8 +40,8 @@ interface PubMedJSON {
 
 export const parsePubMedXML = (xml: string): PubMed[] => {
   let xmlParser = new Parser({});
-  let pubmedJson;
-  xmlParser.parseString(xml, (err: Error, result: object) => {
+  let pubmedJson = {} as PubMedJSON;
+  xmlParser.parseString(xml, (err: Error, result: PubMedJSON) => {
     pubmedJson = result;
   });
   let pubmedArticlesJson: Array<object> =
@@ -251,7 +206,6 @@ export const subseqEditDistance = (source: string[][], target: string[]) => {
         distances[i + 1].push(Math.min(ins, del, sub));
       }
     }
-    // return distances?.at(-1)?.at(-1) ?? NaN;
     min_len = Math.min(min_len, ...(distances?.at(-1) ?? []));
   }
 
@@ -343,8 +297,6 @@ export const searchTokenTable = (w: string, table: TokenTable): Set<number> => {
     }
   }
   return docSet;
-  // console.dir(kkk);
-  // return new Set();
 };
 
 export const zipf = (table: TokenTable): { token: string; count: number }[] => {

@@ -10,8 +10,10 @@ let count = 0;
 
 let f = (url: string, idx: number) => () =>
   fetch(url)
-    .then((response) => response.text())
-    .then((xml) => fs.writeFileSync(`${__dirname}/.data/${idx}.xml`, xml));
+    .then((response: any) => response.text())
+    .then((xml: string) =>
+      fs.writeFileSync(`${__dirname}/.data/${idx}.xml`, xml)
+    );
 let fn_arr = [];
 
 for (let [pmid] of pmids) {
