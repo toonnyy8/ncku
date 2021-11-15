@@ -14,7 +14,8 @@
     "build:hw1-server": "esbuild ./hw1/server/index.ts --bundle --outfile=./hw1/build/server.js --sourcemap --platform=node",
     "build:hw1-report": "esbuild ./hw1/report/dev/index.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --outfile=./hw1/report/build/index.js --sourcemap  --loader:.svg=dataurl",
     "build:hw2-data": "esbuild ./hw2/dl_data.ts --bundle --outfile=./hw2/dl_data.js --sourcemap  --platform=node",
-    "build:hw2-client": "esbuild ./hw2/client/dev/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --sourcemap --outfile=./hw2/client/build/index.js"
+    "build:hw2-client": "esbuild ./hw2/client/dev/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --sourcemap --outfile=./hw2/client/build/index.js",
+    "build:hw3-client": "esbuild ./hw3/client/dev/app.tsx --jsx-factory=h --jsx-fragment=Fragment --bundle --sourcemap --outfile=./hw3/client/build/index.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   "homepage": "https://github.com/toonnyy8/ncku#readme",
   "dependencies": {
     "@antv/g2": "^4.1.32",
+    "@tensorflow/tfjs": "^3.11.0",
     "@types/koa": "^2.13.4",
     "@types/koa-router": "^7.4.4",
     "@types/xml2js": "^0.4.9",
