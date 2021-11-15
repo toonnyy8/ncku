@@ -55915,6 +55915,159 @@ Component that was made reactive: `, type);
     }
     return distances?.at(-1)?.at(-1) ?? NaN;
   };
+  var stopWord = new Set([
+    "about",
+    "again",
+    "al",
+    "all",
+    "almost",
+    "also",
+    "although",
+    "always",
+    "among",
+    "an",
+    "and",
+    "another",
+    "any",
+    "are",
+    "as",
+    "at",
+    "be",
+    "because",
+    "been",
+    "before",
+    "being",
+    "between",
+    "both",
+    "but",
+    "by",
+    "can",
+    "could",
+    "did",
+    "do",
+    "does",
+    "done",
+    "due",
+    "during",
+    "each",
+    "eight",
+    "either",
+    "enough",
+    "especially",
+    "et.",
+    "et",
+    "etc",
+    "five",
+    "for",
+    "found",
+    "four",
+    "from",
+    "further",
+    "had",
+    "has",
+    "have",
+    "having",
+    "here",
+    "how",
+    "however",
+    "i",
+    "ie",
+    "if",
+    "in",
+    "into",
+    "is",
+    "it",
+    "its",
+    "itself",
+    "just",
+    "kg",
+    "km",
+    "made",
+    "mainly",
+    "make",
+    "may",
+    "mg",
+    "might",
+    "ml",
+    "mm",
+    "many",
+    "most",
+    "mostly",
+    "must",
+    "nearly",
+    "neither",
+    "nine",
+    "no",
+    "nor",
+    "not",
+    "obtained",
+    "of",
+    "often",
+    "on",
+    "one",
+    "or",
+    "our",
+    "overall",
+    "perhaps",
+    "quite",
+    "rather",
+    "really",
+    "regarding",
+    "seem",
+    "seen",
+    "seven",
+    "several",
+    "should",
+    "show",
+    "showed",
+    "shown",
+    "shows",
+    "significantly",
+    "since",
+    "six",
+    "so",
+    "some",
+    "such",
+    "ten",
+    "than",
+    "that",
+    "the",
+    "their",
+    "theirs",
+    "them",
+    "then",
+    "there",
+    "therefore",
+    "these",
+    "they",
+    "this",
+    "those",
+    "three",
+    "through",
+    "thus",
+    "to",
+    "two",
+    "upon",
+    "use",
+    "used",
+    "using",
+    "various",
+    "very",
+    "was",
+    "we",
+    "were",
+    "what",
+    "when",
+    "where",
+    "whether",
+    "which",
+    "while",
+    "who",
+    "why",
+    "with",
+    "within",
+    "without"
+  ]);
 
   // node_modules/@tensorflow/tfjs-core/dist/backends/backend.js
   var EPSILON_FLOAT32 = 1e-7;
@@ -100214,82 +100367,6 @@ return a / b;`;
   }
 
   // hw3/client/dev/app.tsx
-  var ZipfChart = defineComponent((_6, { slots }) => {
-    const chartRef = ref(null);
-    let chart;
-    const tokenNum = ref(1);
-    const range5 = ref({ min: 1, max: 1 });
-    const useStemmer = ref(true);
-    let zipf = [];
-    onMounted(() => {
-      chart = new chart_default({
-        container: chartRef.value,
-        autoFit: true,
-        height: 200
-      });
-      changeStemmer(true);
-    });
-    const inputMin = (e) => {
-      range5.value = { min: Number(e.target.value), max: range5.value.max };
-      chart.data(zipf.slice(range5.value.min - 1, range5.value.max));
-      chart.render();
-    };
-    const inputMax = (e) => {
-      range5.value = { max: Number(e.target.value), min: range5.value.min };
-      chart.data(zipf.slice(range5.value.min - 1, range5.value.max));
-      chart.render();
-    };
-    const changeStemmer = (_useStemmer) => {
-      useStemmer.value = _useStemmer;
-      slots.changeStemmer(useStemmer.value);
-      fetch(`./zipf/${_useStemmer}`).then((res) => res.json()).then((zipfData) => {
-        zipf = zipfData;
-        tokenNum.value = zipf.length;
-        range5.value = {
-          min: Math.ceil(tokenNum.value * 0.01),
-          max: Math.ceil(tokenNum.value * 0.05)
-        };
-        chart.data(zipf.slice(range5.value.min - 1, range5.value.max));
-        chart.scale("count", {
-          nice: true
-        });
-        chart.tooltip({
-          showMarkers: false
-        });
-        chart.interaction("active-region");
-        chart.interval().position("token*count");
-        chart.render();
-      });
-    };
-    return () => /* @__PURE__ */ h("div", {
-      style: "position: relative;"
-    }, /* @__PURE__ */ h("div", {
-      ref: chartRef
-    }), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("input", {
-      type: "number",
-      value: range5.value.min,
-      max: range5.value.max,
-      min: "1",
-      step: "1",
-      onChange: inputMin
-    }), /* @__PURE__ */ h("button", {
-      style: [
-        "position: absolute;",
-        "left: 50%;",
-        "transform: translate(-50%,0%);"
-      ],
-      class: [useStemmer.value ? "on" : ""],
-      onClick: () => changeStemmer(!useStemmer.value)
-    }, "stemmer"), /* @__PURE__ */ h("input", {
-      type: "number",
-      value: range5.value.max,
-      max: tokenNum.value,
-      min: range5.value.min,
-      step: "1",
-      onChange: inputMax,
-      style: "right:0px; position: absolute;"
-    }));
-  });
   var App = defineComponent((_6, { slots }) => {
     let keyWord = ref("");
     let targetKeyWord = ref("");
@@ -100302,7 +100379,7 @@ return a / b;`;
     let showingTargetSearch = ref(false);
     const chartRef = ref(null);
     let chart;
-    const range5 = ref({ start: 1, win: 100 });
+    const range5 = ref({ start: 1, win: 10 });
     let sortedSims;
     let tokenNum = ref(0);
     let simWithTarget = ref(NaN);
@@ -100390,6 +100467,19 @@ return a / b;`;
         var reader = new FileReader();
         reader.addEventListener("loadend", () => {
           embBook = parserVector(reader.result);
+          if (embBook.length == vocab.length) {
+            let _embBook = [];
+            let _vocab = [];
+            for (let i = 0; i < vocab.length; i++) {
+              if (!stopWord.has(vocab[i])) {
+                _vocab.push(vocab[i]);
+                _embBook.push(embBook[i]);
+              }
+            }
+            vocab = _vocab;
+            embBook = _embBook;
+            tokenNum.value = vocab.length;
+          }
           console.log("embedding loadend");
         });
         reader.readAsText(files[0]);
@@ -100406,7 +100496,19 @@ return a / b;`;
         var reader = new FileReader();
         reader.addEventListener("loadend", () => {
           vocab = parserMetadata(reader.result);
-          tokenNum.value = vocab.length;
+          if (embBook.length == vocab.length) {
+            let _embBook = [];
+            let _vocab = [];
+            for (let i = 0; i < vocab.length; i++) {
+              if (!stopWord.has(vocab[i])) {
+                _vocab.push(vocab[i]);
+                _embBook.push(embBook[i]);
+              }
+            }
+            vocab = _vocab;
+            embBook = _embBook;
+            tokenNum.value = vocab.length;
+          }
           console.log("matedata loadend");
         });
         reader.readAsText(files[0]);
@@ -100436,11 +100538,11 @@ return a / b;`;
       style: "right:0px; position: absolute;"
     })), /* @__PURE__ */ h("br", null), /* @__PURE__ */ h("button", {
       style: "display: block; margin-left: auto; margin-right: auto;",
-      onClick: loadEmbedding
-    }, "load embedding"), /* @__PURE__ */ h("button", {
-      style: "display: block; margin-left: auto; margin-right: auto;",
       onClick: loadMetadata
-    }, "load metadata"), /* @__PURE__ */ h("input", {
+    }, "load metadata"), /* @__PURE__ */ h("button", {
+      style: "display: block; margin-left: auto; margin-right: auto;",
+      onClick: loadEmbedding
+    }, "load embedding"), /* @__PURE__ */ h("input", {
       type: "text",
       onInput: search,
       placeholder: "Search",

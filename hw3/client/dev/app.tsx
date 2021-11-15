@@ -10,104 +10,13 @@ import {
 import { PubMed } from "./types";
 import { Chart } from "@antv/g2";
 
-import { parserMetadata, parserVector, levenshteinDistance } from "./utils";
+import {
+  parserMetadata,
+  parserVector,
+  levenshteinDistance,
+  stopWord,
+} from "./utils";
 import * as tf from "@tensorflow/tfjs";
-
-const ZipfChart = defineComponent((_, { slots }: { slots }) => {
-  const chartRef: Ref<HTMLDivElement> = ref(null);
-  let chart: Chart;
-  const tokenNum = ref(1);
-  const range = ref({ min: 1, max: 1 });
-  const useStemmer = ref(true);
-
-  let zipf: { token: string; count: number }[] = [];
-  onMounted(() => {
-    chart = new Chart({
-      container: chartRef.value,
-      autoFit: true,
-      height: 200,
-    });
-
-    changeStemmer(true);
-  });
-
-  const inputMin = (e: InputEvent & { target: HTMLInputElement }) => {
-    range.value = { min: Number(e.target.value), max: range.value.max };
-    chart.data(zipf.slice(range.value.min - 1, range.value.max));
-    chart.render();
-  };
-
-  const inputMax = (e: InputEvent & { target: HTMLInputElement }) => {
-    range.value = { max: Number(e.target.value), min: range.value.min };
-    chart.data(zipf.slice(range.value.min - 1, range.value.max));
-    chart.render();
-  };
-
-  const changeStemmer = (_useStemmer: boolean) => {
-    useStemmer.value = _useStemmer;
-    slots.changeStemmer(useStemmer.value);
-    fetch(`./zipf/${_useStemmer}`)
-      .then((res) => res.json())
-      .then((zipfData: { token: string; count: number }[]) => {
-        zipf = zipfData;
-        tokenNum.value = zipf.length;
-        range.value = {
-          min: Math.ceil(tokenNum.value * 0.01),
-          max: Math.ceil(tokenNum.value * 0.05),
-        };
-
-        chart.data(zipf.slice(range.value.min - 1, range.value.max));
-        chart.scale("count", {
-          nice: true,
-        });
-
-        chart.tooltip({
-          showMarkers: false,
-        });
-        chart.interaction("active-region");
-
-        chart.interval().position("token*count");
-
-        chart.render();
-      });
-  };
-
-  return () => (
-    <div style="position: relative;">
-      <div ref={chartRef} />
-      <br />
-
-      <input
-        type="number"
-        value={range.value.min}
-        max={range.value.max}
-        min="1"
-        step="1"
-        onChange={inputMin}
-      />
-      <button
-        style={[
-          "position: absolute;",
-          "left: 50%;",
-          "transform: translate(-50%,0%);",
-        ]}
-        class={[useStemmer.value ? "on" : ""]}
-        onClick={() => changeStemmer(!useStemmer.value)}
-      >
-        stemmer
-      </button>
-      <input
-        type="number"
-        value={range.value.max}
-        max={tokenNum.value}
-        min={range.value.min}
-        step="1"
-        onChange={inputMax}
-        style="right:0px; position: absolute;"
-      />
-    </div>
-  );
-});
 
 const App = defineComponent((_, { slots }: { slots }) => {
   let keyWord = ref("");
@@ -125,7 +34,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
 
   const chartRef: Ref<HTMLDivElement> = ref(null);
   let chart: Chart;
-  const range = ref({ start: 1, win: 100 });
+  const range = ref({ start: 1, win: 10 });
 
   let sortedSims: { token: string }[];
 
@@ -265,6 +174,19 @@ const App = defineComponent((_, { slots }: { slots }) => {
       var reader = new FileReader();
       reader.addEventListener("loadend", () => {
         embBook = parserVector(reader.result as string);
+        if (embBook.length == vocab.length) {
+          let _embBook = [];
+          let _vocab = [];
+          for (let i = 0; i < vocab.length; i++) {
+            if (!stopWord.has(vocab[i])) {
+              _vocab.push(vocab[i]);
+              _embBook.push(embBook[i]);
+            }
+          }
+          vocab = _vocab;
+          embBook = _embBook;
+          tokenNum.value = vocab.length;
+        }
         console.log("embedding loadend");
       });
       reader.readAsText(files[0]);
@@ -284,7 +206,20 @@ const App = defineComponent((_, { slots }: { slots }) => {
       var reader = new FileReader();
       reader.addEventListener("loadend", () => {
         vocab = parserMetadata(reader.result as string);
-        tokenNum.value = vocab.length;
+        // tokenNum.value = vocab.length;
+        if (embBook.length == vocab.length) {
+          let _embBook = [];
+          let _vocab = [];
+          for (let i = 0; i < vocab.length; i++) {
+            if (!stopWord.has(vocab[i])) {
+              _vocab.push(vocab[i]);
+              _embBook.push(embBook[i]);
+            }
+          }
+          vocab = _vocab;
+          embBook = _embBook;
+          tokenNum.value = vocab.length;
+        }
         console.log("matedata loadend");
       });
       reader.readAsText(files[0]);
@@ -319,18 +254,20 @@ const App = defineComponent((_, { slots }: { slots }) => {
         />
       </div>
       <br />
-      <button
-        style="display: block; margin-left: auto; margin-right: auto;"
-        onClick={loadEmbedding}
-      >
-        load embedding
-      </button>
+
       <button
         style="display: block; margin-left: auto; margin-right: auto;"
         onClick={loadMetadata}
       >
         load metadata
       </button>
+      <button
+        style="display: block; margin-left: auto; margin-right: auto;"
+        onClick={loadEmbedding}
+      >
+        load embedding
+      </button>
+
       <input
         type="text"
         onInput={search}
