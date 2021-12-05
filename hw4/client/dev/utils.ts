@@ -1,3 +1,5 @@
+import * as tf from "@tensorflow/tfjs";
+
 export const parserVector = (tsv: string) => {
   return tsv.split("\n").map((v) => v.split("\t").map((x) => Number(x)));
 };
@@ -25,6 +27,84 @@ export const levenshteinDistance = (source: string, target: string): number => {
     }
   }
   return distances?.at(-1)?.at(-1) ?? NaN;
+};
+
+const calcTermFreq = (
+  vocab: string[],
+  sents: [number, string][],
+  terms: [number, string][]
+) => {
+  let termCount: number[][] = [];
+  for (const [sidx, token] of terms) {
+    const didx = sents[sidx][0];
+    if (termCount[didx] == undefined) {
+      termCount[didx] = new Array(vocab.length).fill(0);
+    }
+    const vidx = vocab.findIndex((tk) => tk == token);
+    if (vidx != -1) {
+      termCount[didx][vidx] += 1;
+    }
+  }
+  const termFreq = termCount.map((docTermCount) => {
+    const total = docTermCount.reduce((total, count) => total + count, 0);
+    return docTermCount.map((count) => count / total);
+  });
+
+  return termFreq;
+};
+
+const calcInvDocFreq = (termFreq: number[][]) => {
+  const docNum = termFreq.length;
+  const idf = termFreq
+    .reduce(
+      (df, freq) => {
+        return df.map((v, i) => (v + freq[i] != 0 ? 1 : 0));
+      },
+      termFreq[0].map(() => 1)
+    )
+    .map((v) => docNum / v)
+    .map((v) => Math.log(v));
+
+  return idf;
+};
+
+export const calcTfidf = (
+  vocab: string[],
+  sents: [number, string][],
+  terms: [number, string][]
+) => {
+  const termFreq = calcTermFreq(vocab, sents, terms);
+  const idf = calcInvDocFreq(termFreq);
+
+  const tfidf = termFreq.map((freq) => {
+    return freq.map((f, i) => f * idf[i]);
+  });
+
+  return tfidf;
+};
+
+export const calcSentsEmbWithTfidf = (
+  vocab: string[],
+  embs: number[][],
+  tfidf: number[][],
+  sents: [number, string][],
+  terms: [number, string][]
+) => {
+  const dim = embs[0].length;
+  const sentsEmb = sents.map(() => {
+    return new Array(dim).fill(0);
+  });
+  for (const [sidx, term] of terms) {
+    const didx = sents[sidx][0];
+    const vidx = vocab.findIndex((v) => v == term);
+    if (vidx != -1) {
+      for (const [i, e] of embs[vidx].entries()) {
+        sentsEmb[sidx][i] += e * tfidf[didx][vidx];
+      }
+    }
+  }
+
+  return sentsEmb;
 };
 
 export const stopWord = new Set([

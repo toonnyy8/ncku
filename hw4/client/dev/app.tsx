@@ -15,59 +15,61 @@ import {
   parserVector,
   levenshteinDistance,
   stopWord,
+  calcTfidf,
+  calcSentsEmbWithTfidf,
 } from "./utils";
 import * as tf from "@tensorflow/tfjs";
 
+// @ts-ignore
+import bd_sents from "../../bd_sents.json";
+// @ts-ignore
+import bd_tokens from "../../bd_tokens.json";
+
+// @ts-ignore
+import covid_sents from "../../covid_sents.json";
+// @ts-ignore
+import covid_tokens from "../../covid_tokens.json";
+
+// @ts-ignore
+import metadata from "../../metadata.tsv";
+// @ts-ignore
+import vectors from "../../vectors.tsv";
+
+console.log(bd_sents);
+// console.log(bd_tokens);
+//
+console.log(covid_sents);
+// console.log(covid_tokens);
+//
+// console.log(parserMetadata(metadata));
+// console.log(parserVector(vectors));
+const vocab = parserMetadata(metadata);
+const embs = parserVector(vectors);
+const sents = [
+  ...covid_sents,
+  ...bd_sents.map(([didx, sent]) => [didx + covid_sents.at(-1)?.[0] + 1, sent]),
+];
+
+const terms = [
+  ...covid_tokens,
+  ...bd_tokens.map(([sidx, token]) => [sidx + covid_sents.length, token]),
+];
+
+const tfidf = calcTfidf(vocab, sents, terms);
+
+const sentEmb = tf.tensor2d(
+  calcSentsEmbWithTfidf(vocab, embs, tfidf, sents, terms)
+);
+
 const App = defineComponent((_, { slots }: { slots }) => {
   let keyWord = ref("");
-  let targetKeyWord = ref("");
 
-  let embBook: number[][] = [];
-  // let embBook: Ref<number[][]> = ref([]);
-  let vocab: string[] = [];
-  // let candidate: Ref<JSX.Element> = ref(<></>);
   let candidate: Ref<string[]> = ref([]);
-  let targetCandidate: Ref<string[]> = ref([]);
   let showingCand: Ref<boolean> = ref(false);
-  let showingTargetCand: Ref<boolean> = ref(false);
-  let showingTargetSearch: Ref<boolean> = ref(false);
-
-  const chartRef: Ref<HTMLDivElement> = ref(null);
-  let chart: Chart;
-  const range = ref({ start: 1, win: 10 });
-
-  let sortedSims: { token: string }[];
-
-  let tokenNum: Ref<number> = ref(0);
-  let simWithTarget: Ref<number> = ref(NaN);
-
-  onMounted(() => {
-    chart = new Chart({
-      container: chartRef.value,
-      autoFit: true,
-      height: 200,
-    });
-  });
-
-  const inputStart = (e: InputEvent & { target: HTMLInputElement }) => {
-    range.value = { start: Number(e.target.value), win: range.value.win };
-    chart.data(
-      sortedSims.slice(range.value.start, range.value.start + range.value.win)
-    );
-    chart.render();
-  };
-
-  const inputWin = (e: InputEvent & { target: HTMLInputElement }) => {
-    range.value = { win: Number(e.target.value), start: range.value.start };
-    chart.data(
-      sortedSims.slice(range.value.start, range.value.start + range.value.win)
-    );
-    chart.render();
-  };
+  let showingRank: Ref<boolean> = ref(false);
 
   let search = (e: InputEvent & { target: HTMLInputElement }) => {
-    showingTargetCand.value = false;
-    showingTargetSearch.value = false;
+    showingRank.value = false;
 
     if (e.target.value != "") {
       keyWord.value = e.target.value;
@@ -76,7 +78,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
         .map((token) => ({
           token,
           distance: levenshteinDistance(
-            keyWord.value.toLowerCase(),
+            keyWord.value.split(" ").at(-1).toLowerCase(),
             token.toLowerCase()
           ),
         }))
@@ -86,187 +88,53 @@ const App = defineComponent((_, { slots }: { slots }) => {
       console.log("search");
     }
   };
-  let searchTarget = (e: InputEvent & { target: HTMLInputElement }) => {
-    if (e.target.value != "") {
-      targetKeyWord.value = e.target.value;
-      showingTargetCand.value = true;
-      targetCandidate.value = vocab
-        .map((token) => ({
-          token,
-          distance: levenshteinDistance(
-            targetKeyWord.value.toLowerCase(),
-            token.toLowerCase()
-          ),
-        }))
-        .sort((a, b) => a.distance - b.distance)
-        .slice(0, 10)
-        .map(({ token }) => token);
-      console.log("search target");
-    }
-  };
 
-  let calcEmbSimWithVocab = (query: string) => {
-    let idx = vocab.findIndex(
-      (target) => target.toLowerCase() == query.toLowerCase()
-    );
-    if (idx != -1) {
-      let sims = tf.tidy(() => {
-        let a = tf.tensor2d([embBook[idx]]);
-        let b = tf.tensor2d(embBook);
-        return a
-          .mul(b)
-          .sum(1)
-          .divNoNan(a.square().sum(1).sqrt().mul(b.square().sum(1).sqrt()))
-          .arraySync() as number[];
-      });
+  let embSim: Ref<number[]> = ref([]);
 
-      sortedSims = sims
-        .map((sim, idx) => ({ token: vocab[idx], sim }))
-        .sort((a, b) => b.sim - a.sim);
-      console.log(sortedSims);
+  let calcEmbSim = (query: string) => {
+    return tf.tidy(() => {
+      const qEmb: tf.Tensor2D = query
+        .split(" ")
+        .map((term) => vocab.findIndex((v) => v == term))
+        .map((vidx) =>
+          vidx != -1
+            ? tf.tensor2d([embs[vidx]])
+            : (tf.zeros([1, embs[0].length]) as tf.Tensor2D)
+        )
+        .reduce((prev, emb) => prev.add(emb), tf.zeros([1, embs[0].length]));
 
-      chart.data(
-        sortedSims.slice(range.value.start, range.value.start + range.value.win)
-      );
-      chart.scale("sim", {
-        nice: true,
-      });
+      sentEmb.mul(qEmb).sum(-1);
 
-      chart.tooltip({
-        showMarkers: false,
-      });
-      chart.interaction("active-region");
-
-      chart.interval().position("token*sim");
-
-      chart.render();
-    }
-  };
-  let calcEmbSim = (query: string, target: string) => {
-    let qidx = vocab.findIndex(
-      (token) => token.toLowerCase() == query.toLowerCase()
-    );
-    let tidx = vocab.findIndex(
-      (token) => token.toLowerCase() == target.toLowerCase()
-    );
-    if (qidx != -1 && tidx != -1) {
-      simWithTarget.value = tf.tidy(() => {
-        let a = tf.tensor1d(embBook[qidx]);
-        let b = tf.tensor1d(embBook[tidx]);
-        return a
-          .mul(b)
-          .sum()
-          .divNoNan(a.square().sum().sqrt().mul(b.square().sum().sqrt()))
-          .arraySync() as number;
-      });
-    }
-  };
-
-  const loadEmbedding = () => {
-    console.log("embedding");
-    let load = document.createElement("input");
-    load.type = "file";
-    load.accept = ".tsv";
-
-    load.onchange = (event) => {
-      const files = load.files;
-      // console.log(files[0])
-      var reader = new FileReader();
-      reader.addEventListener("loadend", () => {
-        embBook = parserVector(reader.result as string);
-        if (embBook.length == vocab.length) {
-          let _embBook = [];
-          let _vocab = [];
-          for (let i = 0; i < vocab.length; i++) {
-            if (!stopWord.has(vocab[i])) {
-              _vocab.push(vocab[i]);
-              _embBook.push(embBook[i]);
-            }
-          }
-          vocab = _vocab;
-          embBook = _embBook;
-          tokenNum.value = vocab.length;
-        }
-        console.log("embedding loadend");
-      });
-      reader.readAsText(files[0]);
-    };
-
-    load.click();
-  };
-  const loadMetadata = () => {
-    console.log("matedata");
-    let load = document.createElement("input");
-    load.type = "file";
-    load.accept = ".tsv";
-
-    load.onchange = (event) => {
-      const files = load.files;
-      // console.log(files[0])
-      var reader = new FileReader();
-      reader.addEventListener("loadend", () => {
-        vocab = parserMetadata(reader.result as string);
-        // tokenNum.value = vocab.length;
-        if (embBook.length == vocab.length) {
-          let _embBook = [];
-          let _vocab = [];
-          for (let i = 0; i < vocab.length; i++) {
-            if (!stopWord.has(vocab[i])) {
-              _vocab.push(vocab[i]);
-              _embBook.push(embBook[i]);
-            }
-          }
-          vocab = _vocab;
-          embBook = _embBook;
-          tokenNum.value = vocab.length;
-        }
-        console.log("matedata loadend");
-      });
-      reader.readAsText(files[0]);
-    };
-
-    load.click();
+      return qEmb
+        .mul(sentEmb)
+        .sum(1)
+        .divNoNan(
+          qEmb.square().sum(1).sqrt().mul(sentEmb.square().sum(1).sqrt())
+        )
+        .arraySync() as number[];
+    });
   };
 
   return () => (
     <div class="app">
-      <div style="position: relative;">
-        <div ref={chartRef} />
-        <br />
-
-        <input
-          type="number"
-          value={range.value.start}
-          max={tokenNum.value}
-          min="1"
-          step="1"
-          onInput={inputStart}
-        />
-
-        <input
-          type="number"
-          value={range.value.win}
-          max={tokenNum.value}
-          min="1"
-          step="1"
-          onInput={inputWin}
-          style="right:0px; position: absolute;"
-        />
-      </div>
       <br />
 
-      <button
-        style="display: block; margin-left: auto; margin-right: auto;"
-        onClick={loadMetadata}
-      >
-        load metadata
-      </button>
-      <button
-        style="display: block; margin-left: auto; margin-right: auto;"
-        onClick={loadEmbedding}
-      >
-        load embedding
-      </button>
+      <table>
+        <tr>
+          <td>
+            <button>tf-idf</button>
+          </td>
+          <td>
+            <button>tf-isf</button>
+          </td>
+          <td>
+            <button>tfidf</button>
+          </td>
+          <td>
+            <button>tfidf</button>
+          </td>
+        </tr>
+      </table>
 
       <input
         type="text"
@@ -280,11 +148,16 @@ const App = defineComponent((_, { slots }: { slots }) => {
             <a
               onClick={() => {
                 console.log(token);
-                keyWord.value = token;
+                keyWord.value = [
+                  ...keyWord.value.split(" ").slice(0, -1),
+                  token,
+                ]
+                  .reduce((p, w) => `${p} ${w}`, "")
+                  .slice(1);
+
+                embSim.value = calcEmbSim(keyWord.value);
                 showingCand.value = false;
-                showingTargetSearch.value = true;
-                calcEmbSimWithVocab(token);
-                simWithTarget.value = NaN;
+                showingRank.value = true;
               }}
             >
               {token}
@@ -292,37 +165,23 @@ const App = defineComponent((_, { slots }: { slots }) => {
           </li>
         ))}
       </ol>
-      <input
-        style={[showingTargetSearch.value ? "" : "display:none;"]}
-        class="small"
-        type="text"
-        onInput={searchTarget}
-        placeholder="Target"
-        value={targetKeyWord.value}
-      />
-      <ol style={[showingTargetCand.value ? "" : "display:none;"]}>
-        {targetCandidate.value.map((token) => (
-          <li>
-            <a
-              onClick={() => {
-                console.log(token);
-                targetKeyWord.value = token;
-                showingTargetCand.value = false;
-                calcEmbSim(keyWord.value, token);
-              }}
-            >
-              {token}
-            </a>
-          </li>
-        ))}
+
+      <ol style={[showingRank.value ? "" : "display:none;", "width: 50%"]}>
+        {embSim.value
+          .map((sim, sidx) => ({ sidx, sim }))
+          .sort((a, b) => b.sim - a.sim)
+          .map(({ sim, sidx }) => {
+            const didx = sents[sidx][0];
+            const sent = sents[sidx][1];
+            return (
+              <li>
+                {didx}
+                <br />
+                {sent}
+              </li>
+            );
+          })}
       </ol>
-      <p style="font-size: 1.5rem;text-align: center;">
-        {Number.isNaN(simWithTarget.value)
-          ? ""
-          : `cosine similarity: ${
-              Math.round(simWithTarget.value * 1000) / 1000
-            }`}
-      </p>
     </div>
   );
 });

@@ -178,3 +178,11 @@ a {
 a:hover {
   color: #f79;
 }
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  min-width: 10rem;
+  text-align: center;
+}
