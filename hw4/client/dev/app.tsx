@@ -31,9 +31,9 @@ import covid_sents from "../../covid_sents.json";
 import covid_tokens from "../../covid_tokens.json";
 
 // @ts-ignore
-import metadata from "../../metadata.tsv";
+import metadata from "../../metadata-ex2.tsv";
 // @ts-ignore
-import vectors from "../../vectors.tsv";
+import vectors from "../../vectors-ex2.tsv";
 
 console.log(bd_sents);
 // console.log(bd_tokens);
@@ -62,6 +62,16 @@ const sentEmb = tf.tensor2d(
 );
 
 const App = defineComponent((_, { slots }: { slots }) => {
+  const chartRef: Ref<HTMLDivElement> = ref(null);
+  let chart: Chart;
+  onMounted(() => {
+    chart = new Chart({
+      container: chartRef.value,
+      autoFit: true,
+      height: 200,
+    });
+  });
+
   let keyWord = ref("");
 
   let candidate: Ref<string[]> = ref([]);
@@ -105,18 +115,45 @@ const App = defineComponent((_, { slots }: { slots }) => {
 
       sentEmb.mul(qEmb).sum(-1);
 
-      return qEmb
+      const sim = qEmb
         .mul(sentEmb)
         .sum(1)
         .divNoNan(
           qEmb.square().sum(1).sqrt().mul(sentEmb.square().sum(1).sqrt())
         )
+        //.abs()
         .arraySync() as number[];
+
+      const covidSim = sim
+        .slice(0, covid_sents.length)
+        .reduce((p, s) => p + s, 0);
+      const bdSim = sim.slice(covid_sents.length).reduce((p, s) => p + s, 0);
+
+      chart.data([
+        { docClass: "covid", sim: covidSim / (covidSim + bdSim) },
+        { docClass: "bd", sim: bdSim / (covidSim + bdSim) },
+      ]);
+      chart.scale("sim", {
+        nice: true,
+      });
+
+      chart.tooltip({
+        showMarkers: false,
+      });
+      chart.interaction("active-region");
+
+      chart.interval().position("docClass*sim");
+
+      chart.render();
+
+      return sim;
     });
   };
 
   return () => (
     <div class="app">
+      <div ref={chartRef} />
+
       <br />
 
       <table>
