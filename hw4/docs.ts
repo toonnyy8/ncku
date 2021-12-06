@@ -29,6 +29,6 @@ bdDocs = bdDatasName.reduce((prev, dataName) => {
 }, [] as PubMed[]);
 
 fs.writeFileSync(
-  `${__dirname}/.data/.docs`,
+  `${__dirname}/.data/docs.json`,
   JSON.stringify([...covidDocs, ...bdDocs])
 );

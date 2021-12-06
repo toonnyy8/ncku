@@ -15,8 +15,12 @@ import {
   parserVector,
   levenshteinDistance,
   stopWord,
-  calcTfidf,
-  calcSentsEmbWithTfidf,
+  calcDocTfidf,
+  calcSentTfidf,
+  calcDocBM25,
+  calcSentBM25,
+  calcSentsEmbWithDocWeighted,
+  calcSentsEmbWithSentWeighted,
 } from "./utils";
 import * as tf from "@tensorflow/tfjs";
 
@@ -31,18 +35,10 @@ import covid_sents from "../../covid_sents.json";
 import covid_tokens from "../../covid_tokens.json";
 
 // @ts-ignore
-import metadata from "../../metadata-ex2.tsv";
+import metadata from "../../metadata.tsv";
 // @ts-ignore
-import vectors from "../../vectors-ex2.tsv";
+import vectors from "../../vectors.tsv";
 
-console.log(bd_sents);
-// console.log(bd_tokens);
-//
-console.log(covid_sents);
-// console.log(covid_tokens);
-//
-// console.log(parserMetadata(metadata));
-// console.log(parserVector(vectors));
 const vocab = parserMetadata(metadata);
 const embs = parserVector(vectors);
 const sents = [
@@ -55,11 +51,31 @@ const terms = [
   ...bd_tokens.map(([sidx, token]) => [sidx + covid_sents.length, token]),
 ];
 
-const tfidf = calcTfidf(vocab, sents, terms);
+const docTfidf = calcDocTfidf(vocab, sents, terms);
+const sentTfidf = calcSentTfidf(vocab, sents, terms);
 
-const sentEmb = tf.tensor2d(
-  calcSentsEmbWithTfidf(vocab, embs, tfidf, sents, terms)
+const sentEmbWithDocTfidf = tf.tensor2d(
+  calcSentsEmbWithDocWeighted(vocab, embs, docTfidf, sents, terms, stopWord)
 );
+
+const sentEmbWithSentTfidf = tf.tensor2d(
+  calcSentsEmbWithSentWeighted(vocab, embs, sentTfidf, sents, terms, stopWord)
+);
+
+const docBM25 = calcDocBM25(vocab, sents, terms);
+const sentBM25 = calcSentBM25(vocab, sents, terms);
+
+const sentEmbWithDocBM25 = tf.tensor2d(
+  calcSentsEmbWithDocWeighted(vocab, embs, docBM25, sents, terms, stopWord)
+);
+const sentEmbWithSentBM25 = tf.tensor2d(
+  calcSentsEmbWithSentWeighted(vocab, embs, sentBM25, sents, terms, stopWord)
+);
+
+console.log(docTfidf);
+console.log(sentTfidf);
+console.log(docBM25);
+console.log(sentBM25);
 
 const App = defineComponent((_, { slots }: { slots }) => {
   const chartRef: Ref<HTMLDivElement> = ref(null);
@@ -99,9 +115,13 @@ const App = defineComponent((_, { slots }: { slots }) => {
     }
   };
 
+  let weightedMethod: Ref<
+    "doc-tfidf" | "sent-tfidf" | "doc-BM25" | "sent-BM25"
+  > = ref("doc-tfidf");
+
   let embSim: Ref<number[]> = ref([]);
 
-  let calcEmbSim = (query: string) => {
+  let calcEmbSim = (query: string, targetEmb: tf.Tensor2D) => {
     return tf.tidy(() => {
       const qEmb: tf.Tensor2D = query
         .split(" ")
@@ -113,27 +133,44 @@ const App = defineComponent((_, { slots }: { slots }) => {
         )
         .reduce((prev, emb) => prev.add(emb), tf.zeros([1, embs[0].length]));
 
-      sentEmb.mul(qEmb).sum(-1);
-
       const sim = qEmb
-        .mul(sentEmb)
+        .mul(targetEmb)
         .sum(1)
         .divNoNan(
-          qEmb.square().sum(1).sqrt().mul(sentEmb.square().sum(1).sqrt())
+          qEmb.square().sum(1).sqrt().mul(targetEmb.square().sum(1).sqrt())
         )
-        //.abs()
         .arraySync() as number[];
+      const numOfTopK = sim
+        .map((s, i) => ({ sim: s, didx: i }))
+        .sort((a, b) => b.sim - a.sim)
+        .reduce((prev, { didx }, topK) => {
+          topK = topK + 1;
+          if (prev.length == 0) {
+            const n = didx < covid_sents.length ? 1 : 0;
+            return [
+              { topK, docClass: "covid", n: n },
+              { topK, docClass: "bd", n: topK - n },
+            ];
+          } else {
+            const n = (didx < covid_sents.length ? 1 : 0) + prev.at(-2).n;
 
-      const covidSim = sim
-        .slice(0, covid_sents.length)
-        .reduce((p, s) => p + s, 0);
-      const bdSim = sim.slice(covid_sents.length).reduce((p, s) => p + s, 0);
+            return [
+              ...prev,
+              { topK, docClass: "covid", n },
+              { topK, docClass: "bd", n: topK - n },
+            ];
+          }
+        }, [] as { topK: number; docClass: "covid" | "bd"; n: number }[])
+        .map(({ topK, docClass, n }) => ({ topK, docClass, n: n / topK }));
 
-      chart.data([
-        { docClass: "covid", sim: covidSim / (covidSim + bdSim) },
-        { docClass: "bd", sim: bdSim / (covidSim + bdSim) },
-      ]);
-      chart.scale("sim", {
+      chart.data(numOfTopK);
+      chart.legend("docClass", {
+        itemName: {
+          style: { fontSize: 20, fill: "rgb(40, 40, 40)" },
+        },
+      });
+
+      chart.scale("n", {
         nice: true,
       });
 
@@ -142,7 +179,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
       });
       chart.interaction("active-region");
 
-      chart.interval().position("docClass*sim");
+      chart.line().position("topK*n").color("docClass");
 
       chart.render();
 
@@ -159,16 +196,71 @@ const App = defineComponent((_, { slots }: { slots }) => {
       <table>
         <tr>
           <td>
-            <button>tf-idf</button>
+            <button
+              onClick={() => {
+                if (
+                  weightedMethod.value != "doc-tfidf" &&
+                  embSim.value.length != 0
+                ) {
+                  embSim.value = calcEmbSim(keyWord.value, sentEmbWithDocTfidf);
+                }
+                weightedMethod.value = "doc-tfidf";
+              }}
+              class={[weightedMethod.value == "doc-tfidf" ? "on" : ""]}
+            >
+              doc-tfidf
+            </button>
           </td>
           <td>
-            <button>tf-isf</button>
+            <button
+              onClick={() => {
+                if (
+                  weightedMethod.value != "sent-tfidf" &&
+                  embSim.value.length != 0
+                ) {
+                  embSim.value = calcEmbSim(
+                    keyWord.value,
+                    sentEmbWithSentTfidf
+                  );
+                }
+                weightedMethod.value = "sent-tfidf";
+              }}
+              class={[weightedMethod.value == "sent-tfidf" ? "on" : ""]}
+            >
+              sent-tfidf
+            </button>
           </td>
           <td>
-            <button>tfidf</button>
+            <button
+              onClick={() => {
+                if (
+                  weightedMethod.value != "doc-BM25" &&
+                  embSim.value.length != 0
+                ) {
+                  embSim.value = calcEmbSim(keyWord.value, sentEmbWithDocBM25);
+                }
+                weightedMethod.value = "doc-BM25";
+              }}
+              class={[weightedMethod.value == "doc-BM25" ? "on" : ""]}
+            >
+              doc-BM25
+            </button>
           </td>
           <td>
-            <button>tfidf</button>
+            <button
+              onClick={() => {
+                if (
+                  weightedMethod.value != "sent-BM25" &&
+                  embSim.value.length != 0
+                ) {
+                  embSim.value = calcEmbSim(keyWord.value, sentEmbWithSentBM25);
+                }
+                weightedMethod.value = "sent-BM25";
+              }}
+              class={[weightedMethod.value == "sent-BM25" ? "on" : ""]}
+            >
+              sent-BM25
+            </button>
           </td>
         </tr>
       </table>
@@ -192,7 +284,23 @@ const App = defineComponent((_, { slots }: { slots }) => {
                   .reduce((p, w) => `${p} ${w}`, "")
                   .slice(1);
 
-                embSim.value = calcEmbSim(keyWord.value);
+                const targetEmb = (() => {
+                  switch (weightedMethod.value) {
+                    case "doc-tfidf": {
+                      return sentEmbWithDocTfidf;
+                    }
+                    case "sent-tfidf": {
+                      return sentEmbWithSentTfidf;
+                    }
+                    case "doc-BM25": {
+                      return sentEmbWithDocBM25;
+                    }
+                    case "sent-BM25": {
+                      return sentEmbWithSentBM25;
+                    }
+                  }
+                })();
+                embSim.value = calcEmbSim(keyWord.value, targetEmb);
                 showingCand.value = false;
                 showingRank.value = true;
               }}
@@ -208,11 +316,10 @@ const App = defineComponent((_, { slots }: { slots }) => {
           .map((sim, sidx) => ({ sidx, sim }))
           .sort((a, b) => b.sim - a.sim)
           .map(({ sim, sidx }) => {
-            const didx = sents[sidx][0];
             const sent = sents[sidx][1];
             return (
               <li>
-                {didx}
+                {sidx < covid_sents.length ? "covid" : "bd"}
                 <br />
                 {sent}
               </li>

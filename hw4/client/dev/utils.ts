@@ -53,6 +53,29 @@ const calcTermFreq = (
   return termFreq;
 };
 
+const calcSentTermFreq = (
+  vocab: string[],
+  sents: [number, string][],
+  terms: [number, string][]
+) => {
+  let termCount: number[][] = [];
+  for (const [sidx, token] of terms) {
+    if (termCount[sidx] == undefined) {
+      termCount[sidx] = new Array(vocab.length).fill(0);
+    }
+    const vidx = vocab.findIndex((tk) => tk == token);
+    if (vidx != -1) {
+      termCount[sidx][vidx] += 1;
+    }
+  }
+  const termFreq = termCount.map((docTermCount) => {
+    const total = docTermCount.reduce((total, count) => total + count, 0);
+    return docTermCount.map((count) => count / total);
+  });
+
+  return termFreq;
+};
+
 const calcInvDocFreq = (termFreq: number[][]) => {
   const docNum = termFreq.length;
   const idf = termFreq
@@ -68,7 +91,7 @@ const calcInvDocFreq = (termFreq: number[][]) => {
   return idf;
 };
 
-export const calcTfidf = (
+export const calcDocTfidf = (
   vocab: string[],
   sents: [number, string][],
   terms: [number, string][]
@@ -83,12 +106,53 @@ export const calcTfidf = (
   return tfidf;
 };
 
-export const calcSentsEmbWithTfidf = (
+const calcInvSentFreq = (
   vocab: string[],
-  embs: number[][],
-  tfidf: number[][],
   sents: [number, string][],
   terms: [number, string][]
+) => {
+  let sentNum = sents.length;
+  let sentSets = sents.map(() => new Set());
+
+  for (const [sidx, term] of terms) {
+    sentSets[sidx].add(term);
+  }
+
+  let isf = vocab
+    .map((v) => {
+      return sentSets.reduce(
+        (prev, sentSet) => prev + (sentSet.has(v) ? 1 : 0),
+        1
+      );
+    })
+    .map((v) => sentNum / v)
+    .map((v) => Math.log(v));
+
+  return isf;
+};
+
+export const calcSentTfidf = (
+  vocab: string[],
+  sents: [number, string][],
+  terms: [number, string][]
+) => {
+  const termFreq = calcSentTermFreq(vocab, sents, terms);
+  const isf = calcInvSentFreq(vocab, sents, terms);
+
+  const stfidf = termFreq.map((freq) => {
+    return freq.map((f, i) => f * isf[i]);
+  });
+
+  return stfidf;
+};
+
+export const calcSentsEmbWithDocWeighted = (
+  vocab: string[],
+  embs: number[][],
+  weights: number[][],
+  sents: [number, string][],
+  terms: [number, string][],
+  stopWord: Set<string>
 ) => {
   const dim = embs[0].length;
   const sentsEmb = sents.map(() => {
@@ -97,14 +161,130 @@ export const calcSentsEmbWithTfidf = (
   for (const [sidx, term] of terms) {
     const didx = sents[sidx][0];
     const vidx = vocab.findIndex((v) => v == term);
-    if (vidx != -1) {
+    if (vidx != -1 && !stopWord.has(term)) {
       for (const [i, e] of embs[vidx].entries()) {
-        sentsEmb[sidx][i] += e * tfidf[didx][vidx];
+        sentsEmb[sidx][i] += e * weights[didx][vidx];
       }
     }
   }
 
   return sentsEmb;
+};
+
+// export const calcSentsEmbWithTfisf = (
+//   vocab: string[],
+//   embs: number[][],
+//   tfisf: number[][],
+//   sents: [number, string][],
+//   terms: [number, string][],
+//   stopWord: Set<string>
+// ) => {
+//   const dim = embs[0].length;
+//   const sentsEmb = sents.map(() => {
+//     return new Array(dim).fill(0);
+//   });
+//   for (const [sidx, term] of terms) {
+//     const didx = sents[sidx][0];
+//     const vidx = vocab.findIndex((v) => v == term);
+//     if (vidx != -1 && !stopWord.has(term)) {
+//       for (const [i, e] of embs[vidx].entries()) {
+//         sentsEmb[sidx][i] += e * tfisf[didx][vidx];
+//       }
+//     }
+//   }
+//
+//   return sentsEmb;
+// };
+
+export const calcSentsEmbWithSentWeighted = (
+  vocab: string[],
+  embs: number[][],
+  weights: number[][],
+  sents: [number, string][],
+  terms: [number, string][],
+  stopWord: Set<string>
+) => {
+  const dim = embs[0].length;
+  const sentsEmb = sents.map(() => {
+    return new Array(dim).fill(0);
+  });
+  for (const [sidx, term] of terms) {
+    const vidx = vocab.findIndex((v) => v == term);
+    if (vidx != -1 && !stopWord.has(term)) {
+      for (const [i, e] of embs[vidx].entries()) {
+        sentsEmb[sidx][i] += e * weights[sidx][vidx];
+      }
+    }
+  }
+
+  return sentsEmb;
+};
+
+export const calcDocBM25 = (
+  vocab: string[],
+  sents: [number, string][],
+  terms: [number, string][]
+) => {
+  const termFreq = calcTermFreq(vocab, sents, terms);
+  const idf = calcInvDocFreq(termFreq);
+  const docNum = sents.at(-1)[0] + 1;
+  const docLens: number[] = new Array(docNum).fill(0);
+
+  for (const [sidx, _] of terms) {
+    const didx = sents[sidx][0];
+    docLens[didx] += 1;
+  }
+  const docAvgLen = terms.length / docNum;
+  const k1 = 1.5;
+  const k3 = 1.5;
+  const b = 7.5;
+
+  const bm25 = termFreq.map((freq, didx) => {
+    return freq.map((f, i) => {
+      const t1 = (k1 + 1) * f;
+      const t2 = k1 * (1 - b + b * (docLens[didx] / docAvgLen)) + f;
+
+      const u1 = (k3 + 1) * f;
+      const u2 = k3 + f;
+
+      return (t1 / t2) * (u1 / u2) * idf[i];
+    });
+  });
+
+  return bm25;
+};
+
+export const calcSentBM25 = (
+  vocab: string[],
+  sents: [number, string][],
+  terms: [number, string][]
+) => {
+  const termFreq = calcSentTermFreq(vocab, sents, terms);
+  const idf = calcInvSentFreq(vocab, sents, terms);
+  const sentNum = sents.length;
+  const sentLens: number[] = new Array(sentNum).fill(0);
+
+  for (const [sidx, _] of terms) {
+    sentLens[sidx] += 1;
+  }
+  const sentAvgLen = terms.length / sentNum;
+  const k1 = 1.5;
+  const k3 = 1.5;
+  const b = 7.5;
+
+  const bm25 = termFreq.map((freq, didx) => {
+    return freq.map((f, i) => {
+      const t1 = (k1 + 1) * f;
+      const t2 = k1 * (1 - b + b * (sentLens[didx] / sentAvgLen)) + f;
+
+      const u1 = (k3 + 1) * f;
+      const u2 = k3 + f;
+
+      return (t1 / t2) * (u1 / u2) * idf[i];
+    });
+  });
+
+  return bm25;
 };
 
 export const stopWord = new Set([

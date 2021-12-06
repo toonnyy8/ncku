@@ -27,7 +27,7 @@ for (let [pmid] of pmids) {
     fn_arr.push(f(url, count / 100));
     pmid_list = "";
   }
-  // if (count == 2000) break;
+  if (count == 1000) break;
 }
 
 fn_arr.reduce((p, f) => p.then(f), Promise.resolve());
