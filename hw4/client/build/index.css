@@ -175,6 +175,10 @@ ol {
 a {
   color: #0cf;
 }
+a.black {
+  color: #000;
+}
+
 a:hover {
   color: #f79;
 }

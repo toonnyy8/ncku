@@ -120,6 +120,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
   > = ref("doc-tfidf");
 
   let embSim: Ref<number[]> = ref([]);
+  let mode: "keyWord" | `sent:${number}` = "keyWord";
 
   let calcEmbSim = (query: string, targetEmb: tf.Tensor2D) => {
     return tf.tidy(() => {
@@ -132,6 +133,65 @@ const App = defineComponent((_, { slots }: { slots }) => {
             : (tf.zeros([1, embs[0].length]) as tf.Tensor2D)
         )
         .reduce((prev, emb) => prev.add(emb), tf.zeros([1, embs[0].length]));
+
+      const sim = qEmb
+        .mul(targetEmb)
+        .sum(1)
+        .divNoNan(
+          qEmb.square().sum(1).sqrt().mul(targetEmb.square().sum(1).sqrt())
+        )
+        .arraySync() as number[];
+      const numOfTopK = sim
+        .map((s, i) => ({ sim: s, didx: i }))
+        .sort((a, b) => b.sim - a.sim)
+        .reduce((prev, { didx }, topK) => {
+          topK = topK + 1;
+          if (prev.length == 0) {
+            const n = didx < covid_sents.length ? 1 : 0;
+            return [
+              { topK, docClass: "covid", n: n },
+              { topK, docClass: "bd", n: topK - n },
+            ];
+          } else {
+            const n = (didx < covid_sents.length ? 1 : 0) + prev.at(-2).n;
+
+            return [
+              ...prev,
+              { topK, docClass: "covid", n },
+              { topK, docClass: "bd", n: topK - n },
+            ];
+          }
+        }, [] as { topK: number; docClass: "covid" | "bd"; n: number }[])
+        .map(({ topK, docClass, n }) => ({ topK, docClass, n: n / topK }));
+
+      chart.data(numOfTopK);
+      chart.legend("docClass", {
+        itemName: {
+          style: { fontSize: 20, fill: "rgb(40, 40, 40)" },
+        },
+      });
+
+      chart.scale("n", {
+        nice: true,
+      });
+
+      chart.tooltip({
+        showMarkers: false,
+      });
+      chart.interaction("active-region");
+
+      chart.line().position("topK*n").color("docClass");
+
+      chart.render();
+
+      return sim;
+    });
+  };
+
+  let calcSentEmbSim = (sidx: number, targetEmb: tf.Tensor2D) => {
+    return tf.tidy(() => {
+      const sidx_t = tf.tensor1d([sidx], "int32");
+      const qEmb = targetEmb.gather(sidx_t, 0);
 
       const sim = qEmb
         .mul(targetEmb)
@@ -202,7 +262,13 @@ const App = defineComponent((_, { slots }: { slots }) => {
                   weightedMethod.value != "doc-tfidf" &&
                   embSim.value.length != 0
                 ) {
-                  embSim.value = calcEmbSim(keyWord.value, sentEmbWithDocTfidf);
+                  embSim.value =
+                    mode == "keyWord"
+                      ? calcEmbSim(keyWord.value, sentEmbWithDocTfidf)
+                      : calcSentEmbSim(
+                          Number(mode.split(":")[1]),
+                          sentEmbWithDocTfidf
+                        );
                 }
                 weightedMethod.value = "doc-tfidf";
               }}
@@ -218,10 +284,13 @@ const App = defineComponent((_, { slots }: { slots }) => {
                   weightedMethod.value != "sent-tfidf" &&
                   embSim.value.length != 0
                 ) {
-                  embSim.value = calcEmbSim(
-                    keyWord.value,
-                    sentEmbWithSentTfidf
-                  );
+                  embSim.value =
+                    mode == "keyWord"
+                      ? calcEmbSim(keyWord.value, sentEmbWithSentTfidf)
+                      : calcSentEmbSim(
+                          Number(mode.split(":")[1]),
+                          sentEmbWithSentTfidf
+                        );
                 }
                 weightedMethod.value = "sent-tfidf";
               }}
@@ -237,7 +306,13 @@ const App = defineComponent((_, { slots }: { slots }) => {
                   weightedMethod.value != "doc-BM25" &&
                   embSim.value.length != 0
                 ) {
-                  embSim.value = calcEmbSim(keyWord.value, sentEmbWithDocBM25);
+                  embSim.value =
+                    mode == "keyWord"
+                      ? calcEmbSim(keyWord.value, sentEmbWithDocBM25)
+                      : calcSentEmbSim(
+                          Number(mode.split(":")[1]),
+                          sentEmbWithDocBM25
+                        );
                 }
                 weightedMethod.value = "doc-BM25";
               }}
@@ -253,7 +328,13 @@ const App = defineComponent((_, { slots }: { slots }) => {
                   weightedMethod.value != "sent-BM25" &&
                   embSim.value.length != 0
                 ) {
-                  embSim.value = calcEmbSim(keyWord.value, sentEmbWithSentBM25);
+                  embSim.value =
+                    mode == "keyWord"
+                      ? calcEmbSim(keyWord.value, sentEmbWithSentBM25)
+                      : calcSentEmbSim(
+                          Number(mode.split(":")[1]),
+                          sentEmbWithSentBM25
+                        );
                 }
                 weightedMethod.value = "sent-BM25";
               }}
@@ -276,6 +357,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
           <li>
             <a
               onClick={() => {
+                mode = "keyWord";
                 console.log(token);
                 keyWord.value = [
                   ...keyWord.value.split(" ").slice(0, -1),
@@ -321,7 +403,31 @@ const App = defineComponent((_, { slots }: { slots }) => {
               <li>
                 {sidx < covid_sents.length ? "covid" : "bd"}
                 <br />
-                {sent}
+                <a
+                  class="black"
+                  onClick={() => {
+                    mode = `sent:${sidx}`;
+                    const targetEmb = (() => {
+                      switch (weightedMethod.value) {
+                        case "doc-tfidf": {
+                          return sentEmbWithDocTfidf;
+                        }
+                        case "sent-tfidf": {
+                          return sentEmbWithSentTfidf;
+                        }
+                        case "doc-BM25": {
+                          return sentEmbWithDocBM25;
+                        }
+                        case "sent-BM25": {
+                          return sentEmbWithSentBM25;
+                        }
+                      }
+                    })();
+                    embSim.value = calcSentEmbSim(sidx, targetEmb);
+                  }}
+                >
+                  {sent}
+                </a>
               </li>
             );
           })}
