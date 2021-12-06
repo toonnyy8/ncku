@@ -7,6 +7,8 @@ body {
   display: block;
   margin-left: auto;
   margin-right: auto;
+
+  text-align: center;
 }
 
 .doc {
@@ -170,6 +172,7 @@ ol {
   margin-right: auto;
   width: 10%;
   min-width: 10rem;
+  text-align: left;
 }
 
 a {

@@ -141,6 +141,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
           qEmb.square().sum(1).sqrt().mul(targetEmb.square().sum(1).sqrt())
         )
         .arraySync() as number[];
+
       const numOfTopK = sim
         .map((s, i) => ({ sim: s, didx: i }))
         .sort((a, b) => b.sim - a.sim)
@@ -162,6 +163,10 @@ const App = defineComponent((_, { slots }: { slots }) => {
             ];
           }
         }, [] as { topK: number; docClass: "covid" | "bd"; n: number }[])
+        .reduce((prev, { topK, docClass, n }) => {
+          if (topK % 3 == 1) return [...prev, { topK, docClass, n }];
+          else return prev;
+        }, [])
         .map(({ topK, docClass, n }) => ({ topK, docClass, n: n / topK }));
 
       chart.data(numOfTopK);
@@ -200,6 +205,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
           qEmb.square().sum(1).sqrt().mul(targetEmb.square().sum(1).sqrt())
         )
         .arraySync() as number[];
+
       const numOfTopK = sim
         .map((s, i) => ({ sim: s, didx: i }))
         .sort((a, b) => b.sim - a.sim)
@@ -221,6 +227,10 @@ const App = defineComponent((_, { slots }: { slots }) => {
             ];
           }
         }, [] as { topK: number; docClass: "covid" | "bd"; n: number }[])
+        .reduce((prev, { topK, docClass, n }) => {
+          if (topK % 3 == 1) return [...prev, { topK, docClass, n }];
+          else return prev;
+        }, [])
         .map(({ topK, docClass, n }) => ({ topK, docClass, n: n / topK }));
 
       chart.data(numOfTopK);
@@ -250,9 +260,9 @@ const App = defineComponent((_, { slots }: { slots }) => {
   return () => (
     <div class="app">
       <div ref={chartRef} />
-
+      Percentage of Top K
       <br />
-
+      <br />
       <table>
         <tr>
           <td>
@@ -345,7 +355,6 @@ const App = defineComponent((_, { slots }: { slots }) => {
           </td>
         </tr>
       </table>
-
       <input
         type="text"
         onInput={search}
@@ -392,7 +401,6 @@ const App = defineComponent((_, { slots }: { slots }) => {
           </li>
         ))}
       </ol>
-
       <ol style={[showingRank.value ? "" : "display:none;", "width: 50%"]}>
         {embSim.value
           .map((sim, sidx) => ({ sidx, sim }))
