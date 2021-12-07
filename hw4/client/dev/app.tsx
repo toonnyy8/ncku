@@ -54,6 +54,10 @@ const terms = [
 const docTfidf = calcDocTfidf(vocab, sents, terms);
 const sentTfidf = calcSentTfidf(vocab, sents, terms);
 
+const sentEmb = tf.tensor2d(
+  calcSentsEmbWithDocWeighted(vocab, embs, docTfidf.map((vs)=>vs.map(()=>1)), sents, terms, stopWord)
+);
+
 const sentEmbWithDocTfidf = tf.tensor2d(
   calcSentsEmbWithDocWeighted(vocab, embs, docTfidf, sents, terms, stopWord)
 );
@@ -116,8 +120,8 @@ const App = defineComponent((_, { slots }: { slots }) => {
   };
 
   let weightedMethod: Ref<
-    "doc-tfidf" | "sent-tfidf" | "doc-BM25" | "sent-BM25"
-  > = ref("doc-tfidf");
+    "none"|"doc-tfidf" | "sent-tfidf" | "doc-BM25" | "sent-BM25"
+  > = ref("none");
 
   let embSim: Ref<number[]> = ref([]);
   let mode: "keyWord" | `sent:${number}` = "keyWord";
@@ -167,7 +171,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
           if (topK % 3 == 1) return [...prev, { topK, docClass, n }];
           else return prev;
         }, [])
-        .map(({ topK, docClass, n }) => ({ topK, docClass, n: n / topK }));
+        .map(({ topK, docClass, n }) => ({ topK, docClass, n: 100*n / topK }));
 
       chart.data(numOfTopK);
       chart.legend("docClass", {
@@ -231,7 +235,7 @@ const App = defineComponent((_, { slots }: { slots }) => {
           if (topK % 3 == 1) return [...prev, { topK, docClass, n }];
           else return prev;
         }, [])
-        .map(({ topK, docClass, n }) => ({ topK, docClass, n: n / topK }));
+        .map(({ topK, docClass, n }) => ({ topK, docClass, n: 100*n / topK }));
 
       chart.data(numOfTopK);
       chart.legend("docClass", {
@@ -265,6 +269,40 @@ const App = defineComponent((_, { slots }: { slots }) => {
       <br />
       <table>
         <tr>
+
+<td>
+  <button
+    onClick={() => {
+      if (
+        weightedMethod.value != "none" &&
+        embSim.value.length != 0
+      ) {
+        embSim.value =
+          mode == "keyWord"
+            ? calcEmbSim(keyWord.value, sentEmb)
+            : calcSentEmbSim(
+                Number(mode.split(":")[1]),
+                sentEmb
+              );
+      }
+      weightedMethod.value = "none";
+    }}
+    class={[weightedMethod.value == "none" ? "on" : ""]}
+  >
+  none  
+</button>
+</td>
+
+
+
+
+
+
+
+
+
+
+
           <td>
             <button
               onClick={() => {
@@ -377,6 +415,9 @@ const App = defineComponent((_, { slots }: { slots }) => {
 
                 const targetEmb = (() => {
                   switch (weightedMethod.value) {
+                    case "none": {
+                      return sentEmb;
+                    }
                     case "doc-tfidf": {
                       return sentEmbWithDocTfidf;
                     }
@@ -417,6 +458,9 @@ const App = defineComponent((_, { slots }: { slots }) => {
                     mode = `sent:${sidx}`;
                     const targetEmb = (() => {
                       switch (weightedMethod.value) {
+                        case "none": {
+                          return sentEmb;
+                        }
                         case "doc-tfidf": {
                           return sentEmbWithDocTfidf;
                         }
