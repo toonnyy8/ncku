@@ -3,8 +3,8 @@ import fs from "fs";
 import { PubMed } from "./types";
 import { parsePubMedXML } from "./utils";
 
-let dataDirList: string[] = ["covid", "bipolardis", "covid-bd"];
-// let dataDirList: string[] = ["covid-bd"];
+// let dataDirList: string[] = ["covid", "bipolardis", "covid-bd"];
+let dataDirList: string[] = ["covid"];
 
 let pubMedDocs = dataDirList
   .map((dataDir) => {
