@@ -3,15 +3,23 @@ import * as tf from "@tensorflow/tfjs";
 export const zip = (a, ...args) =>
   a.map((k, i) => [k, ...args.map((arg) => arg[i])]);
 
-export const shuffle = (arr: any[]) => {
+export const shuffle = (arr: any[], ...arrs: any[][]) => {
   for (let i = arr.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    if (i < arr.length && j < arr.length) {
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      for (let _arr of arrs) {
+        [_arr[i], _arr[j]] = [_arr[j], _arr[i]];
+      }
+    }
   }
 };
 
 export const parserVector = (tsv: string) => {
-  return tsv.split("\n").map((v) => v.split("\t").map((x) => Number(x)));
+  return tsv
+    .split("\n")
+    .slice(0, -1)
+    .map((v) => v.split("\t").map((x) => Number(x)));
 };
 
 export const parserMetadata = (tsv: string) => {

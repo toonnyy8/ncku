@@ -19,15 +19,20 @@ let f = (url: string, idx: number) => () =>
     );
 let fn_arr = [];
 
+let fileIdx = 0;
 for (let [pmid] of pmids) {
   pmid_list += pmid + ",";
   count += 1;
   if (count % 100 == 0) {
     let url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmid_list}&retmode=abstract&rettype=xml`;
-    fn_arr.push(f(url, count / 100));
+    fn_arr.push(f(url, fileIdx));
     pmid_list = "";
+    fileIdx += 1;
   }
   // if (count == 2000) break;
 }
-
+if (count % 100 != 0) {
+  let url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmid_list}&retmode=abstract&rettype=xml`;
+  fn_arr.push(f(url, fileIdx));
+}
 fn_arr.reduce((p, f) => p.then(f), Promise.resolve());

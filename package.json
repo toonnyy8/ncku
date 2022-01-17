@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/toonnyy8/ncku#readme",
   "dependencies": {
+    "@antv/data-set": "^0.11.8",
     "@antv/g2": "^4.1.32",
     "@tensorflow/tfjs": "^3.11.0",
     "@types/koa": "^2.13.4",
