@@ -40,9 +40,9 @@ let _docSents: string[][] = docSentsJson;
 let _tfidf: { [token: string]: number }[] = tfidfJson;
 let _docsEmb = parserVector(docsEmbTsv);
 shuffle(_docsEmb, _tfidf, _docSents);
-const docSents = _docSents.slice(0, 2500);
-const tfidf = _tfidf.slice(0, 2500);
-const docsEmb = tf.tensor2d(_docsEmb.slice(0, 2500));
+const docSents = _docSents.slice(0, 1000);
+const tfidf = _tfidf.slice(0, 1000);
+const docsEmb = tf.tensor2d(_docsEmb.slice(0, 1000));
 
 // const docsEmb = tf.tensor2d(parserVector(docsEmbTsv));
 
