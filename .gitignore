@@ -1,13 +1,11 @@
-node_modules
-.parcel-cache
-dist
-.cache
-*.pyc
-*.h5
-*.pkl
-cv-env
-kagglecatsanddogs_3367a
-target
-carpalTunnel
-libtorch
-.data
+# Compiled
+*.elc
+
+# Packaging
+.cask
+
+# Backup files
+*~
+
+# Undo-tree save-files
+*.~undo-tree
