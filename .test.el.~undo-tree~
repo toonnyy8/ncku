@@ -1,0 +1,100 @@
+(undo-tree-save-format-version . 1)
+"fa84be90038132402b5d521b4774e834e68d86b5"
+[nil nil nil nil (25393 22887 854428 89000) 0 nil]
+([nil nil ((#("(require 'cl-lib)
+
+(defun t8/range (start end)
+  (let ((range_
+         (lambda (start end prev range_)
+           (if (< start end)
+               (funcall range_ (+ start 1) end (append prev (list start)) range_)
+               prev))))
+       (funcall range_ start end '() range_)))
+
+(t8/range 1 8)
+
+(defun t8/list-to-string
+    (elems delimiter elem-to-str-fn)
+    (cl-reduce
+       (lambda (prev curr)
+         (format \"%s%s%s\" prev delimiter (funcall elem-to-str-fn curr)))
+       (cdr elems)
+       :initial-value (funcall elem-to-str-fn (car elems))))
+
+(t8/list-to-string '(1 2 3) \" \" (lambda (elem) (format \"%s\" elem)))
+
+;;;###autoload
+(defun t8/show-pt
+  (elem-to-str-fn) 
+  (let* ((p-fn (lambda (n)
+                 (let ((_p (lambda (a b)
+                             (append a (list (* b (nth 0 (last a))))))))
+                      (cl-reduce _p (t8/range 1 (+ n 1)) :initial-value '(1)))))
+         (pascals-triangle-fn (lambda (n)   
+                                (let ((p (funcall p-fn n)))
+                                  (cl-map 'list 
+                                    (lambda (i)
+                                      (cl-map 'list 
+                                        (lambda (j)
+                                          (/ (nth i p)
+                                            (* (nth j p)
+                                              (nth (- i j) p))))
+                                        (t8/range 0 (+ i 1))))
+                                    (t8/range 0 n)))))
+         (show-pt-fn (lambda (n)
+                       (t8/list-to-string
+                         (let ((slist (cl-map 'list
+                                        (lambda (curr) (t8/list-to-string curr \" \" elem-to-str-fn))
+                                        (funcall pascals-triangle-fn n))))
+                              (let ((max-len  (length (nth (- n 1) slist))))
+                                   (cl-map 'list
+                                     (lambda (curr) (s-center max-len curr))
+                                     slist)))
+                         \"\\n\" (lambda (elem) (format \"%s\" elem))))))
+
+       (lambda
+         (n) \"pascals-triangle\" (interactive \"NOrder:\")
+         (let
+           ((curr-buff (current-buffer)))
+           (pop-to-buffer (get-buffer-create \"pascals-triangle\"))
+           (erase-buffer)
+           (insert (funcall show-pt-fn n))
+           (pop-to-buffer curr-buff)))))
+
+(which-key-add-key-based-replacements \"<leader>tp\" \"pascals-triangle\")
+(which-key-add-key-based-replacements \"<leader>tpd\" \"decimal\")
+(evil-define-key '(normal emacs motion) 'global (kbd \"<leader>tpd\") (t8/show-pt (lambda (elem) (format \"%d\" elem))))
+(which-key-add-key-based-replacements \"<leader>tpx\" \"hex\")
+(evil-define-key '(normal emacs motion) 'global (kbd \"<leader>tpx\") (t8/show-pt (lambda (elem) (format \"%x\" elem))))
+
+(provide 'hw1)
+" 0 1 (\.\.\. nil) 1 8 (\.\.\. nil) 8 10 (\.\.\. nil) 10 16 (\.\.\. nil) 16 17 (\.\.\. nil) 17 19 (\.\.\. nil) 19 20 (\.\.\. nil) 20 25 (\.\.\. nil) 25 26 (\.\.\. nil) 26 34 (\.\.\. nil) 34 35 (\.\.\. nil) 35 36 (\.\.\. nil) 36 45 (\.\.\. nil) 45 46 (\.\.\. nil) 46 49 (\.\.\. nil) 49 50 (\.\.\. nil) 50 53 (\.\.\. nil) 53 54 (\.\.\. nil) 54 55 (\.\.\. nil) 55 56 (\.\.\. nil) 56 72 (\.\.\. nil) 72 73 (\.\.\. nil) 73 79 (\.\.\. nil) 79 80 (\.\.\. nil) 80 81 (\.\.\. nil) 81 102 (\.\.\. nil) 102 103 (\.\.\. nil) 103 115 (\.\.\. nil) 115 116 (\.\.\. nil) 116 118 (\.\.\. nil) 118 119 (\.\.\. nil) 119 120 (\.\.\. nil) 120 131 (\.\.\. nil) 131 132 (\.\.\. nil) 132 148 (\.\.\. nil) 148 149 (\.\.\. nil) 149 164 (\.\.\. nil) 164 165 (\.\.\. nil) 165 174 (\.\.\. nil) 174 175 (\.\.\. nil) 175 180 (\.\.\. nil) 180 181 (\.\.\. nil) 181 193 (\.\.\. nil) 193 194 (\.\.\. nil) 194 204 (\.\.\. nil) 204 205 (\.\.\. nil) 205 206 (\.\.\. nil) 206 213 (\.\.\. nil) 213 214 (\.\.\. nil) 214 234 (\.\.\. nil) 234 235 (\.\.\. nil) 235 236 (\.\.\. nil) 236 237 (\.\.\. nil) 237 238 (\.\.\. nil) 238 246 (\.\.\. nil) 246 247 (\.\.\. nil) 247 273 (\.\.\. nil) 273 274 (\.\.\. nil) 274 275 (\.\.\. nil) 275 282 (\.\.\. nil) 282 283 (\.\.\. nil) 283 284 (\.\.\. nil) 284 285 (\.\.\. nil) 285 287 (\.\.\. nil) 287 288 (\.\.\. nil) 288 300 (\.\.\. nil) 300 301 (\.\.\. nil) 301 303 (\.\.\. nil) 303 304 (\.\.\. nil) 304 309 (\.\.\. nil) 309 310 (\.\.\. nil) 310 327 (\.\.\. nil) 327 332 (\.\.\. nil) 332 333 (\.\.\. nil) 333 363 (\.\.\. nil) 363 364 (\.\.\. nil) 364 369 (\.\.\. nil) 369 370 (\.\.\. nil) 370 387 (\.\.\. nil) 387 388 (\.\.\. nil) 388 394 (\.\.\. nil) 394 395 (\.\.\. nil) 395 396 (\.\.\. nil) 396 405 (\.\.\. nil) 405 406 (\.\.\. nil) 406 416 (\.\.\. nil) 416 417 (\.\.\. nil) 417 424 (\.\.\. nil) 424 432 (\.\.\. nil) 432 448 (\.\.\. nil) 448 449 (\.\.\. nil) 449 469 (\.\.\. nil) 469 476 (\.\.\. nil) 476 477 (\.\.\. nil) 477 478 (\.\.\. nil) 478 479 (\.\.\. nil) 479 480 (\.\.\. nil) 480 487 (\.\.\. nil) 487 488 (\.\.\. nil) 488 497 (\.\.\. nil) 497 498 (\.\.\. nil) 498 506 (\.\.\. nil) 506 520 (\.\.\. nil) 520 521 (\.\.\. nil) 521 522 (\.\.\. nil) 522 545 (\.\.\. nil) 545 546 (\.\.\. nil) 546 555 (\.\.\. nil) 555 556 (\.\.\. nil) 556 557 (\.\.\. nil) 557 558 (\.\.\. nil) 558 559 (\.\.\. nil) 559 561 (\.\.\. nil) 561 562 (\.\.\. nil) 562 581 (\.\.\. nil) 581 582 (\.\.\. nil) 582 587 (\.\.\. nil) 587 588 (\.\.\. nil) 588 589 (\.\.\. nil) 589 592 (\.\.\. nil) 592 593 (\.\.\. nil) 593 594 (\.\.\. nil) 594 600 (\.\.\. nil) 600 601 (\.\.\. nil) 601 602 (\.\.\. nil) 602 606 (\.\.\. nil) 606 607 (\.\.\. nil) 607 608 (\.\.\. nil) 608 609 (\.\.\. nil) 609 616 (\.\.\. nil) 616 620 (\.\.\. nil) 620 625 (\.\.\. nil) 625 626 (\.\.\. nil) 626 627 (\.\.\. nil) 627 628 (\.\.\. nil) 628 630 (\.\.\. nil) 630 633 (\.\.\. nil) 633 636 (\.\.\. nil) 636 644 (\.\.\. nil) 644 645 (\.\.\. nil) 645 646 (\.\.\. nil) 646 651 (\.\.\. nil) 651 652 (\.\.\. nil) 652 662 (\.\.\. nil) 662 665 (\.\.\. nil) 665 666 (\.\.\. nil) 666 680 (\.\.\. nil) 680 681 (\.\.\. nil) 681 685 (\.\.\. nil) 685 686 (\.\.\. nil) 686 690 (\.\.\. nil) 690 691 (\.\.\. nil) 691 692 (\.\.\. nil) 692 693 (\.\.\. nil) 693 698 (\.\.\. nil) 698 699 (\.\.\. nil) 699 705 (\.\.\. nil) 705 706 (\.\.\. nil) 706 707 (\.\.\. nil) 707 708 (\.\.\. nil) 708 709 (\.\.\. nil) 709 727 (\.\.\. nil) 727 728 (\.\.\. nil) 728 731 (\.\.\. nil) 731 732 (\.\.\. nil) 732 733 (\.\.\. nil) 733 734 (\.\.\. nil) 734 737 (\.\.\. nil) 737 738 (\.\.\. nil) 738 744 (\.\.\. nil) 744 745 (\.\.\. nil) 745 746 (\.\.\. nil) 746 749 (\.\.\. nil) 749 750 (\.\.\. nil) 750 780 (\.\.\. nil) 780 781 (\.\.\. nil) 781 790 (\.\.\. nil) 790 791 (\.\.\. nil) 791 796 (\.\.\. nil) 796 797 (\.\.\. nil) 797 801 (\.\.\. nil) 801 802 (\.\.\. nil) 802 808 (\.\.\. nil) 808 809 (\.\.\. nil) 809 815 (\.\.\. nil) 815 816 (\.\.\. nil) 816 817 (\.\.\. nil) 817 818 (\.\.\. nil) 818 819 (\.\.\. nil) 819 820 (\.\.\. nil) 820 821 (\.\.\. nil) 821 822 (\.\.\. nil) 822 823 (\.\.\. nil) 823 846 (\.\.\. nil) 846 847 (\.\.\. nil) 847 860 (\.\.\. nil) 860 861 (\.\.\. nil) 861 872 (\.\.\. nil) 872 873 (\.\.\. nil) 873 878 (\.\.\. nil) 878 879 (\.\.\. nil) 879 880 (\.\.\. nil) 880 881 (\.\.\. nil) 881 895 (\.\.\. nil) 895 897 (\.\.\. nil) 897 898 (\.\.\. nil) 898 899 (\.\.\. nil) 899 900 (\.\.\. nil) 900 901 (\.\.\. nil) 901 902 (\.\.\. nil) 902 903 (\.\.\. nil) 903 904 (\.\.\. nil) 904 914 (\.\.\. nil) 914 915 (\.\.\. nil) 915 935 (\.\.\. nil) 935 936 (\.\.\. nil) 936 942 (\.\.\. nil) 942 943 (\.\.\. nil) 943 944 (\.\.\. nil) 944 945 (\.\.\. nil) 945 946 (\.\.\. nil) 946 980 (\.\.\. nil) 980 982 (\.\.\. nil) 982 983 (\.\.\. nil) 983 986 (\.\.\. nil) 986 987 (\.\.\. nil) 987 988 (\.\.\. nil) 988 989 (\.\.\. nil) 989 991 (\.\.\. nil) 991 992 (\.\.\. nil) 992 1006 (\.\.\. nil) 1006 1007 (\.\.\. nil) 1007 1008 (\.\.\. nil) 1008 1009 (\.\.\. nil) 1009 1010 (\.\.\. nil) 1010 1044 (\.\.\. nil) 1044 1045 (\.\.\. nil) 1045 1095 (\.\.\. nil) 1095 1096 (\.\.\. nil) 1096 1102 (\.\.\. nil) 1102 1103 (\.\.\. nil) 1103 1104 (\.\.\. nil) 1104 1105 (\.\.\. nil) 1105 1106 (\.\.\. nil) 1106 1145 (\.\.\. nil) 1145 1146 (\.\.\. nil) 1146 1200 (\.\.\. nil) 1200 1201 (\.\.\. nil) 1201 1207 (\.\.\. nil) 1207 1208 (\.\.\. nil) 1208 1209 (\.\.\. nil) 1209 1210 (\.\.\. nil) 1210 1211 (\.\.\. nil) 1211 1254 (\.\.\. nil) 1254 1255 (\.\.\. nil) 1255 1257 (\.\.\. nil) 1257 1258 (\.\.\. nil) 1258 1265 (\.\.\. nil) 1265 1266 (\.\.\. nil) 1266 1311 (\.\.\. nil) 1311 1312 (\.\.\. nil) 1312 1314 (\.\.\. nil) 1314 1315 (\.\.\. nil) 1315 1322 (\.\.\. nil) 1322 1323 (\.\.\. nil) 1323 1370 (\.\.\. nil) 1370 1371 (\.\.\. nil) 1371 1375 (\.\.\. nil) 1375 1376 (\.\.\. nil) 1376 1381 (\.\.\. nil) 1381 1382 (\.\.\. nil) 1382 1384 (\.\.\. nil) 1384 1385 (\.\.\. nil) 1385 1386 (\.\.\. nil) 1386 1387 (\.\.\. nil) 1387 1388 (\.\.\. nil) 1388 1429 (\.\.\. nil) 1429 1430 (\.\.\. nil) 1430 1441 (\.\.\. nil) 1441 1442 (\.\.\. nil) 1442 1447 (\.\.\. nil) 1447 1448 (\.\.\. nil) 1448 1449 (\.\.\. nil) 1449 1450 (\.\.\. nil) 1450 1451 (\.\.\. nil) 1451 1488 (\.\.\. nil) 1488 1489 (\.\.\. nil) 1489 1501 (\.\.\. nil) 1501 1502 (\.\.\. nil) 1502 1503 (\.\.\. nil) 1503 1504 (\.\.\. nil) 1504 1505 (\.\.\. nil) 1505 1506 (\.\.\. nil) 1506 1510 (\.\.\. nil) 1510 1516 (\.\.\. nil) 1516 1517 (\.\.\. nil) 1517 1528 (\.\.\. nil) 1528 1529 (\.\.\. nil) 1529 1535 (\.\.\. nil) 1535 1536 (\.\.\. nil) 1536 1537 (\.\.\. nil) 1537 1538 (\.\.\. nil) 1538 1539 (\.\.\. nil) 1539 1540 (\.\.\. nil) 1540 1731 (\.\.\. nil) 1731 1732 (\.\.\. nil) 1732 2012 (\.\.\. nil) 2012 2054 (\.\.\. nil) 2054 2055 (\.\.\. nil) 2055 2056 (\.\.\. nil) 2056 2057 (\.\.\. nil) 2057 2083 (\.\.\. nil) 2083 2087 (\.\.\. nil) 2087 2088 (\.\.\. nil) 2088 2089 (\.\.\. nil) 2089 2095 (\.\.\. nil) 2095 2096 (\.\.\. nil) 2096 2097 (\.\.\. nil) 2097 2101 (\.\.\. nil) 2101 2102 (\.\.\. nil) 2102 2103 (\.\.\. nil) 2103 2104 (\.\.\. nil) 2104 2111 (\.\.\. nil) 2111 2115 (\.\.\. nil) 2115 2120 (\.\.\. nil) 2120 2121 (\.\.\. nil) 2121 2122 (\.\.\. nil) 2122 2123 (\.\.\. nil) 2123 2124 (\.\.\. nil) 2124 2125 (\.\.\. nil) 2125 2126 (\.\.\. nil) 2126 2135 (\.\.\. nil) 2135 2136 (\.\.\. nil) 2136 2142 (\.\.\. nil) 2142 2152 (\.\.\. nil) 2152 2153 (\.\.\. nil) 2153 2154 (\.\.\. nil) 2154 2155 (\.\.\. nil) 2155 2156 (\.\.\. nil) 2156 2174 (\.\.\. nil) 2174 2175 (\.\.\. nil) 2175 2176 (\.\.\. nil) 2176 2187 (\.\.\. nil) 2187 2188 (\.\.\. nil) 2188 2197 (\.\.\. nil) 2197 2198 (\.\.\. nil) 2198 2208 (\.\.\. nil) 2208 2209 (\.\.\. nil) 2209 2212 (\.\.\. nil) 2212 2224 (\.\.\. nil) 2224 2225 (\.\.\. nil) 2225 2226 (\.\.\. nil) 2226 2236 (\.\.\. nil) 2236 2237 (\.\.\. nil) 2237 2251 (\.\.\. nil) 2251 2252 (\.\.\. nil) 2252 2253 (\.\.\. nil) 2253 2254 (\.\.\. nil) 2254 2266 (\.\.\. nil) 2266 2267 (\.\.\. nil) 2267 2281 (\.\.\. nil) 2281 2282 (\.\.\. nil) 2282 2300 (\.\.\. nil) 2300 2318 (\.\.\. nil) 2318 2319 (\.\.\. nil) 2319 2320 (\.\.\. nil) 2320 2332 (\.\.\. nil) 2332 2333 (\.\.\. nil) 2333 2345 (\.\.\. nil) 2345 2346 (\.\.\. nil) 2346 2358 (\.\.\. nil) 2358 2359 (\.\.\. nil) 2359 2366 (\.\.\. nil) 2366 2367 (\.\.\. nil) 2367 2387 (\.\.\. nil) 2387 2388 (\.\.\. nil) 2388 2389 (\.\.\. nil) 2389 2401 (\.\.\. nil) 2401 2402 (\.\.\. nil) 2402 2425 (\.\.\. nil) 2425 2426 (\.\.\. nil) 2426 2427 (\.\.\. nil) 2427 2428 (\.\.\. nil) 2428 2429 (\.\.\. nil) 2429 2430 (\.\.\. nil) 2430 2432 (\.\.\. nil) 2432 2433 (\.\.\. nil) 2433 2470 (\.\.\. nil) 2470 2482 (\.\.\. nil) 2482 2483 (\.\.\. nil) 2483 2501 (\.\.\. nil) 2501 2502 (\.\.\. nil) 2502 2503 (\.\.\. nil) 2503 2504 (\.\.\. nil) 2504 2512 (\.\.\. nil) 2512 2541 (\.\.\. nil) 2541 2554 (\.\.\. nil) 2554 2555 (\.\.\. nil) 2555 2564 (\.\.\. nil) 2564 2565 (\.\.\. nil) 2565 2566 (\.\.\. nil) 2566 2567 (\.\.\. nil) 2567 2582 (\.\.\. nil) 2582 2584 (\.\.\. nil) 2584 2585 (\.\.\. nil) 2585 2604 (\.\.\. nil) 2604 2605 (\.\.\. nil) 2605 2614 (\.\.\. nil) 2614 2615 (\.\.\. nil) 2615 2619 (\.\.\. nil) 2619 2632 (\.\.\. nil) 2632 2633 (\.\.\. nil) 2633 2634 (\.\.\. nil) 2634 2635 (\.\.\. nil) 2635 2646 (\.\.\. nil) 2646 2647 (\.\.\. nil) 2647 2653 (\.\.\. nil) 2653 2654 (\.\.\. nil) 2654 2655 (\.\.\. nil) 2655 2659 (\.\.\. nil) 2659 2660 (\.\.\. nil) 2660 2661 (\.\.\. nil) 2661 2662 (\.\.\. nil) 2662 2669 (\.\.\. nil) 2669 2673 (\.\.\. nil) 2673 2678 (\.\.\. nil) 2678 2679 (\.\.\. nil) 2679 2680 (\.\.\. nil) 2680 2681 (\.\.\. nil) 2681 2682 (\.\.\. nil) 2682 2683 (\.\.\. nil) 2683 2684 (\.\.\. nil) 2684 2721 (\.\.\. nil) 2721 2734 (\.\.\. nil) 2734 2735 (\.\.\. nil) 2735 2740 (\.\.\. nil) 2740 2741 (\.\.\. nil) 2741 2742 (\.\.\. nil) 2742 2743 (\.\.\. nil) 2743 2758 (\.\.\. nil) 2758 2760 (\.\.\. nil) 2760 2761 (\.\.\. nil) 2761 2780 (\.\.\. nil) 2780 2781 (\.\.\. nil) 2781 2790 (\.\.\. nil) 2790 2791 (\.\.\. nil) 2791 2795 (\.\.\. nil) 2795 2808 (\.\.\. nil) 2808 2809 (\.\.\. nil) 2809 2810 (\.\.\. nil) 2810 2811 (\.\.\. nil) 2811 2822 (\.\.\. nil) 2822 2823 (\.\.\. nil) 2823 2829 (\.\.\. nil) 2829 2830 (\.\.\. nil) 2830 2831 (\.\.\. nil) 2831 2835 (\.\.\. nil) 2835 2836 (\.\.\. nil) 2836 2837 (\.\.\. nil) 2837 2838 (\.\.\. nil) 2838 2845 (\.\.\. nil) 2845 2849 (\.\.\. nil) 2849 2854 (\.\.\. nil) 2854 2855 (\.\.\. nil) 2855 2856 (\.\.\. nil) 2856 2857 (\.\.\. nil) 2857 2858 (\.\.\. nil) 2858 2860 (\.\.\. nil) 2860 2861 (\.\.\. nil) 2861 2868 (\.\.\. nil) 2868 2870 (\.\.\. nil) 2870 2873 (\.\.\. nil) 2873 2874 (\.\.\. nil) 2874 2875 (\.\.\. nil)) . 32) (undo-tree-id55 . -2875) (undo-tree-id56 . -2127) (undo-tree-id57 . -816) (undo-tree-id58 . -817) (undo-tree-id59 . -818) (undo-tree-id60 . -818) (undo-tree-id61 . -819) (undo-tree-id62 . -819) (undo-tree-id63 . -820) (undo-tree-id64 . -820) (undo-tree-id65 . -821) \.\.\.) nil (25393 22887 854390 641000) 0 nil])
+([nil nil ((98 . 110) (97 . 99) (93 . 97) (#("c" 0 1 (\.\.\. nil)) . -93) (undo-tree-id46 . -1) (undo-tree-id47 . -1) (undo-tree-id48 . -1) 94 (92 . 94) (#(" " 0 1 (\.\.\. nil)) . -92) (undo-tree-id49 . -1) (undo-tree-id50 . -1) \.\.\.) nil (25393 22887 853666 266000) 0 nil])
+([nil nil ((nil rear-nonsticky nil 112 . 113) (#("
+" 0 1 (\.\.\. nil)) . -149) (112 . 150) 109) nil (25393 22887 853607 360000) 0 nil])
+([nil nil ((114 . 120) (#("s" 0 1 (\.\.\. nil)) . -114) (undo-tree-id36 . -1) (undo-tree-id37 . -1) (#("e" 0 1 (\.\.\. nil)) . -115) (undo-tree-id38 . -1) (undo-tree-id39 . -1) (#("q" 0 1 (\.\.\. nil)) . -116) (undo-tree-id40 . -1) (undo-tree-id41 . -1) 117 (130 . 133) \.\.\.) nil (25393 22887 853594 808000) 0 nil])
+([nil nil ((198 . 200) (185 . 198) (184 . 185) (#(" " 0 1 (\.\.\. nil)) . -183) (undo-tree-id33 . -1) (undo-tree-id34 . -1) (undo-tree-id35 . -1) 184 (183 . 184) (184 . 185) 183 (171 . 183) \.\.\.) nil (25393 22887 853548 766000) 0 nil])
+([nil nil ((nil rear-nonsticky nil 201 . 202) (#("
+" 0 1 (\.\.\. nil)) . -246) (201 . 247) 199) nil (25393 22887 853523 37000) 0 nil])
+([nil nil ((224 . 228) (#("u" 0 1 (\.\.\. nil)) . -224) (undo-tree-id31 . -1) (undo-tree-id32 . -1) 225 (221 . 225)) nil (25393 22887 853514 183000) 0 nil])
+([nil nil ((249 . 252)) nil (25393 22887 853500 381000) 0 nil])
+([nil nil ((503 . 509) (451 . 453) (495 . 501) (#("\"" 0 1 (\.\.\. nil)) . -495) (undo-tree-id0 . -1) (undo-tree-id1 . -1) (undo-tree-id2 . -1) (undo-tree-id3 . -1) (undo-tree-id4 . -1) (undo-tree-id5 . -1) (undo-tree-id6 . -1) 496 \.\.\.) nil (25393 22887 853457 725000) 0 nil])
+([nil nil ((513 . 514) 508) nil (25393 22887 853181 423000) 0 nil])
+([nil nil ((79 . 80) (t 25393 22887 869290 225000)) nil (25393 23182 674440 216000) 0 nil])
+([nil nil ((513 . 517) (511 . 514)) nil (25393 23201 25112 189000) 0 nil] [nil nil ((#(";; -*- lexical-binding: t -*-
+" 0 3 (fontified t face font-lock-comment-delimiter-face) 3 30 (fontified t face font-lock-comment-face)) . 1) (t 25393 22923 181290 211000)) ((1 . 31) (t 25393 23089 365290 148000)) (25393 23089 355068 585000) 0 nil])
+([nil nil ((#(")" 0 1 (face (rainbow-delimiters-depth-1-face parinfer-rust-dim-parens) fontified nil)) . 523) (undo-tree-id0 . -1) (#("(" 0 1 (face (rainbow-delimiters-depth-1-face) fontified t)) . -523) (undo-tree-id1 . -1) (undo-tree-id2 . -1) (undo-tree-id3 . -1) (undo-tree-id4 . -1) (undo-tree-id5 . -1) 524 (524 . 525) (523 . 524) (522 . 523) (t 25393 23201 37290 105000)) nil (25393 23212 307695 413000) 0 nil])
+nil
+([nil nil ((546 . 548) (547 . 548) 545 (537 . 545) (538 . 539) 537 (535 . 537) (530 . 533) (532 . 533) 530 (529 . 530) (#("a" 0 1 (fontified t)) . -529) (undo-tree-id23 . -1) 530 (529 . 530) (530 . 531) 529 (528 . 529) (526 . 528) (#("r" 0 1 (fontified t)) . -526) (undo-tree-id24 . -1) 527 (524 . 527) (524 . 525) (523 . 524) (t 25393 23212 317290 101000)) nil (25393 23496 945075 930000) 0 nil])
+([nil nil ((530 . 534) (524 . 530) (551 . 552) 524 (523 . 524)) nil (25393 23496 945042 336000) 0 nil])
+([nil nil ((565 . 577) (565 . 566) (564 . 565) (#("a" 0 1 (fontified t)) . -564) (undo-tree-id21 . -1) (#("-" 0 1 (fontified t)) . -565) (undo-tree-id22 . -1) 566 (564 . 566) (562 . 564)) nil (25393 23496 945031 503000) 0 nil])
+([nil nil ((570 . 573) (571 . 572) 570 (565 . 570) (565 . 566) (564 . 565) (563 . 564)) nil (25393 23496 945012 440000) 0 nil])
+([nil nil ((576 . 577) 570 (569 . 570) (#(")" 0 1 (fontified t face (rainbow-delimiters-unmatched-face parinfer-rust-dim-parens))) . 575) (574 . 575)) nil (25393 23496 945000 878000) 0 nil])
+([nil nil ((#(")" 0 1 (fontified t face (rainbow-delimiters-depth-1-face parinfer-rust-dim-parens))) . 576) (592 . 593) 579 (578 . 579)) nil (25393 23496 944991 34000) 0 nil])
+([nil nil ((253 . 254) (247 . 253) (269 . 270) 247 (246 . 247) (185 . 192) (204 . 205) 185 (184 . 185) (209 . 211) (#("e" 0 1 (fontified t)) . -209) (undo-tree-id8 . -1) 210 (207 . 210) (#("f" 0 1 (fontified t)) . -207) (undo-tree-id9 . -1) (#("u" 0 1 (fontified t)) . -208) (undo-tree-id10 . -1) (#("n" 0 1 (fontified t face font-lock-keyword-face)) . -209) (undo-tree-id11 . -1) 210 (164 . 165) (#("t" 0 1 (fontified t)) . -164) (undo-tree-id12 . -1) 165 (162 . 165) (159 . 162) (#("f" 0 1 (fontified t)) . -159) (undo-tree-id13 . -1) (#("e" 0 1 (fontified t)) . -160) (undo-tree-id14 . -1) (#("f" 0 1 (fontified t)) . -161) (undo-tree-id15 . -1) 162 (159 . 162) (#("d" 0 1 (fontified t)) . -159) (undo-tree-id16 . -1) (#("e" 0 1 (fontified t)) . -160) (undo-tree-id17 . -1) (#("f" 0 1 (fontified t)) . -161) (undo-tree-id18 . -1) (#("u" 0 1 (fontified t)) . -162) (undo-tree-id19 . -1) (#("n" 0 1 (fontified t face font-lock-keyword-face)) . -163) (undo-tree-id20 . -1) 164) nil (25393 23496 944971 399000) 0 nil])
+([nil nil ((514 . 522) (458 . 465) (458 . 459)) nil (25393 23496 944893 899000) 0 nil])
+([nil nil ((#(")" 0 1 (fontified t face (rainbow-delimiters-depth-1-face parinfer-rust-dim-parens))) . 597) (undo-tree-id1 . -1) 603 (#("(let ((a 2))
+" 0 1 (fontified t face (rainbow-delimiters-depth-1-face)) 1 4 (fontified t face font-lock-keyword-face) 4 5 (fontified t) 5 6 (fontified t face (rainbow-delimiters-depth-2-face)) 6 7 (fontified t face (rainbow-delimiters-depth-3-face)) 7 10 (fontified t) 10 11 (fontified t face (rainbow-delimiters-depth-3-face parinfer-rust-dim-parens)) 11 12 (fontified t face (rainbow-delimiters-depth-2-face parinfer-rust-dim-parens)) 12 13 (fontified t)) . 600) (undo-tree-id2 . -3) (undo-tree-id3 . -10) (undo-tree-id4 . -11) (undo-tree-id5 . -11) (undo-tree-id6 . -12) (undo-tree-id7 . -3) 603) nil (25393 23496 944882 753000) 0 nil])
+([nil nil ((601 . 609) (601 . 602) (600 . 601) (599 . 600) (597 . 598) (#(")" 0 1 (fontified nil face (rainbow-delimiters-depth-2-face parinfer-rust-dim-parens))) . 612) 599 (#(" " 0 1 (fontified t)) . -599) (undo-tree-id0 . -1) 600) nil (25393 23496 944790 930000) 0 nil])
+([nil current ((625 . 626) 279) nil (25393 23496 944723 846000) 0 nil])
+nil

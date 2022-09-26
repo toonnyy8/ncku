@@ -1,0 +1,19 @@
+;; -*- lexical-binding: t -*-
+
+(get-buffer-create "*dynamic vs lexical*")
+
+(setq foo-lexical-var "global value")
+(defvar foo-lexical-defvar "global value")
+
+(defun foo-lexical-value () foo-lexical-var)
+(defun foo-lexical-defvar-value () foo-lexical-defvar)
+
+(let
+  ((foo-lexical-var "local value")
+   (foo-lexical-defvar "local value"))
+  (with-current-buffer
+    "*dynamic vs lexical*"
+    (goto-char (point-max))
+    (insert "setq: " (foo-lexical-value) "\n"
+            "defvar: " (foo-lexical-defvar-value) "\n\n")))
+
